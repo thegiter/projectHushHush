@@ -1,0 +1,31 @@
+news/.../shps_news/
+----------------------------
+news/wp-config.php
+	require_once dirname(__FILE__).'/../shared/phps/db_news.php';
+----------------------------
+news/wp-login
+	if (!defined('root')) {
+
+		define('root', '../');
+
+	}
+--
+	function login_header( $title = 'Login', $message = '', $wp_error = '' ) {
+--
+	<form name="loginform" id="loginform" action="<?php
+		echo esc_url(site_url('login/', 'login_post'));
+	?>" method="post">
+----------------------------
+news/index.php
+	if (!defined('root')) {
+		
+		define('root', '../');
+
+	}
+----------------------------
+news/wp-admin/admin-ajax.php
+	if (!defined('root')) {
+		
+		define('root', '../../');
+
+	}

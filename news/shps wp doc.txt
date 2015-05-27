@@ -1,0 +1,1 @@
+Wordpress defines a constant ABSPATH for the root of wordpress

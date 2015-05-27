@@ -1,3 +1,22 @@
+#Dev files
+*.dev.js
+*.dev.css
+gulpfile.js
+
+#xampp
+xampp/
+
+#nodjs npm
+node_modules/
+
+#Docs
+Doc.txt
+doc.txt
+Before Uninstall.txt
+loading example.txt
+REMINDER.txt
+strange names.txt
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
