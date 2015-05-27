@@ -1,0 +1,184 @@
+﻿/*
+Theme Name: の弑す魂の PS News
+Theme URI: http://shps.co.za/
+Description: の弑す魂の PS news section theme.
+Author: の弑す魂の
+Version: 1.0
+Tags: two-columns, fixed-width, custom-header, custom-background, threaded-comments, sticky-post, translation-ready, microformats, rtl-language-support, editor-style
+*/
+@charset "utf-8";
+.navigation:after{
+	content:	"&nbsp;";
+	width:		0px;
+	height:		0px;
+	visibility:	hidden;
+	display:	block;
+	clear:		both;
+}
+.nav-previous {
+	float: left;
+	width: 50%;
+}
+.nav-next {
+	float: right;
+	text-align: right;
+	width: 50%;
+}
+.post {
+	padding:		5px;
+	margin:			10px 0;
+	font-family:	arial, 微软雅黑, 黑体;
+}
+.post-bg-sdw-tl{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/tl.png);
+	background-repeat:	no-repeat;
+	width:				15px;
+	height:				15px;
+	top:				-5px;
+	left:				-5px;
+}
+.post-bg-sdw-tl,
+.post-bg-sdw-top,
+.post-bg-sdw-tr,
+.post-bg-sdw-lft,
+.post-bg-sdw-rgt,
+.post-bg-sdw-bl,
+.post-bg-sdw-btm,
+.post-bg-sdw-br{
+	position:	absolute;
+}
+.post-bg-sdw-top{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/top.png);
+	background-repeat:	repeat-x;
+	height:				10px;
+	top:				-5px;
+	left:				10px;
+	right:				10px;
+}
+.post-bg-sdw-tr{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/tr.png);
+	background-repeat:	no-repeat;
+	width:				15px;
+	height:				15px;
+	top:				-5px;
+	right:				-5px;
+}
+.post-bg-sdw-lft{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/lft.png);
+	background-repeat:	repeat-y;
+	width:				10px;
+	top:				10px;
+	bottom:				10px;
+	left:				-5px;
+}
+.post-bg-sdw-rgt{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/rgt.png);
+	background-repeat:	repeat-y;
+	width:				10px;
+	top:				10px;
+	bottom:				10px;
+	right:				-5px;
+}
+.post-bg-sdw-bl{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/bl.png);
+	background-repeat:	no-repeat;
+	width:				15px;
+	height:				15px;
+	bottom:				-5px;
+	left:				-5px;
+}
+.post-bg-sdw-btm{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/btm.png);
+	background-repeat:	repeat-x;
+	height:				10px;
+	left:				10px;
+	right:				10px;
+	bottom:				-5px;
+}
+.post-bg-sdw-br{
+	background-image: 	url(../../../../shared/imgs/post_bg_sdw/br.png);
+	background-repeat:	no-repeat;
+	width:				15px;
+	height:				15px;
+	right:				-5px;
+	bottom:				-5px;
+}
+.bg-main{
+	width:				700px;
+	background-image:	url(../../../../shared/imgs/post_bg.jpg);
+	background-repeat:	repeat-y;
+	position:			relative;
+	padding:			5px 0;										/* removes collapsing of nested margins by inserting something (padding in this case) in between the margins */
+}
+.entry-header{
+	margin:	15px 25px;
+}
+.entry-title{
+	font-family:	serif, 楷体;
+	margin:			0;
+	font-weight:	bold;
+	font-size:		24px;
+}
+.entry-title a{
+	text-decoration:	none;
+	color:				#000000;
+}
+.tag-announcements .entry-title a{
+	color:	#ff4545;
+}
+.entry-meta{
+	margin-top:	5px;
+}
+.entry-date a{
+	color:	#80FF00;
+}
+.author a{
+	color:	#006391;
+}
+.post-prvimg{
+	background-image:	url(attr(src));
+	width:				attr(width);
+	height:				attr(height);
+	display:			block;
+	float:				left;
+	margin:				5px 5px 5px 0;
+}
+.entry-utility{
+	text-align:		right;
+}
+.cat-links a{
+	color:	#916000;
+}
+.tag-links a{
+	color:	#8f9100;
+}
+.entry-margin{
+	margin-left:	10px;
+	margin-right:	10px;
+}
+.colophon{
+	margin:	0 20px;
+}
+.site-info{
+	display:		inline-block;
+	float:			left;
+}
+.site-generator{
+	display:		inline-block;
+	float:			right;
+	font-style:		italic;
+	font-family:	Georgia, 'Bitstream Charte', serif;
+	color:			#ffffff;
+}
+.site-generator a{
+	display:				inline-block;
+	background-image:		url(images/wordpress.png);
+	background-position:	center left;
+	background-repeat:		no-repeat;
+	min-height:				16px;
+	padding-left:			18px;
+	color:					#000000;
+}
+.site-generator a:visited{
+	color:	#ffffff;
+}

@@ -1,0 +1,17 @@
+@charset "utf-8";
+#nws-bd-wpr{
+	padding-top:	1px;
+}
+#news-ttl{
+	width:				307px;
+	height:				129px;
+	background-image:	url(../images/news_ttl.png);
+}
+#ctt-wpr{
+	width:		1024px;
+	margin:		0 auto 50px;
+	position:	relative;
+}
+#nws-fter-cnr{
+	margin:	5px 0px 20px 0px;
+}
