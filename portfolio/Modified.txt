@@ -1,0 +1,76 @@
+/index.php
+
+if (!defined('root')) {
+		define('root', '../');
+	}
+
+
+-----------------------
+/administration/index.php
+
+	if (!defined('root')) {
+		define('root', '../../');
+	}
+
+-----------------------
+/.htaccess
+
+RewriteBase /portfolio/
+
+----------------------
+NEW /article/
+
+---------------------
+component/com_content
+
+---------------------
+new plugin
+
+jumi
+-------------------
+/plugins/content/pagebreak/pagebreak.php
+
+protected function _createNavigation(&$row, $page, $n)
+	{
+		$pnSpace = '';
+
+		if (JText::_('JGLOBAL_LT') || JText::_('JGLOBAL_LT'))
+		{
+			$pnSpace = ' ';
+		}
+
+		if ($page < $n - 1)
+		{
+			$page_next = $page + 1;
+
+			//$link_next = str_replace('?', '#', JRoute::_(ContentHelperRoute::getArticleRoute($row->slug, $row->catid) . '&showall=&limitstart=' . ($page_next)));
+			$link_next = '#page'.($page_next+1);
+			
+			// Next >>
+			$next = '<a id="pb-next" href="' . $link_next . '">' . JText::_('JNEXT') . $pnSpace . JText::_('JGLOBAL_GT') . JText::_('JGLOBAL_GT') . '</a>';
+		}
+		else
+		{
+			$next = JText::_('JNEXT');
+		}
+
+		if ($page > 0)
+		{
+			$page_prev = $page - 1 == 0 ? 1 : $page;
+			
+			$link_prev = '#page'.$page_prev;
+			//$link_prev = JRoute::_(ContentHelperRoute::getArticleRoute($row->slug, $row->catid) . '&showall=&limitstart=' . ($page_prev));
+
+			// << Prev
+			$prev = '<a id="pg-prev" href="' . $link_prev . '">' . JText::_('JGLOBAL_LT') . JText::_('JGLOBAL_LT') . $pnSpace . JText::_('JPREV') . '</a>';
+		}
+		else
+		{
+			$prev = JText::_('JPREV');
+		}
+
+		$row->text .= '<ul><li>' . $prev . ' </li><li>' . $next . '</li></ul>';
+	}
+
+/plugins/content/pagebreak/jss/
+--------------------

@@ -1,0 +1,5 @@
+To add a view to a component, create a new folder in the view folder, inside the component's folder, with all the necessary files.
+
+inside the default.xml in the tmpl folder, modify the title and descriptions to display your view in the backend.
+
+go the admin/language, find the component's sys.ini file and add your view's title and description.
