@@ -1,0 +1,1 @@
+(function(){var c='beta';var d='beta-mdt';var e=new ttlElmOnload(c);e.addElm(d);e.addScript('/shared/tooltip_f/jss/tooltip_f.js');e.callback=function(){var a=document.getElementById(d);tooltipFModule.addTo(a,'The site is still in beta stage.');var b=document.getElementById(c);b.classList.remove('dsp-non');b.offsetHeight};e.start()})();

@@ -1,0 +1,41 @@
+@charset "utf-8";
+@import url("../../fg_cnr/csss/fg_cnr.css");
+@import url("../../to_top/csss/to_top.css");
+@import url("../../onenote_menu_cnr/csss/omc.css");
+.tools-wpr{
+	position:			fixed;
+	top:				0;
+	right:				0;
+	bottom:				0;
+	width:				40px;
+	perspective:		900px;
+}
+aside.tools{
+	position:			absolute;
+	right:				0;
+	box-sizing:			border-box;
+	height:				100%;
+	transform-origin:	right;
+}
+aside.tools .ctt-cnr{
+	max-width:		80vw;
+	height:			100%;
+}
+aside.tools .ctt-cnr > div > div{
+	padding:		15px;
+	box-sizing:		border-box;
+	max-width:		70vw;
+	box-shadow:		8px 0px 12px 3px rgba(0,0,0,0.75);
+}
+aside.tools-trans-normal{
+	transition:			transform 1s ease-out;
+}
+aside.tools-trans-delay{
+	transition:			transform 1s ease-out 1s, opacity 1s ease-in;
+}
+aside.tools-trans-init{
+	transform:			translatex(-40px) rotatey(135deg);		/* must create perspective first to trigger 3d transform, 2d transforms doesn't need pers */
+}
+.tools-hover:hover .tools{
+	transform:	translatex(0) rotatey(0);
+}

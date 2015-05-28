@@ -1,0 +1,13 @@
+@charset "utf-8";
+.ul-sdw{
+	background-image: 		url(../imgs/uls.png);
+	background-repeat:		no-repeat;
+	background-position:	bottom;
+	background-size:		contain;
+	display:				inline-block;		/* to shrink to wrap the content */
+}
+.ul-sdw-padding{
+	padding-bottom:		6%;
+	padding-left:		6%;
+	padding-right:		6%;
+}

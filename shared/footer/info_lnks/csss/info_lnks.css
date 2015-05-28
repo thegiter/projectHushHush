@@ -1,0 +1,10 @@
+﻿@charset "utf-8";
+.ftr-info-lnks li{
+	display:	inline;
+}
+.ftr-info-lnks a:link{
+	color:	#d01818;
+}
+.ftr-info-lnks a:visited{
+	color:	#982926;
+}

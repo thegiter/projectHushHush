@@ -1,0 +1,9 @@
+﻿@charset "utf-8";
+#err-004-ico{
+	background-image:	url(../imgs/004_ico.jpg);
+	background-repeat:	no-repeat;
+	width:				225px;
+	height:				278px;
+	position:			relative;
+	bottom:				5px;
+}

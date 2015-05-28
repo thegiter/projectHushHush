@@ -1,0 +1,43 @@
+﻿@charset "utf-8";
+#err-005-ico{
+	width:				47px;
+	height:				48px;
+	background-image:	url(../imgs/inf.png);
+}
+#err-005-mlc-ttl{
+	margin:		5px 0px;
+}
+.tpl-ie-hr-cnr div{
+	position:	absolute;
+	top:		0;
+}
+#err-005-mlc-lst{
+	margin-top:			0px;
+	margin-bottom:		20px;
+}
+#err-005-wyt-lst li{
+	margin: 				15px 0px;
+	background-image:		url(../imgs/bullet.png);
+	background-repeat:		no-repeat;
+	background-position:	left center;
+	padding-left:			25px;
+}
+#err-005-mic>td{
+	padding-top:	20px;
+}
+#err-005-mic p{
+	margin:	0px;
+}
+#err-005-mic ul{
+	margin:	0px;
+}
+#err-005-mlc-lst,		/* most likely causes (mlc) */
+#err-005-mic ul{
+	padding-left:		40px;
+	list-style-type:	disc;
+	color:				#575757;
+}
+#err-005-mlc-lst li span,	
+#err-005-mic ul>li>span{
+	color:		#909090;
+}

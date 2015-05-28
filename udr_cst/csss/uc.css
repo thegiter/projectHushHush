@@ -1,0 +1,149 @@
+﻿@charset "utf-8";
+#cnr{
+	min-width:				1400px;
+	min-height:				1080px;
+	height:					100%;
+	width:					100%;
+}
+#ctr-cnr{
+	background-image:		url(../imgs/udr_cst.png);	/*png and jpg are same size*/
+	background-repeat:		no-repeat;
+	background-position:	top center;
+	width:					1400px;
+	height:					1080px;
+	text-align:				center;
+	position:				relative;
+}
+#left{
+	position:	absolute;
+	top:		0px;
+	left:		90px;
+	padding:	5px 10px 10px 5px;
+}
+#uc-note{
+	width:					380px;
+	height:					580px;
+	background-image:		url(../imgs/note_bg.jpg);
+	background-repeat:		no-repeat;
+	background-position:	top left;
+	padding-left:			10px;
+	padding-top:			9px;
+	padding-bottom:			4px;
+	text-align:				left;
+	position:				relative;					/* position to get on top */
+}
+#site-ico-ver-ali{
+	position:	absolute;
+	top:		365px;
+	width:		100%;
+}
+#site-ico{
+	background-image:	url(../../shared/imgs/site_icon_256.png);
+	background-repeat:	no-repeat;
+	width:				256px;
+	height:				260px;
+}
+#ttl{
+	text-shadow:	#000000 2px 2px 2px;
+	color:			#ffffff;
+	font-size:		48px;
+}
+.yellow{
+	color:	#eed54c;
+}
+#words{
+	text-align:	left;
+	width:		400px;
+}
+#note-txt-wpr{
+	position:	absolute;
+	top:		9px;
+	bottom:		4px;
+	left:		10px;
+	right:		0;
+	padding:	0 10px;
+}
+#note-hdr{
+	margin:	50px 0 100px 0;
+}
+#logo-sml{
+	position:	relative;
+	left:		10px;
+	display:	inline-block;
+}
+#note-stt{
+	font-style:		italic;
+	text-shadow:	#000000 1px 1px 1px;
+	text-align:		right;
+}
+#note-ctt-ver-ali{
+	position:		relative;
+	top:			100px;
+	margin-left:	10px;
+	margin-right:	10px;
+}
+#note-p1{
+	color:	#b0a38f;
+}
+#note-p2{
+	color:	#9ab5d0;
+}
+#ipt-ure{
+	width:				220px;
+	height:				25px;
+	background-image:	url(../imgs/uc_ipt.jpg);
+	background-repeat:	no-repeat;
+	ime-mode:			disabled;
+}
+#msg-cnr{
+	background-color:	#f3e6e6;
+	border:				2px solid #924949;
+	font-size:			14px;
+	position:			absolute;
+	max-width:			200px;
+	opacity:			0;
+}
+#msg-ctt{
+	background-image:		url(../imgs/msg_arrow.gif);
+	background-position:	left center;
+	background-repeat:		no-repeat;
+	position:				relative;
+	left:					-7px;
+	padding:				5px;
+	padding-left:			12px;
+}
+#msg{
+	color:	#666;
+}
+#val-tick{
+	display:		inline-block;
+	vertical-align:	middle;
+	position:		relative;
+	left:			5px;
+	visibility:		hidden;
+}
+.uc-btn{
+	width:		120px;
+	height: 	60px;
+	float:		right;
+}
+#right{
+	width:				458px;
+	height:				656px;
+	position:			absolute;
+	right:				0px;
+	bottom:				0px;
+	background-image:	url(../imgs/cor_pic.png);
+	background-repeat:	no-repeat;
+}
+#sub-msg{
+	color:			#797161;
+	text-align:		center;
+	text-shadow:	#000000 -1px -1px 1px;
+}
+#uc-cr{
+	position:	absolute;
+	bottom:		0;
+	text-align:	center;
+	margin:		0 auto;
+}

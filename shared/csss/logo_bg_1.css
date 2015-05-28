@@ -1,0 +1,18 @@
+﻿@charset "utf-8";
+.logo-bg-1-cnr{
+	left:		50%;
+}
+.logo-bg-1-cnr,
+.logo-bg-1{
+	position:	absolute;
+	right:		0px;
+	top:		0px;
+	bottom:		0px;
+	max-width:	1012px;
+	max-height:	556px;
+}
+.logo-bg-1{
+	left:				-368px;
+	background-image:	url(../imgs/logo_bg_1.png);
+	background-repeat:	no-repeat;
+}

@@ -1,0 +1,6 @@
+﻿@charset "utf-8";
+@import url("../../csss/hr.css");
+@import url("../sml/csss/footer.css");
+.lv2-ftr-ctnr{
+	margin:	5px 0px 20px 0px;
+}

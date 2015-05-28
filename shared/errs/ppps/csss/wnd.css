@@ -1,0 +1,40 @@
+﻿@charset "utf-8";
+body{
+	width:	500px;
+	height:	200px;
+}
+#wnd-cnr{
+	width:		500px;
+	height:		200px;
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+}
+#wnd-ctt{
+	padding-left:	10px;
+}
+#pnl-cnr{
+	width:		500px;
+	height:		42px;
+	position:	absolute;
+	bottom:		0px;
+}
+#wnd-ttl{
+	color:		#003399;
+	font-size:	18px;
+}
+#wnd-txt{
+	font-size:	14px;
+}
+#wnd-pnl-wpr{
+	display:	table;
+}
+#wnd-pnl{
+	display:		table-cell;
+	vertical-align:	middle;
+	text-align:		right;
+}
+#wnd-cls-btn{
+	margin-right:	10px;
+	margin-top:		7px;
+}

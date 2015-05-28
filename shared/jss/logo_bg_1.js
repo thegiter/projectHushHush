@@ -1,0 +1,1 @@
+imgPreload('/shared/imgs/logo_bg_1.jpg');

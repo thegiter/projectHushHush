@@ -1,0 +1,25 @@
+﻿@charset "utf-8";
+.hr-head{
+	background-image:	url(../imgs/hr_head.png);
+	background-repeat:	no-repeat;
+	width:				80px;
+	height:				2px;
+}
+.hr-body{
+	background-image:	url(../imgs/hr_body.png);
+	background-repeat:	repeat-x;
+	left:				80px;
+	right:				81px;
+}
+.hr-body,
+.hr-ass{
+	height:		2px;
+	position:	absolute;							/* absolute positioning since body is absolute positioning already, but otherwies use float in this kind of situition to allow its size to influence the parent element */
+	top:		0;
+}
+.hr-ass{
+	background-image:	url(../imgs/hr_ass.png);
+	background-repeat:	no-repeat;
+	right:				0px;
+	width:				81px;
+}

@@ -1,0 +1,28 @@
+@charset "utf-8";
+.article{
+	text-shadow:	#000000 1px 1px 1px;
+	font-family:	arial, 微软雅黑, 黑体;
+	position:		relative;
+	padding:		20px;
+	font-size:		1.3em;
+}
+.article p{
+	margin:	1.5em 3vw;
+}
+.article,
+.article a:visited,
+.article .lowlight:hover{
+	color:		#7a97a1;
+}
+.article a:link{
+	color:		rgba(0, 0, 0, 0.87);	/* not using opacity because the link element might have other things inside, such as an ::after element */
+}
+.article h3{
+	font-family:	"Time New Roman";
+}
+.article h4{
+	font-family:	georgia;
+}
+.article .lowlight{
+	color:	#495a60;
+}

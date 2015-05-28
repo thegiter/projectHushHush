@@ -1,0 +1,5 @@
+﻿@charset "utf-8";
+#bc-cnr{
+	visibility:	hidden; /* vsb hid is not the same as opa 0, opa 0 mean it's transparent, but it's still there and functional, eg, links will still be clickable, but vsb 0 will make it disappear, much the same as dsp non except it still occupies the space. */
+	opacity:	0;
+}

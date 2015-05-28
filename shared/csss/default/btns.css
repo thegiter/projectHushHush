@@ -1,0 +1,23 @@
+@charset "utf-8";
+.generic-btn,
+.refresh,
+.btn-close{
+	text-decoration:	none;
+}
+.generic-btn:hover,
+.refresh:hover,
+.btn-close:hover{
+	text-decoration:	underline;
+}
+.refresh:active,
+.generic-btn:active,
+.btn-close:active{
+	display:		inline-block;
+	transform:		scale(0.9, 0.9);
+}
+.refresh{
+	color:				#007ba8;
+}
+.btn-close{
+	color:		#a80000;
+}

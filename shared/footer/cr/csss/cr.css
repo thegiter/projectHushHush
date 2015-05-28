@@ -1,0 +1,18 @@
+﻿@charset "utf-8";
+.cr-lnk:link{
+	color:	#d1c7af;
+}
+.cr-lnk:visited{
+	color:	#645f52;
+}
+.cr-si::before{/*site icon*/
+	content:				"";
+	display:				inline-block;
+	vertical-align:			middle;
+	margin-right:			.2em;
+	background-size:		contain;
+	background-image:		url(../../../imgs/site_icon_16.png);
+	background-repeat:		no-repeat;
+	width:					1em;
+	height:					1em;
+}

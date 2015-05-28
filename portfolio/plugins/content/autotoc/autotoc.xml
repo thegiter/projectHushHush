@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="content" version="1.6.0" client="site" method="upgrade">
+  <name>plg_content_autotoc</name>
+  <creationDate>January 2010</creationDate>
+  <author>TomProgs</author>
+  <authorEmail>admin@tomprogs.at</authorEmail>
+  <authorUrl>http://www.tomprogs.at</authorUrl>
+  <copyright>
+    Copyright (C) 2009, Straton IT
+    Copyright (C) 2010-2013 Thomas Geymayer. All rights reserved.
+  </copyright>
+  <license>http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL</license>
+  <version>0.17.5-J1.6+</version>
+  <description>PLG_CONTENT_AUTOTOC_DESC</description>
+  <files>
+      <filename plugin="autotoc">autotoc.php</filename>
+      <filename>autotoc.css</filename>
+      <filename>autotoc.js</filename>
+  </files>
+  <languages>
+    <language tag="de-DE">de-DE/de-DE.plg_content_autotoc.ini</language>
+    <language tag="de-DE">de-DE/de-DE.plg_content_autotoc.sys.ini</language>
+    <language tag="en-GB">en-GB/en-GB.plg_content_autotoc.ini</language>
+    <language tag="en-GB">en-GB/en-GB.plg_content_autotoc.sys.ini</language>
+    <language tag="es-ES">es-ES/es-ES.plg_content_autotoc.ini</language>
+    <language tag="es-ES">es-ES/es-ES.plg_content_autotoc.sys.ini</language>
+    <language tag="fr-FR">fr-FR/fr-FR.plg_content_autotoc.ini</language>
+    <language tag="fr-FR">fr-FR/fr-FR.plg_content_autotoc.sys.ini</language>
+  </languages>
+  <config>
+    <fields name="params">
+
+      <fieldset name="basic">
+        <field name="enabled"
+               type="radio" default="1"
+               label="AUTO_TOC_ENABLED_DEFAULT"
+               description="AUTO_TOC_ENABLED_DEFAULT_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+        <field name="addToc"
+               type="radio" default="1"
+               label="AUTO_TOC_DISPLAY_TOC"
+               description="AUTO_TOC_DISPLAY_TOC_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+        <field name="showOnFrontPage"
+               type="radio" default="0"
+               label="AUTO_TOC_SHOW_ON_FRONT_PAGE"
+               description="AUTO_TOC_SHOW_ON_FRONT_PAGE_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+        <field name="addNumbering"
+               type="radio" default="1"
+               label="AUTO_TOC_ADD_HEADING_NUMBERING"
+               description="AUTO_TOC_ADD_HEADING_NUMBERING_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+        <field name="addNumberingToc"
+               type="radio" default="0"
+               label="AUTO_TOC_ADD_NUMBERING_TOC"
+               description="AUTO_TOC_ADD_NUMBERING_TOC_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+        <field name="numSlice"
+               type="list" default="1"
+               label="AUTO_TOC_NUMBERING_START"
+               description="AUTO_TOC_NUMBERING_START_DESC">
+          <option value="0">h1</option>
+          <option value="1">h2</option>
+          <option value="2">h3</option>
+          <option value="3">h4</option>
+        </field>
+        <field name="maxHeadingLevel"
+               type="list" default="6"
+               label="AUTO_TOC_NUMBERING_END"
+               description="AUTO_TOC_NUMBERING_END_DESC">
+          <option value="2">h2</option>
+          <option value="3">h3</option>
+          <option value="4">h4</option>
+          <option value="5">h5</option>
+          <option value="6">h6</option>
+        </field>
+        <field name="floatDir"
+               type="list" default="none"
+               label="AUTO_TOC_FLOAT"
+               description="AUTO_TOC_FLOAT_DESC">
+          <option value="left">FLOAT_LEFT</option>
+          <option value="right">FLOAT_RIGHT</option>
+          <option value="none">FLOAT_NONE</option>
+        </field>
+        <field name="layout"
+               type="radio" default="table"
+               label="AUTO_TOC_LAYOUT"
+               description="AUTO_TOC_LAYOUT_DESC">
+          <option value="table">AUTO_TOC_LAYOUT_LIST</option>
+          <option value="dropdown">AUTO_TOC_LAYOUT_DROPDOWN</option>
+        </field>
+        <field name="hide_button"
+               type="radio" default="1"
+               label="AUTO_TOC_HIDE_BUTTON"
+               description="AUTO_TOC_HIDE_BUTTON_DESC">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+        <field name="hide_default"
+               type="radio" default="0"
+               label="AUTO_TOC_HIDE_DEFAULT"
+               description="AUTO_TOC_HIDE_DEFAULT_DESC">
+            <option value="0">AUTO_TOC_SHOW</option>
+            <option value="1">AUTO_TOC_HIDE</option>
+        </field>
+      </fieldset>
+
+      <fieldset name="advanced">
+        <field name="additional_views"
+         type="text" default=""
+         label="AUTO_TOC_ADDITIONAL_VIEWS"
+         description="AUTO_TOC_ADDITIONAL_VIEWS_DESC">
+        </field>
+        <field name="useDefaultCSS"
+               type="radio" default="1"
+               label="AUTO_TOC_USE_DEFAULT_CSS"
+               description="AUTO_TOC_USE_DEFAULT_CSS_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+        <field name="appendClear"
+               type="radio" default="0"
+               label="AUTO_TOC_APPEND_CLEAR"
+               description="AUTO_TOC_APPEND_CLEAR_DESC">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </field>
+      </fieldset>
+
+    </fields>
+  </config>
+</extension>

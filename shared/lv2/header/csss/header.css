@@ -1,0 +1,14 @@
+﻿@charset "utf-8";
+@import url("../../../csss/logo_bg_1.css");
+@import url("../../../csss/logo.css");
+@import url("../../menu/csss/menu_bg_hid.css");
+@import url("../../../csss/bc_init_hid.css");
+@import url("../../menu/csss/menu.css");
+@import url("../../../csss/bc.css");
+.lv2-ttl-cnr{
+	width:	904px;
+	margin:	0 auto;
+}
+.lv2-ttl{
+	background-repeat:	no-repeat;
+}

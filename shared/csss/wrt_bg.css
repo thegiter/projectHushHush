@@ -1,0 +1,54 @@
+﻿@charset "utf-8";
+.wrt-tl{
+	background-image:	url(../imgs/wrt_tl.jpg);
+	background-repeat:	no-repeat;
+	position:			absolute;
+	top:				0px;
+	left:				0px;
+	width:				20px;
+	height:				20px;
+}
+.wrt-top{
+	background-image:	url(../imgs/wrt_top.jpg);
+	background-repeat:	repeat-x;
+	position:			absolute;
+	top:				0px;
+	left:				20px;
+	right:				20px;
+	height:				20px;
+}
+.wrt-tr{
+	background-image:	url(../imgs/wrt_tr.jpg);
+	background-repeat:	no-repeat;
+	position:			absolute;
+	top:				0px;
+	right:				0px;
+	width:				20px;
+	height:				20px;
+}
+.wrt-lft{
+	background-image:	url(../imgs/wrt_lft.jpg);
+	background-repeat:	repeat-y;
+	position:			absolute;
+	top:				20px;
+	left:				0px;
+	bottom:				0px;
+	width:				10px;
+}
+.wrt-ctr{
+	background-color:	#87856a;
+	position:			absolute;
+	top:				20px;
+	left:				10px;
+	right:				15px;
+	bottom:				0px;
+}
+.wrt-rgt{
+	background-image:	url(../imgs/wrt_rgt.jpg);
+	background-repeat:	repeat-y;
+	position:			absolute;
+	top:				20px;
+	right:				0px;
+	bottom:				0px;
+	width:				15px;
+}

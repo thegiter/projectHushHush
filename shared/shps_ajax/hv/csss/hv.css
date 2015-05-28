@@ -1,0 +1,168 @@
+@charset "utf-8";
+/*hv cnr styles*/
+.shps-ajax-hv-cnr{
+	position:	relative;
+}
+.shps-ajax-hv-cnr > span{
+	cursor:				pointer;
+}
+/*hv icon styles*/
+.shps-ajax-hv-cnr span.icon{
+	position:	relative;
+	perspective:	200vmax;
+	transition:		transform .5s;
+	transform-style:	preserve-3d;
+}
+.shps-ajax-hv-cnr span.icon > div{
+	position:	absolute;
+	top:		25%;
+	left:		25%;
+	right:		25%;
+	bottom:		25%;
+	background-image:	linear-gradient(135deg, rgba(0, 114, 255, .25) 0%, rgba(0, 18, 40, .25) 100%);
+	border:				.1em outset #0073ff;
+	box-shadow:			0 0 .1em .1em rgba(0, 0, 0, .75);
+	transition:	transform .5s;
+}
+/*hv history ctt styles*/
+.shps-ajax-hv-pg{
+	box-shadow:	0 0 .5rem .1rem rgba(0, 0, 0, .75);
+}
+.shps-ajax-hv-pg::before{
+	content:	"";
+	position:	absolute;
+	top:		-4rem;
+	left:		-1rem;
+	right:		-1rem;
+	bottom:		-1rem;
+	z-index:	-1;
+	border-top:		4rem solid hsla(213, 100%, 50%, .1);
+	border-left:	1rem solid hsla(213, 100%, 50%, .1);
+	border-right:	1rem solid hsla(213, 100%, 50%, .1);
+	border-bottom:	1rem solid hsla(213, 100%, 50%, .1);
+	outline:	.4rem outset hsla(213, 100%, 75%, .2);
+}
+.shps-ajax-hv-pg::after{
+	content:	"";
+	position:	absolute;
+	left:		0;
+	right:		0;
+	bottom:		-7%;
+	z-index:	-2;
+	box-shadow:	0 0 4rem 2rem rgba(0, 0, 0, .75);
+	transform:	perspective(200vmax) rotatex(65deg);
+}
+.shps-ajax-hv-ttl{
+	position:	absolute;
+	top:		-4rem;
+	font-size:	3rem;
+	color:		rgba(255, 255, 255, .5);
+}
+/*hv ctt 3d styles*/
+.shps-ajax-hv-pp{/*post processing*/
+	pointer-events:	none;
+	position:	absolute;
+	top:		0;
+	left:		0;
+	right:		0;
+	bottom:		0;
+	transition:	box-shadow .5s;
+}
+.shps-ajax-hv-sdw{
+	box-shadow:	inset 0 -35vh 35vh 0 rgba(0, 0, 0, .75);
+/*mix blend mode is bugged when used with 3d transform*/
+	/*mix-blend-mode:	multiply;*/
+}
+.shps-ajax-hv-lgt{
+	box-shadow:	inset 0 50vh 50vh 0 rgba(255, 255, 255, .25);
+	/*mix-blend-mode:	overlay;*/
+}
+/*hv ctt btn styles*/
+.shps-ajax-hv-btn{
+	position:	absolute;
+	top:		50%;
+	left:		10%;
+	width:		20%;
+	color:			white;
+	font-size:		1.5em;
+	word-wrap:	break-word;
+	font-weight:	bold;
+	background-color:	rgba(135, 133, 106, .75);
+	text-align:	center;
+	transition:	transform 1s;
+	border:		none;
+	padding:	0;
+	cursor:		pointer;
+	overflow:	hidden;
+}
+.shps-ajax-hv-btn > span{
+	display:	inline-block;
+	box-sizing:	border-box;
+	width:		100%;
+	background-color:	rgba(135, 133, 106, .75);
+	padding:	.5em;
+}
+.shps-ajax-hv-btn > .trans{
+	transition:	transform .5s;
+}
+.shps-ajax-hv-btn > .inner-sdw{
+	position:	absolute;
+	top:	0;
+	left:	0;
+	right:	0;
+	bottom:	0;
+	box-shadow:	inset 0 0 .5rem .3rem rgba(0, 0, 0, .75);
+}
+.shps-ajax-hv-btn > .pos-abs{
+	top:	0;
+	left:	0;
+}
+.shps-ajax-hv-btn > .top{
+	transform:	translatey(-100%);
+}
+.shps-ajax-hv-btn > .btm{
+	transform:	translatey(100%);
+}
+/*hv icon closed or open hvr styles*/
+.shps-ajax-hv-cnr span.icon:not(.open),
+.shps-ajax-hv-cnr:hover span.open{
+	transform: rotatex(-15deg) rotatey(-30deg);
+}
+.shps-ajax-hv-cnr span.icon > div:first-child,
+.shps-ajax-hv-cnr:hover span.open > div:first-child{
+	transform:	translatez(-1em);
+}
+.shps-ajax-hv-cnr:hover span.open > div:nth-child(2){
+	transform:	none;
+}
+.shps-ajax-hv-cnr span.icon > div:last-child,
+.shps-ajax-hv-cnr:hover span.open > div:last-child{
+	transform:	translatez(1em);
+}
+/*hv icon open or closed hvr styles*/
+.shps-ajax-hv-cnr span.open,
+.shps-ajax-hv-cnr:hover span.icon:not(.open){
+	transform:	scale(.8);
+}
+.shps-ajax-hv-cnr span.open > div:first-child,
+.shps-ajax-hv-cnr:hover span.icon:not(.open) > div:first-child{
+	transform-origin:	top;
+	transform:			translatey(-60%) rotatex(90deg) translatey(-50%) rotatex(-90deg) rotatex(-40deg);
+}
+.shps-ajax-hv-cnr span.open > div:nth-child(2),
+.shps-ajax-hv-cnr:hover span.icon:not(.open) > div:nth-child(2){
+	transform-origin:	bottom;
+	transform:			translatey(60%) rotatex(90deg) translatey(-50%) rotatex(-90deg) rotatex(40deg);
+}
+.shps-ajax-hv-cnr span.open > div:last-child,
+.shps-ajax-hv-cnr:hover span.icon:not(.open) > div:last-child{
+	transform:	none;
+}
+/*hv history cnr clicked styles*/
+.shps-ajax-history-show{
+	transform:	scale(.5);
+}
+/*hv history ctt btn init styles*/
+.shps-ajax-hv-btn-init{
+	transform:	translatey(-50%) translatex(150%) scale(0);
+}

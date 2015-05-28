@@ -1,0 +1,40 @@
+﻿@charset "utf-8";
+.cnr-tl{
+	position:			absolute;
+	width:				35px;
+	height:				35px;
+	background-image:	url(../imgs/cnr_tl.jpg);
+	background-repeat:	no-repeat;
+	top:				0px;
+	left:				0px;
+}
+.cnr-top{
+	background-image:	url(../imgs/cnr_top.jpg);
+	background-repeat:	repeat-x;
+	height:				35px;
+	position:			absolute;
+	top:				0px;
+	left:				35px;
+	right:				0px;
+}
+.cnr-lft{
+	background-image:	url(../imgs/cnr_lft.jpg);
+	background-repeat:	repeat-y;
+	width:				30px;
+	position:			absolute;
+	top:				35px;
+	left:				0px;
+	bottom:				0px;
+}
+.cnr-rest{
+	position:			absolute;
+	top:				35px;
+	left:				30px;
+	bottom:				0px;
+	right:				0px;
+	background-color:	#87856a;
+}
+.cnr-dft-anim{			/* since the setting applies to the outer container, it is ok to put it in this original css file, otherwise setting should be put in a seperate file and get included by the page that requires the anim */
+	opacity:	0;
+	visibility:	hidden;	/* vsb hid is not the same as opa 0, opa 0 mean it's transparent, but it's still there and functional, eg, links will still be clickable, but vsb 0 will make it disappear, much the same as dsp non except it still occupies the space. */
+}

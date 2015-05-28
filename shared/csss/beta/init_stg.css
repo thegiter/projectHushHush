@@ -1,0 +1,26 @@
+﻿@charset "utf-8";
+#beta{
+	position:			fixed;
+	bottom:				0px;
+	right:				0px;
+}
+#beta-inf-cnr{
+	padding:	10px;
+	position:	fixed;
+	border:		1px solid #ffffff;
+	z-index:	100001;
+}
+#beta-inf-bg{
+	background-color:	#000000;
+	border:				1px outset #20272e;
+	opacity:			0.5;
+	position:			absolute;
+	left:				-5px;
+	top:				-5px;
+	right:				-5px;
+	bottom:				-5px;
+}
+#beta-inf{
+	color:		#d06300;
+	position:	relative;
+}

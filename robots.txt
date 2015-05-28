@@ -1,0 +1,28 @@
+User-agent: *
+Disallow: /debug/
+Disallow: /shared/errs/003.php
+Disallow: /shared/errs/tpl_dft.php
+Disallow: /shared/errs/tpl_ie.php
+Disallow: /shared/errs/006/006.php
+Disallow: /shared/phps/
+Disallow: /udr_cst/
+
+Disallow: portfolio/administrator/
+Disallow: portfolio/bin/
+Disallow: portfolio/cache/
+Disallow: portfolio/cli/
+Disallow: portfolio/components/
+Disallow: portfolio/includes/
+Disallow: portfolio/installation/
+Disallow: portfolio/language/
+Disallow: portfolio/layouts/
+Disallow: portfolio/libraries/
+Disallow: portfolio/logs/
+Disallow: portfolio/media/
+Disallow: portfolio/modules/
+Disallow: portfolio/plugins/
+Disallow: portfolio/templates/
+Disallow: portfolio/tmp/
+
+Allow: /
+

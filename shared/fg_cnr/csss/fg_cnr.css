@@ -1,0 +1,110 @@
+@charset "utf-8";
+.fgcnr-pos{
+	position:	relative;
+}
+.fgcnr-padding{
+	padding:	9px 16px 18px 9px;
+}
+.fgcnr-tl{
+	width:				50%;
+	height:				50%;
+	max-width:			40px;
+	max-height:			40px;
+	position:			absolute;
+	left:				0;
+	top:				0;
+	background-image:	url(../imgs/tl.png);
+	background-repeat:	no-repeat;
+	background-size:	contain;
+}
+.fgcnr-top{
+	height:				50%;
+	max-height:			40px;
+	position:			absolute;
+	left:				40px;
+	right:				40px;
+	top:				0;
+	background-image:	url(../imgs/top.png);
+	background-repeat:	repeat-x;
+	background-size:	contain;
+}
+.fgcnr-tr{
+	width:				50%;
+	height:				50%;
+	max-width:			40px;
+	max-height:			40px;
+	position:			absolute;
+	right:				0;
+	top:				0;
+	background-image:	url(../imgs/tr.png);
+	background-repeat:	no-repeat;
+	background-size:	contain;
+}
+.fgcnr-lft{
+	width:				50%;
+	max-width:			40px;
+	position:			absolute;
+	left:				0;
+	top:				40px;
+	bottom:				40px;
+	background-image:	url(../imgs/lft.png);
+	background-repeat:	repeat-y;
+	background-size:	contain;
+}
+.fgcnr-ctr{
+	position:			absolute;
+	left:				40px;
+	right:				40px;
+	top:				40px;
+	bottom:				40px;
+	background-image:	url(../imgs/ctr.png);
+}
+.fgcnr-rgt{
+	width:				50%;
+	max-width:			40px;
+	position:			absolute;
+	right:				0;
+	top:				40px;
+	bottom:				40px;
+	background-image:	url(../imgs/rgt.png);
+	background-repeat:	repeat-y;
+	background-size:	contain;
+}
+.fgcnr-bl{
+	width:				50%;
+	height:				50%;
+	max-width:			40px;
+	max-height:			40px;
+	position:			absolute;
+	left:				0;
+	bottom:				0;
+	background-image:	url(../imgs/bl.png);
+	background-repeat:	no-repeat;
+	background-size:	contain;
+}
+.fgcnr-btm{
+	height:				50%;
+	max-height:			40px;
+	position:			absolute;
+	left:				40px;
+	right:				40px;
+	bottom:				0;
+	background-image:	url(../imgs/btm.png);
+	background-repeat:	repeat-x;
+	background-size:	contain;
+}
+.fgcnr-br{
+	width:				50%;
+	height:				50%;
+	max-width:			40px;
+	max-height:			40px;
+	position:			absolute;
+	right:				0;
+	bottom:				0;
+	background-image:	url(../imgs/br.png);
+	background-repeat:	no-repeat;
+	background-size:	contain;
+}
+.fgcnr-br ~ *{	/* all subsequent elements are relative so they are not covered by these absolute elements */
+	position:	relative;
+}

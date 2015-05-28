@@ -1,0 +1,11 @@
+@charset "utf-8";
+.ptfl-article-ctt h3{
+	color:	#90ea8e;
+}
+.ptfl-article-ctt h4{
+	color:	#b1eaaf;
+}
+.ptfl-article-ctt mark{
+	color:				#c8eac7;
+	background-color:	transparent;
+}

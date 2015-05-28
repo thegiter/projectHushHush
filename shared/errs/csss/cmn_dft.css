@@ -1,0 +1,70 @@
+﻿@charset "utf-8";
+a.lnk{
+	color: #7dc975;
+}
+a.lnk:visited,
+span.pp{
+	color: #8ed2ea;
+}
+.tpl-dft-bnr{
+	background-image:		url(../imgs/err_bnr.jpg);
+	background-repeat:		repeat-x;
+	background-position:	top center;
+	height:					296px;
+	padding-top:			20px;
+	padding-bottom:			20px;
+	min-width:				100%;						/* needed for maxthon to render properly, otherwise min width is 1024px. Again and again, i can't stress enough: maxthon sucks! microsoft don't even use ie7 anymore, what the fuck is wrong with the maxthon team*/
+	text-align:				center;
+	margin-bottom:			20px;
+}
+.tpl-dft-ico{
+	display:		inline-block;
+	height:			100%;
+	vertical-align:	middle;
+}
+.tpl-dft-ttl{
+	display:		inline;
+	vertical-align:	middle;
+	color:			#b30101;
+	font-size:		70px;
+	margin-left:	20px;
+	text-shadow: 	#000000 -1px -1px 1px;
+}
+.tpl-dft-ctt{
+	width:			800px;
+	margin-left:	auto;
+	margin-right:	auto;
+}
+.tpl-dft-ctt-txt{
+	text-shadow:	#000000 1px 1px 1px;
+	color:			#7a97a1;
+	font-size:		24px;
+}
+.err-dld:link{
+	color:	#65dd8f;
+}
+.err-dld:visited{
+	color:	#2f5f40;
+}
+.err-dld:link,
+.err-dld:visited{
+	text-decoration:	none;
+}
+.err-dld:hover{
+	text-decoration:	underline;
+}
+.tpl-dft-lst{
+	margin-left:	15px;
+}
+.tpl-dft-ie{
+	margin-top:		30px;
+	font-size:		18px;
+	font-family:	arial;
+}
+.tpl-dft-ie span.tpl-dft-ie-ttl{
+	color:			#435a62;
+	font-weight:	bold;
+}
+.tpl-dft-cr{
+	margin:	10px 0px;
+}

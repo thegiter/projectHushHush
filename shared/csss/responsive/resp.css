@@ -1,0 +1,10 @@
+@charset "utf-8";
+.img-resp-cnr{
+	max-width:	100%;
+}
+.larg-scrn-min-4{
+	min-width:	25%;
+}
+.larg-scrn-min-3{
+	min-width:	33.33%;
+}

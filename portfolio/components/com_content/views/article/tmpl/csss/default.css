@@ -1,0 +1,26 @@
+@charset "utf-8";
+@import url("splash.css");
+@import url("main.css");
+@import url("../../../../../../../shared/tools/csss/tools.css");
+@import url("../../../../../../../shared/read_bg/csss/read_bg.css");
+.ptfl-article-para-bg{	/* parallax */
+	position:				absolute;
+	top:					0;
+	left:					0;
+	height:					100vh;
+	width:					100%;
+	transform:				translatez(-200vw) scale(2);
+}
+.ptfl-article-para-bg .post-proc{	/* post proccessing */
+	width:				100%;
+	height:				100%;
+	background-image:	url(../imgs/bg_ptn.png), linear-gradient(-45deg, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
+}
+.ptfl-article-bg-img{
+	width:				100%;
+	height:				100%;
+	background-repeat:	no-repeat;
+}
+.ptfl-article-bd-wpr{
+	transform:	none;
+}

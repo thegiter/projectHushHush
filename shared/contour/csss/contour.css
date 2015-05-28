@@ -1,0 +1,73 @@
+@charset "utf-8";
+.contour-tl{
+	width:				5px;
+	height:				5px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/tl.png);
+	position:			absolute;
+	top:				0px;
+	left:				0px;
+}
+.contour-top{
+	height:				5px;
+	background-repeat:	repeat-x;
+	background-image:	url(../imgs/top.png);
+	position:			absolute;
+	top:				0px;
+	left:				5px;
+	right:				6px;
+}
+.contour-tr{
+	width:				6px;
+	height:				5px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/tr.png);
+	position:			absolute;
+	top:				0px;
+	right:				0px;
+}
+.contour-lft{
+	width:				5px;
+	background-repeat:	repeat-y;
+	background-image:	url(../imgs/lft.png);
+	position:			absolute;
+	top:				5px;
+	left:				0px;
+	bottom:				6px;
+}
+.contour-rgt{
+	width:				6px;
+	background-repeat:	repeat-y;
+	background-image:	url(../imgs/rgt.png);
+	position:			absolute;
+	top:				5px;
+	right:				0px;
+	bottom:				6px;
+}
+.contour-bl{
+	width:				5px;
+	height:				6px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/bl.png);
+	position:			absolute;
+	left:				0px;
+	bottom:				0px;
+}
+.contour-btm{
+	height:				6px;
+	background-repeat:	repeat-x;
+	background-image:	url(../imgs/btm.png);
+	position:			absolute;
+	left:				5px;
+	bottom:				0px;
+	right:				6px;
+}
+.contour-br{
+	width:				6px;
+	height:				6px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/br.png);
+	position:			absolute;
+	bottom:				0px;
+	right:				0px;
+}

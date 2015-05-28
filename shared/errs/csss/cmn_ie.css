@@ -1,0 +1,89 @@
+﻿@charset "utf-8";
+body{
+	background-position:	top left;
+	padding:				20px 20px 0px 20px;
+	position:				absolute;
+	top:					0px;
+	left:					0px;
+}
+ul{
+	list-style-image:	none;
+}
+#cnr{
+	width:		750px;
+	height:		750px;
+	position:	relative;	/* needed for inner elements' positionings */
+	padding:	25px;
+}
+.tpl-ie-ico{
+	background-repeat:	no-repeat;
+	display:			table-cell;
+}
+.tpl-ie-ttl{
+	font-family:	tahoma;
+	color:			#ff1616;
+	font-weight:	normal;
+	margin:			10px 0px 10px 10px;	/*clockwise: top right bottom left*/
+}
+.tpl-ie-hr-cnr{
+	width:		100%;
+	height:		2px;
+	position:	relative; /* inner element drill */
+}
+.tpl-ie-ctt-txt{
+	margin-left:	10px;
+	color:			#909090;
+	font-family:	tahoma;
+	position:		relative;	/*for child positioning*/
+}
+.tpl-ie-wyt-lst{
+	margin-left:	5px;
+}
+.tpl-ie-dld:hover{
+	text-decoration:	none;
+}
+.tpl-ie-dld:visited{
+	color:	grey;
+}
+.tpl-ie-dld:link{
+	color: #b2d412;
+}
+span.blu-lnk,
+.blu-lnk:link,
+.blu-lnk:visited{
+	color:				#43b9ee;
+	text-decoration:	none;
+}
+.blu-lnk:hover{
+	text-decoration:	underline;
+	color:				#074ae5;
+}
+.mor-inf-cnr{
+	position:		relative;
+	margin-left:	5px;
+	width:			100%;
+}
+.mor-inf-btn-cnr{
+	width:			15px;
+	padding-right:	10px;
+}
+.mor-inf-btn{
+	background-image:	url(../imgs/up.png);
+}
+.mor-inf-btn,
+#sh-btn{
+	width:				15px;
+	height:				15px;
+	background-repeat:	no-repeat;
+}
+#sh-btn{
+	background-image:	url(../imgs/down.png);
+}
+.tpl-ie-logo{
+	position:	absolute;
+	top:		20px;
+	left:		488px;
+}
+.tpl-ie-cr{
+	margin-top:	10px;
+}

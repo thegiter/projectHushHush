@@ -1,0 +1,22 @@
+﻿@charset "utf-8";
+h1.logo{
+	margin:	0px;
+}
+h1.logo a{
+	display:	inline-block;
+	width:		12.67354166667cm;
+	max-width:	100%;
+}
+img.logo{
+	background-image:	url(../imgs/logo.png);
+	background-repeat:	no-repeat;
+	background-size:	contain;
+	width:				100%;
+	height:				0;
+	padding-bottom:		16.49269311064718162839248434238%;
+}
+.lgo-stt{
+	color:			#a0a0a0;
+	font-size:		1.5em;
+	font-style:		italic;
+}

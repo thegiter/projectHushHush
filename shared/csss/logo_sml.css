@@ -1,0 +1,7 @@
+﻿@charset "utf-8";
+.logo-sml{
+	background-image:	url(../imgs/logo_sml.png);
+	background-repeat:	no-repeat;
+	width:				290px;
+	height:				53px;
+}

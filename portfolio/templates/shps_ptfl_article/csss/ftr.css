@@ -1,0 +1,40 @@
+@charset "utf-8";
+.ptfl-ftr-cnr{
+	margin:	0 20px;
+}
+.site-info{
+	display:		inline-block;
+	float:			left;
+}
+.site-generator{
+	display:		inline-block;
+	float:			right;
+	font-style:		italic;
+	font-family:	Georgia, 'Bitstream Charte', serif;
+}
+.site-generator > .red,
+.site-generator a:visited,
+.site-generator a:visited .red{
+	color:	#e42626;
+}
+.site-generator > .blue,
+.site-generator a:visited .blue{
+	color:	#0d6dab;
+}
+.site-generator > .orange,
+.site-generator a:visited .orange{
+	color:	#fc8f30;
+}
+.site-generator > .green,
+.site-generator a:visited .green{
+	color:	#5aa426;
+}
+.site-generator a{
+	display:				inline-block;
+	background-image:		url(../imgs/jml_logo.png);
+	background-position:	center left;
+	background-repeat:		no-repeat;
+	min-height:				21px;
+	padding-left:			24px;
+	color:					#000000;
+}

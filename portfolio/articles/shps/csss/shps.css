@@ -1,0 +1,38 @@
+@charset "utf-8";
+@import url("../../../../shared/lv2/menu/csss/menu_bg_hid.css");
+@import url("../../../../shared/lv2/menu/csss/menu.css");
+#ld-img-cnr{
+	width: 	17cm;
+	float: 	right;
+}
+#ld-img{
+	padding-bottom: 	56.25%;
+	background-image: 	url(../imgs/layered_design.jpg);
+	background-size:	contain;
+}
+.menu-cnr{
+	width:	auto;
+	margin:	0;
+	float:	left;
+}
+#ab-img-cnr{
+	width: 		17cm;
+	float: 		right;
+	overflow:	hidden;
+	background:	linear-gradient(135deg, rgba(229,229,229,1) 0%,rgba(255,255,255,1) 100%);
+	transform:	perspective(500px) rotateX(10deg) scale(0.9);
+}
+#ab-img-bg{
+	padding-bottom: 	56.25%;
+	background-image: 	url(../../../images/articles/shps/shps.png);
+	transform:			skew(45deg, -30deg) scale(0.7);
+	background-size:	contain;
+}
+#ab-img-shadow{
+	position:		absolute;
+	top:			0;
+	left:			0;
+	width:			100%;
+	height:			100%;
+	box-shadow:		0px 15px 18px 5px #000 inset;
+}

@@ -1,0 +1,7 @@
+﻿@charset "utf-8";
+#err-002-ico{
+	background-image:		url(../imgs/002_ico.jpg);
+	background-repeat:		no-repeat;
+	background-position:	left bottom;
+	width:					319px;
+}

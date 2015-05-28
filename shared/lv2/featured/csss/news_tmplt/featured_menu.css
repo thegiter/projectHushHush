@@ -1,0 +1,10 @@
+@charset "utf-8";
+.featured-menu-cnr-wpr{
+	position:	absolute;
+	top:		400px;
+	left:		50%;
+}
+.featured-menu-cnr{
+	position:	absolute;
+	left:		315px;
+}

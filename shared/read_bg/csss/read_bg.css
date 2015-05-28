@@ -1,0 +1,30 @@
+@charset "utf-8";
+.read-bg-cnr{
+	position:			relative;
+	background-color:	#87856a;
+}
+.read-bg-cnr .read-lgt{
+	background-image:		linear-gradient(135deg, rgba(255,255,255,0.2) 0%,rgba(255,255,255,0) 30%);
+	background-position:	10px 10px;
+	box-shadow: 			inset 4px 4px 10px 10px rgba(0,0,0,0.75);
+	position:				absolute;
+	z-index:				10;
+	top:					0;
+	left:					0;
+	right:					0;
+	bottom:					0;
+}
+.read-bg-cnr .read-bg{
+	background-image:	url(../imgs/bg_ptn.jpg);
+	box-shadow: 		2px 2px 8px 1px rgba(0,0,0,0.75);
+	position:			absolute;
+	top:				10px;
+	left:				10px;
+	right:				10px;
+	bottom:				10px;
+	z-index:			0;
+}
+.read-bg-cnr .read-cnr{
+	position:		relative;
+	z-index:		20;
+}

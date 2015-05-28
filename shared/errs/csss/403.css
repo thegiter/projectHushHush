@@ -1,0 +1,7 @@
+﻿@charset "utf-8";
+#err-403-ico{
+	background-image:		url(../imgs/403_ico.jpg);
+	background-repeat:		no-repeat;
+	background-position:	left center;
+	width:					292px;
+}

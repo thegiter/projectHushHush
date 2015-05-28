@@ -1,0 +1,46 @@
+@charset "utf-8";
+.ds1515-tr{
+	width:				18px;
+	height:				25px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/tr.png);
+	position:			absolute;
+	top:				0px;
+	right:				-18px;
+}
+.ds1515-rgt{
+	width:				18px;
+	background-repeat:	repeat-y;
+	background-image:	url(../imgs/rgt.png);
+	position:			absolute;
+	top:				25px;
+	right:				-18px;
+	bottom:				2px;
+}
+.ds1515-bl{
+	width:				25px;
+	height:				23px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/bl.png);
+	position:			absolute;
+	left:				0px;
+	bottom:				-23px;
+}
+.ds1515-btm{
+	height:				23px;
+	background-repeat:	repeat-x;
+	background-image:	url(../imgs/btm.png);
+	position:			absolute;
+	left:				25px;
+	bottom:				-23px;
+	right:				7px;
+}
+.ds1515-br{
+	width:				25px;
+	height:				25px;
+	background-repeat:	no-repeat;
+	background-image:	url(../imgs/br.png);
+	position:			absolute;
+	bottom:				-23px;
+	right:				-18px;
+}

@@ -1,0 +1,9 @@
+@charset "utf-8";
+.pb-ctt-cnr{
+	overflow-y: hidden;
+	transition:	height 3s;
+}
+.pb-ctt-wpr{
+	transition:	transform 3s;
+	width:		100%;
+}
