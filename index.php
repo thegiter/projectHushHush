@@ -64,6 +64,9 @@
 				<main id="psd-ctt-cnr" role="main">
 				</main>
 			</section>
+			
+			<aside>
+			</aside>
 		</div>
 		<div id="shps-logo-cnr">
 			<h1 id="shps-logo">

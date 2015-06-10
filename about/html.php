@@ -19,7 +19,7 @@
 			<a id="abt-shps-cnr" href="#!about/#の弑す魂の_ps" class="abt-shps-cnr skewed init dsp-non">
 				<div class="bg-pic">
 				</div>
-				<div class="ctt">
+				<div class="abt-xx-ctt">
 					<div class="abt-pnl-rgt">
 						<p>
 							Find out what is <span class="kaiti" xml:lang="zh">の弑す魂の</span> PS, learn its history, read its policies and terms, study its legendary fundation, and so much more...
@@ -55,7 +55,7 @@
 
 				</h3>
 				
-				<div class="ctt">
+				<div class="abt-xx-ctt">
 					<div class="abt-pnl-rgt">
 						<p>
 							Anything and everything you need to know about the owner of this site - Desmond.
