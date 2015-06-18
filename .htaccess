@@ -369,7 +369,7 @@ ServerSignature Off
 ####
 
 ##general
-
+	
 	#normal resources
 	#presentational files that collaborate, 1 day
 	<FilesMatch "\.(jpg|jpeg|png|gif|bmp|swf|svg|js|css)$">
@@ -394,9 +394,11 @@ ServerSignature Off
 	</FilesMatch>
 
 ##global
-
+	
 	#no transform
 	Header merge Cache-Control "no-transform"
+	
+	FileETag INode MTime Size
 </IfModule>
 
 # ----------------------------------------------------------------------

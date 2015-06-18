@@ -5,9 +5,10 @@
 
 	require_once root.'shared/ajax_chk/ajax_chk.php';
 	
-	if (!defined('da')) {
-		define('da', false);
-	}
+	header('Last-Modified: Wed, 17 Jun 2015 22:13:40 GMT');
+	header('ETag: "shpshpv1"');
+	
+	require_once root.'shared/cache_ctrl/front_end.php';
 	
 	$shpsAjax = new stdClass;
 	

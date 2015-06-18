@@ -2,9 +2,6 @@
 	if (!defined('root')) {
 		define('root', '');
 	}
-	if (!defined('da')) {
-		define('da', false);
-	}
 
 	$dtc_browsers = array('ie', 'gc');
 	require_once root.'shared/dtc/dtc.php';
@@ -67,6 +64,9 @@
 			
 			<aside>
 			</aside>
+			
+			<section><!--notification pane-->
+			</section>
 		</div>
 		<div id="shps-logo-cnr">
 			<h1 id="shps-logo">
