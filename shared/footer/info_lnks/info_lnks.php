@@ -27,6 +27,8 @@
 			]
 		];
 		
+		//disabled is an array containing the names of the disabled links
+		//see above for the name of each link
 		public static function getHtml($dlm = null, $disabled = null) {
 			$html = '<ul class="ftr-info-lnks no-style no-indent">
 				';

@@ -6,6 +6,14 @@
 	$dtc_browsers = array('ie', 'gc');
 	require_once root.'shared/dtc/dtc.php';
 	
+	//as part of the website, the cache validation is not compatible with non supported browsers,
+	//therfore put after browser detection
+	//check if modified
+	require_once root.'shared/cache_ctrl/validate.php';
+	
+	//not using etag, because apache deflate gzip changes it
+	cacheCtrlModule::validate('Sat, 20 Jun 2015 13:20:06 GMT');
+	
 	require root.'shared/phps/dtdec_x.php';
 	
 	echo "\n";
@@ -14,85 +22,57 @@
 ?>
 
 
-		<meta name="description" content="Desmond's personal website. Currently in its beta." />
-		<meta name="keywords" content="弑魂,SHPS,Personal website,Desmond" />
+		<meta name="robots" content="noindex,follow" />
+		<meta name="description" content="Desmond Zhu's personal website. Currently in its beta." />
+		<meta name="keywords" content="弑魂,SHPS,Personal website,Desmond Zhu" />
 		<meta name="robots" content="index,follow" />
 		<meta name="google-site-verification" content="WiIzb9FaspCvU6Lxe-COLQr1_LSfwfWQOpkc5meOHNc" />
-		
-		<!--must be above all local scripts
-		not async because it must be loaded before other js-->
-		<script src="/shared/jss/common.js" type="text/javascript">
+
+		<script src="/jss/installer.js" type="text/javascript" async="async">
 		</script>
 		
-		<link rel="stylesheet" type="text/css" href="/csss/shps.css"/><!-- put first because this stylesheet is most important -->
-		<!-- followed by the javascripts -->
-		<script src="/jss/shps.js" type="text/javascript" async="async"><!--		these jss are order-sensitive -->
-		</script>
+		<link rel="stylesheet" type="text/css" href="/shared/errs/csss/002.css"/>
+		<link rel="stylesheet" type="text/css" href="/shared/errs/csss/cmn_dft.css"/>
+		<link rel="stylesheet" type="text/css" href="/shared/csss/logo.css"/>
+		<link rel="stylesheet" type="text/css" href="/shared/csss/hr.css"/>
+		<link rel="stylesheet" type="text/css" href="/shared/footer/sml/csss/footer.css"/>
 		
-		<link rel="stylesheet" type="text/css" href="/shared/footer/cr/csss/cr.css"/>
-		
-		<link rel="stylesheet" type="text/css" href="/shared/csss/beta/init_stg.css"/>
-		<link rel="stylesheet" type="text/css" href="/shared/csss/beta/beta.css"/>
-		<!-- beta js is put after beta css, because html5 parsing dictates that js must wait for preceding css, so we group relevant css and js together
-			and make sure css precedes the js, this ensures that the css is always downloaded, which contains important stylings -->
-		<script src="/shared/jss/beta.js" type="text/javascript" async="async">			
-		</script>
-		
-		<title>の弑す魂の PS</title>
+		<title>002 Error - の弑す魂の PS</title>
 	</head>
 	
 	<body class="fulbd">
-		<div id="psd-bd-cnr">	<!-- pseudo body container -->
-			<aside id="psd-menu-cnr">
-				<div id="psd-menu-scrl-cnr">
-				</div>
-				<div class="sdw">
-				</div>
-			</aside>
+		<div class="bd-wpr shared-css-bg-basic">								<!-- required for google chrome to show bd bg properly -->
+			<?php
+				require root.'shared/phps/logo.php';
+			?>
 			
-			<section id="psd-vp-cnr" class="psd-vp-cnr"><!--pseudo viewport container-->
-				<div id="psd-bg-cnr">
+			<div class="tpl-dft-bnr">
+				<span id="err-002-ico" class="tpl-dft-ico"></span><h3 class="tpl-dft-ttl tahoma unbold">
+					Javascript Disabled
+				</h3>
+			</div>
+			<div class="tpl-dft-ctt">
+				<div class="tpl-dft-ctt-txt verdana">					<!-- if this div is still not needed when the page structure is settled, it should be removed -->
+					<p>
+						Thank you for trying to browse my site.
+					</p>
+					<p>
+						Unfortunately, this website does not support Javasript-disabled users, and it has been detected that your browser has disabled/blocked Javascript. (Please turn on your browser\'s Javascript and <a href="" title="Reload the page." class="refresh">try again</a>.)
+					</p>
 				</div>
-				<div id="psd-ctt-scrl-cnr" class="psd-ctt-scrl-cnr">
-					<div>
-					</div>
-				</div>
-
-				<main id="psd-ctt-cnr" role="main">
-				</main>
-			</section>
+			</div>
+			<div class="pos-rel">
+				<?php
+					require root.'shared/phps/hr.php';
+				?>
+		
+			</div>
+			<div class="tpl-dft-cr ta-ctr">
+				<?php
+					require root.'shared/footer/sml/footer.php';
+				?>
 			
-			<aside>
-			</aside>
-			
-			<section><!--notification pane-->
-			</section>
+			</div>
 		</div>
-		<div id="shps-logo-cnr">
-			<h1 id="shps-logo">
-				<a><span class="opa-0 shps-logo-letter-init-size shps-logo-entry-trans">
-					<div>
-						S
-					</div>
-				</span><span class="opa-0 shps-logo-letter-init-size shps-logo-entry-trans">
-					<div>
-						H
-					</div>
-				</span><span class="opa-0 shps-logo-letter-init-size shps-logo-entry-trans">
-					<div>
-						P
-					</div>
-				</span><span class="opa-0 shps-logo-letter-init-size shps-logo-entry-trans">
-					<div>
-						S
-					</div>
-				</span></a>
-			</h1>
-		</div>
-
-		<?php
-			require root.'shared/phps/beta.php';
-		?>
-
 	</body>
 </html>

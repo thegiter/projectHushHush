@@ -398,7 +398,9 @@ ServerSignature Off
 	#no transform
 	Header merge Cache-Control "no-transform"
 	
-	FileETag INode MTime Size
+	#FileETag INode MTime Size
+	#deflate fucks up etag, therefore we disable etag, because we still want gzip
+	FileETag None
 </IfModule>
 
 # ----------------------------------------------------------------------
@@ -483,6 +485,7 @@ RewriteCond %{QUERY_STRING} !^ir=true$
 RewriteRule ^udr_cst/$ a/mother/non/fucking/existent.file [L]
 
 # Root (General) ###########################################
+RewriteRule ^manifest.php$ - [L]
 RewriteRule ^(.+/)?$ $1index.php?di=true [L,QSA]
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{QUERY_STRING} di=true

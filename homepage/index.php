@@ -3,10 +3,13 @@
 		define('root', '../');
 	}
 
-	require_once root.'shared/ajax_chk/ajax_chk.php';
+	require_once root.'shared/cache_ctrl/validate.php';
 	
-	header('Last-Modified: Wed, 17 Jun 2015 22:13:40 GMT');
-	header('ETag: "shpshpv1"');
+	//not using etag, because apache deflate gzip changes it
+	//validate also sets the headers for lastmodified and etag
+	cacheCtrlModule::validate('Wed, 17 Jun 2015 22:13:40 GMT');
+	
+	require_once root.'shared/ajax_chk/ajax_chk.php';
 	
 	require_once root.'shared/cache_ctrl/front_end.php';
 	
