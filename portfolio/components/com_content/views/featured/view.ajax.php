@@ -1,6 +1,6 @@
 <?php
 	defined('_JEXEC') or die;
-	$_POST['refpg'] == '#!portfolio/' or die;
+	($_POST['refpg'] == '#!portfolio/') or die;
 	
 	class ContentViewFeatured extends JViewLegacy {
 		protected $item = null;

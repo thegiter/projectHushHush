@@ -18,8 +18,7 @@ JHtml::_('behavior.caption');
 
 	if ($jml_menu->getActive() == $jml_menu->getDefault()) {
 		require root.'portfolio/components/com_content/views/featured/tmpl/shpsdefault.php';
-	}
-	else {
+	} else {
 		require root.'portfolio/components/com_content/views/featured/tmpl/jdefault.php';
 	}
 ?>

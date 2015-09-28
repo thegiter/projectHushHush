@@ -381,6 +381,11 @@ ServerSignature Off
 		Header set Cache-Control "max-age=604800"
 	</FilesMatch>
 
+	#own static, 30 days
+	<FilesMatch "\favicon.ico$">
+		Header set Cache-Control "max-age=2592000"
+	</FilesMatch>
+	
 	#third party static, 1 year
 	<FilesMatch "\.(woff|woff2)$">
 		Header set Cache-Control "max-age=31536000"

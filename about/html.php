@@ -64,7 +64,7 @@
 				</div>
 			</a>
 			<!--need to be manipulated by js, therefore can not use after psudo element-->
-			<div>
+			<div><!--the gloss-->
 			</div>
 		</section>
 	</div>

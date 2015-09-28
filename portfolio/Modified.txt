@@ -1,10 +1,37 @@
 /index.php
 
-if (!defined('root')) {
+	if (!defined('root')) {
 		define('root', '../');
 	}
 
 
+	require_once root.'shared/ajax_chk/ajax_chk.php';
+
+	require_once root.'shared/cache_ctrl/json.php';	
+
+	$doc = JFactory::getDocument();
+	
+	$doc->shpsAjax = new stdClass;
+	$doc->shpsAjax->rscs = [];
+	
+	ob_start();//output buffering of shpsAjax
+
+	$tmp_ob = ob_get_clean();
+	
+	if ($tmp_ob != '') {
+		$r =& $doc->shpsAjax->rscs;
+		
+		$rGrpCnt = count($r);
+		
+		$r[$rGrpCnt] = [];
+		$r1 =& $r[$rGrpCnt];
+		
+		$r1[0] = new stdClass;
+		$r1[0]->type = 'html';
+		$r1[0]->html = $tmp_ob;
+	}
+	
+	echo json_encode($doc->shpsAjax);
 -----------------------
 /administration/index.php
 

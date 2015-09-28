@@ -29,12 +29,9 @@ $task     = $app->input->getCmd('task', '');
 $itemid   = $app->input->getCmd('Itemid', '');
 $sitename = $app->getCfg('sitename');
 
-if($task == "edit" || $layout == "form" )
-{
+if($task == "edit" || $layout == "form" ) {
 	$fullWidth = 1;
-}
-else
-{
+} else {
 	$fullWidth = 0;
 }
 
@@ -83,8 +80,32 @@ else
 	$logo = '<span class="site-title" title="'. $sitename .'">'. $sitename .'</span>';
 }
 
-	$doc->shpsAjax->csss[count($doc->shpsAjax->csss)] = '/portfolio/templates/shps_ptfl/csss/ptfl.css';
-	$doc->shpsAjax->jss[count($doc->shpsAjax->jss)] = '/portfolio/templates/shps_ptfl/jss/shpsptfl_tmpl.js';
+	$r =& $doc->shpsAjax->rscs;
+	
+	$rGrpCnt = count($r);
+	
+//first grp
+	$r[$rGrpCnt] = [];
+	$r1 =& $r[$rGrpCnt];
+	
+	$r1[0] = new stdClass;
+	$r1[0]->type = 'link';
+	$r1[0]->url = '/portfolio/templates/shps_ptfl/csss/ftr.css';
+//sec grp
+	$r[$rGrpCnt + 1] = [];
+	$r2 =& $r[$rGrpCnt + 1];
+	
+	$r2[0] = new stdClass;
+	$r2[0]->type = 'link';
+	$r2[0]->url = '/portfolio/templates/shps_ptfl/csss/ptfl.css';
+//3rd grp
+	$r[$rGrpCnt + 2] = [];
+	$r3 =& $r[$rGrpCnt + 2];
+	
+	$r3[0] = new stdClass;
+	$r3[0]->type = 'script';
+	$r3[0]->url = '/portfolio/templates/shps_ptfl/jss/shpsptfl_tmpl.js';
+	//define $r[][]->async = false; to turn off async loading for the script
 	
 	$ptfl_isHome = false;
 	
@@ -92,8 +113,7 @@ else
 		$this->setTitle($sitename);
 
 		$ptfl_isHome = true;
-	}
-	else {
+	} else {
 		$this->setTitle($this->getTitle().' | '.$sitename);
 	}
 ?>

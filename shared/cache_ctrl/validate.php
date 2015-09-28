@@ -5,7 +5,7 @@
 		public static function validate($lm, $etag = null) {
 			$ifMod = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
 			$ifMat = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : false;
-			
+
 			header('Last-Modified: '.$lm);
 			
 			//set etag-header

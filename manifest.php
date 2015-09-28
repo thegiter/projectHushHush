@@ -15,7 +15,7 @@
 	
 	require_once root.'shared/cache_ctrl/front_end.php';
 	
-	header('Content-Type: application/json; charset=utf-8');
+	require_once root.'shared/cache_ctrl/json.php';
 	
 	$manifest = [];
 	
