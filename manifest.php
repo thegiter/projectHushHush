@@ -7,7 +7,7 @@
 	
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Sat, 22 Jun 2015 02:42:40 GMT');
+	cacheCtrlModule::validate('Mon, 19 Oct 2015 02:42:40 GMT');
 	
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -67,10 +67,6 @@
 	$manifest[3][0] = new stdClass;
 	$manifest[3][0]->type = 'script';
 	$manifest[3][0]->url = '/shared/jss/beta.js';
-	
-	$manifest[3][1] = new stdClass;
-	$manifest[3][1]->type = 'script';
-	$manifest[3][1]->url = '/shared/jss/gaa.js';//because google recommends the script to be last
 
 	echo json_encode($manifest);
 ?>
