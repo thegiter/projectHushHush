@@ -397,6 +397,11 @@ ServerSignature Off
 	<FilesMatch "^gm/discount.jpg$">
 		Header set Cache-Control "max-age=0, private, no-store, no-cache, must-revalidate"
 	</FilesMatch>
+	
+	#gm featured
+	<FilesMatch "^gm/featured.jpg$">
+		Header set Cache-Control "max-age=0, private, no-store, no-cache, must-revalidate"
+	</FilesMatch>
 
 ##global
 	

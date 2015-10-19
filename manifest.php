@@ -67,6 +67,10 @@
 	$manifest[3][0] = new stdClass;
 	$manifest[3][0]->type = 'script';
 	$manifest[3][0]->url = '/shared/jss/beta.js';
+	
+	$manifest[3][1] = new stdClass;
+	$manifest[3][1]->type = 'script';
+	$manifest[3][1]->url = '/shared/jss/gaa.js';//because google recommends the script to be last
 
 	echo json_encode($manifest);
 ?>
