@@ -14,8 +14,9 @@
 		</span>	
 	</h2>
 	
-	<div class="ctt-cnr">
-		<section class="ctt">
+	<!--tab cnr here with tab indicator styled as top of the ctt cnr piece-->
+	<div class="ctt-cnr"><!--ctt cnr will have no top piece-->
+		<section id="abt-pgs-wpr" class="ctt">
 			<a id="abt-shps-cnr" href="#!about/#の弑す魂の_ps" class="abt-shps-cnr skewed init dsp-non">
 				<div class="bg-pic">
 				</div>
@@ -45,8 +46,7 @@
 				?>
 
 				</h3>
-			</a>
-			<a id="abt-sh-cnr" href="#!about/#の弑す魂の" class="abt-sh-cnr skewed init dsp-non">
+			</a><a id="abt-sh-cnr" href="#!about/#の弑す魂の" class="abt-sh-cnr skewed init dsp-non">
 				<div class="bg-pic">
 				</div>
 				<h3><?php
@@ -63,10 +63,10 @@
 					</div>
 				</div>
 			</a>
-			<!--need to be manipulated by js, therefore can not use after psudo element-->
-			<div><!--the gloss-->
-			</div>
 		</section>
+		
+		<div><!--the gloss-->
+		</div>
 	</div>
 	<div class="bg-overlay">
 	</div>

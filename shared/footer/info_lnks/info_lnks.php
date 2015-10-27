@@ -14,12 +14,12 @@
 			],
 			'terms' => [
 				'text' => 'Terms',
-				'url' => '#!about/の弑す魂の_ps/#terms of use',
+				'url' => '#!about/#の弑す魂の_ps/#terms of use/',
 				'title' => 'Go to the terms of use page.'
 			],
 			'policies' => [
 				'text' => 'Policies',
-				'url' => '#!about/の弑す魂の_ps/#privacy policy',
+				'url' => '#!about/#の弑す魂の_ps/#privacy policy/',
 				'title' => 'Go to the privacy policy page.'
 			],
 			'help' => [

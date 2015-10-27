@@ -17,8 +17,7 @@ function menuBtnModule(elm) {//elm is the btn element
 			
 			//set to true
 			elm.dataset.isOpenBtn = 'true';
-		}
-		else{
+		} else {
 			mdf_cls(elm, 'add', 'menu-close-btn');
 			mdf_cls(elm, 'remove', 'menu-open-btn');
 			
