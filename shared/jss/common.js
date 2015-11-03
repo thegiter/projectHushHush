@@ -418,7 +418,7 @@ var shpsCmm = {};
 	//the responseType can be optionally set, by default it would be string
 	//	returns xhr when successful, does not currently implement a failure detection
 	//a failure detection would likely to include a timeout
-	shpsCmm.createAjax = function(method, url, param, rspType, rqsHdrs, ajaxHldr) {
+	shpsCmm.createAjax = function(method, url, param, rspType, rqsHdrs, ajaxHldr, disableHdrCt) {
 		return new Promise(function(fullfill, reject) {
 			var ajax = new XMLHttpRequest();
 			
@@ -431,7 +431,9 @@ var shpsCmm = {};
 			//further more, there is no point of using promise if not async
 			ajax.open(method, url, true);
 			//Send the proper header information along with the request
-			ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			if (!disableHdrCt) {
+				ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			}
 			
 			if (rqsHdrs) {
 				rqsHdrs.forEach(function(hdrObj) {
@@ -612,7 +614,7 @@ var shpsCmm = {};
 	
 	//optimized scrl end lsnr uses the optimize scrl lisener but only fires when the end of scrolling is detected
 	//for user scrls, the end is only triggered when the user releases their scroll command, i.e mouse or finger
-	//for script scrolls, when the scroll is paused or stopped for longger than the delay, the lisener fires
+	//for script scrolls, when the scroll is paused or stopped for longer than the delay, the lisener fires
 	//you can use set scriptScrl to true on the scroll elm to bypass the listener
 	//so that the listener does not fire for script scrolls
 	//the last scroll evt is then passed to the handler
@@ -1086,6 +1088,20 @@ var shpsCmm = {};
 			}
 		}
 	};
+	
+	//the horizontal mousewheel module captures mousewheel scrolling and translates it to horizontal scroll
+	//all other methods of scrolling already handles horizontal scrolling pretty well
+	//only the mousewheel is the trouble and need to be dealt with
+	//this means, no vertical scroll will be allowed when this module is on
+	//to enable a child element vertical scroll, register the child element with module
+	//if you register an element that is not a child/decendent element of the hor scroll element
+	//the module will not function properly
+	var hMw = shpsCmm.horMousewheel = {};
+	
+	//register wheel flag var correct variable with the window
+	window.addEventListener('wheel', function(evt) {
+		
+	});
 })();
 
 var wdwLoaded = false;

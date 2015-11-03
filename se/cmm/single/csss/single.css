@@ -1,0 +1,45 @@
+@charset "utf-8";
+.ipt-lbl{
+	color: orange;
+}
+input[type="text"],
+input[type="number"]{
+	box-shadow:	inset 0 0 1px 0 rgba(0, 0, 0, .7);
+}
+h2{
+	background-color:	grey;
+}
+h3{
+	color:	red;
+	opacity:	.5;
+}
+h4{
+	color: orange;
+	opacity:	.5;
+}
+h3, h4{
+	margin: 0;
+}
+.aomg-cnr,
+#aomg-cnr{
+	color: red;
+}
+.aomg-cnr[data-positive="1"],
+#aomg-cnr[data-positive="1"]{
+	background-color: lime;
+	color: green;
+}
+.pc[data-negative="1"],
+#pc-cnr[data-negative="1"]{
+	color: red;
+}
+.cpivr-cnr[data-indicator="buy"],
+#cpivr-cnr[data-indicator="buy"]{
+	background-color: lime;
+	color: green;
+}
+.cpcvr-cnr[data-indicator="sell"],
+#cpivr-cnr[data-indicator="sell"]{
+	background-color: pink;
+	color: red;
+}

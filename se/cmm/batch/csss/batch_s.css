@@ -1,0 +1,52 @@
+@charset "utf-8";
+body{
+	white-space:	nowrap;
+	position:	absolute;
+}
+body > :not(.thead){
+	white-space: initial;
+}
+#msg-cnr{
+	background-color:	rgba(255, 255, 255, .8);
+	position:	sticky;
+	top:		0;
+	left:		0;
+	width:		90vw;
+	z-index:	1;
+}
+#msg-cnr > span{
+	margin:	.5em;
+}
+.thead{
+	position:	sticky;
+	top:		0;
+	white-space:	nowrap;
+	background-color:	rgba(255, 255, 255, .8);
+}
+.thead > td,
+.tkr-col > tr > td,
+.tbody > tr > td{
+	display:	inline-block;
+	width:	7em;
+	white-space:	initial;
+	word-wrap:	break-word;
+}
+.tkr-col,
+.tbody{
+	display:		inline-block;
+	vertical-align:	top;
+}
+.tkr-col{
+	position:	sticky;
+	left:		0;
+	background-color:	rgba(255, 255, 255, .7);
+}
+.tkr-col > tr,
+.tbody > tr{
+	display:	block;
+	white-space: nowrap;
+}
+.tkr-col > tr,
+.tbody > tr{
+	height:	4em;
+}

@@ -1,0 +1,1 @@
+seSingle.init(.012, '/se/siphon/def/ajax/def.php');

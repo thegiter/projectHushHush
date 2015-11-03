@@ -437,9 +437,6 @@ ErrorDocument 403 shared/phps/get/err_403.php?ir=true
 # inner directories should override outer ones, hence on top
 # Mod_Rewrite urls are not case sensitive
 
-### Basic Bg ################################################
-RewriteRule ^shared/bgs/basic/html.php$ - [L]
-
 ### Contour #################################################
 RewriteRule ^shared/contour/contour.php$ - [L]
 
@@ -487,9 +484,6 @@ RewriteRule ^about/(の弑す魂の(_(ps))?/)$ about/xx_tpl.php?requri=$1&xx=sh$
 RewriteCond %{QUERY_STRING} requri=の弑す魂の(_ps)?/
 RewriteRule ^about/xx_tpl\.php$ - [L]
 
-### Homepage ###############################################
-RewriteRule ^homepage/html.php$ - [L]
-
 ## Under Construction #######################################
 RewriteCond %{QUERY_STRING} !^ir=true$
 RewriteRule ^udr_cst/$ a/mother/non/fucking/existent.file [L]
@@ -504,8 +498,8 @@ RewriteRule ^(.+/)?index.php$ - [L]
 #RewriteRule . - [R=404,L]
 #request_uri begins with a prepended slash, unlike the pattern uri portion of rewriterule. Additionally, if an external redirect is enforced, ie. uisng the [R] flag, substitution uri portion of rewriterule must be relative to the root and has a slash prepended
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/debug/
-RewriteCond %{REQUEST_FILENAME} !.(css|jpg|png|gif|js|html|ico|woff2|woff)$
+RewriteCond %{REQUEST_URI} !^/(debug|se)/
+RewriteCond %{REQUEST_FILENAME} !.(css|jpg|png|gif|js|xhtml|html|ico|woff2|woff)$
 RewriteCond %{REQUEST_URI} !^/robots\.txt$
 RewriteRule . udr_cst/?ir=true [L]
 #mod_rewrite always takes precedence over directory index, so there is no point putting directory index on top

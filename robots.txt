@@ -1,5 +1,7 @@
 User-agent: *
 Disallow: /debug/
+Disallow: /gm/
+Disallow: /se/
 Disallow: /shared/errs/003.php
 Disallow: /shared/errs/tpl_dft.php
 Disallow: /shared/errs/tpl_ie.php
