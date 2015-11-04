@@ -3,7 +3,7 @@
 		define('root', '../../../');
 	}
 	
-	$ctt = file_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
+	$ctt = file_get_contents('http://www.gurufocus.com/term/mktcap/SHSE:600000/Market%2BCap/');
 	echo $ctt;					
 	preg_match('/data_value"\>CN¥(.+) Mil/', $ctt, $matches);
 	echo json_encode($matches);	
