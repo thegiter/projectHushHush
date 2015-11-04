@@ -66,7 +66,9 @@
 					construct_tkrs_msg($buys);
 				}
 				
-				mail('297154048@outlook.com', 'SHPS SE Update', $msg);
+				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za');
+				
+				mysql_query('TRUNCATE table advice_updates');
 			}
 		}
 	}

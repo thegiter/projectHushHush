@@ -17,7 +17,7 @@
 		<button disabled="disabled" id="ss-btn">Start Siphon</button>
 		
 		<p id="msg-cnr">
-			<span></span><span></span><span></span><span></span><span></span><!--for threads-->
+			<span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><!--for threads-->
 		</p>
 		
 		<div class="thead">

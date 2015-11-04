@@ -3,21 +3,30 @@ shpsCmm.domReady().then(function() {
 	
 	var maxRetrys = 5;
 	
-	var numThreads = 5;
-	var threadRows = [];
-	
-	function siphonThread(threadRowsObj, threadNum) {
-		var cntr = threadRowsObj.s - 2;
+	var initNumThreads = 5;
+	var additonalNumThreads = 15;
 
+	var threadCnt = -1;
+	
+	var tkrRows = [];
+	
+	function siphonThread() {
+		threadCnt++;
+		
+		var threadNum = threadCnt;
+		
 		var retrys = 0;
+		var tkrRow;
 		
 		function getTicker() {
 			//first child of row is the cell with the ticker
-			return /\s*(\d+)\s*/.exec(scb.tkrRows[cntr].children[0].textContent)[1];
+			return /\s*(\d+)\s*/.exec(tkrRow.children[0].textContent)[1];
 		};
 		
 		function siphon(tkr) {
-			shpsCmm.createAjax('post', '/se/siphon/def/db/batch/siphon.php', 'se='+scb.se+'&tkr='+tkr, 'json').then(function(xhr) {
+			var se = (tkr.charAt(0) == '6') ? 'SHSE' : 'SZSE';
+			
+			shpsCmm.createAjax('post', '/se/siphon/def/db/batch/siphon.php', 'se='+se+'&tkr='+tkr, 'json').then(function(xhr) {
 				//determin if success, set retry cntr to 0
 				//if success, update the table row, else retry
 				if (xhr.response) {//xhr.response will be null if failed
@@ -32,7 +41,16 @@ shpsCmm.domReady().then(function() {
 						//pass data to be styled
 						scb.style(td, defName, defValue);
 						
-						scb.body.children[cntr].appendChild(td);
+						var rowIdx;
+						
+						//get the row index
+						forEachNodeItem(scb.tkrRows, function(row, idx) {
+							if (row == tkrRow) {
+								rowIdx = idx;
+							}
+						});
+						
+						scb.body.children[rowIdx].appendChild(td);
 					}
 					
 					//siphon next
@@ -61,15 +79,22 @@ shpsCmm.domReady().then(function() {
 		}
 		
 		function siphonNext() {
-			cntr++;
-			
-			if (cntr >= threadRowsObj.e) {
-				scb.tMsgCnrs[threadNum].textContent = 'Thread '+threadNum+' last stock siphoned, siphon complete!';
+			//if no more rows, terminate
+			if (tkrRows.length <= 0) {
+				scb.tMsgCnrs[threadNum].textContent = 'Last stock siphoned, siphon complete!';
 				
 				return false;
 			}
 			
-			if (!scb.tkrRows[cntr].children[1].textContent) {
+			//pick a random row
+			var randIdx = getRandomInt(0, tkrRows.length);
+			tkrRow = tkrRows[randIdx];
+			
+			//remove the row from the arr so other threads won't bother with it
+			tkrRows.splice(randIdx, 1);
+			
+			//if does not have a name, the tkr is invalid, skip
+			if (!/[\S]+/.exec(tkrRow.children[1].textContent)) {
 				siphonNext();
 			} else {
 				siphon(getTicker());
@@ -80,10 +105,13 @@ shpsCmm.domReady().then(function() {
 		
 		siphonNext();
 	}
-
+	
+	//min interval between threads is 5 min
+	var minInt = 300;
+	
 	function createDelayedThread(threadIdx) {
 		//choose a random delay
-		var delay = getRandomInt(900, 3600);
+		var delay = getRandomInt(minInt * threadIdx, 2700);
 		
 		var msgObj = scb.tMsgCnrs[threadIdx];
 		
@@ -92,56 +120,36 @@ shpsCmm.domReady().then(function() {
 			msgObj.textContent = 'starting in '+(--delay)+' secs.';
 		}, 1000);
 		
-		var trObj = threadRows[threadIdx];
-		
 		setTimeout(function() {
 			clearInterval(intId);
 			
-			new siphonThread(trObj, threadIdx);
+			new siphonThread();
 		}, delay * 1000);
-	}
-	
-	function startSiphoning() {
-		//create threads
-		//assign rows to each thread
-		var numRowsPerThread = Math.floor(scb.maxRows / numThreads);
-		
-		for (var c = 1; c <= numThreads; c++) {
-			threadRows.push({
-				s: (c - 1) * numRowsPerThread + 1,
-				e: c * numRowsPerThread
-			});
-			
-			if (c == 1) {
-				var more;
-				
-				if ((more = scb.maxRows - numThreads * numRowsPerThread) > 0) {
-					threadRows[c - 1].e += more;
-				}
-			}
-		}
-		
-		//choose a random thread to start and then
-		//for each of the rest threads, wait random time and start
-		//to avoid suspision
-		var randThreadIdx = getRandomInt(0, 5);
-		
-		new siphonThread(threadRows[randThreadIdx], randThreadIdx);
-		
-		for (var i = 0; i < threadRows.length; i++) {
-			if (i !== randThreadIdx) {
-				createDelayedThread(i);
-			}
-		}
 	}
 	
 	//start siphoning one by one
 	//first we will read the table rows, and keep an counter
 	//we will read its ticker, and pass it to the server
 	scb.setBtnHdlr(function(evt) {
-		cntr = -1;
-		retrys = 0;
+		//set a tmp copy of the tkr rows
+		forEachNodeItem(scb.tkrRows, function(row) {
+			tkrRows.push(row);
+		});
 		
-		startSiphoning();	
+		//start one thread, then set time out for additional threads over 45 min
+		new siphonThread();
+		
+		//for each of the rest threads, wait random time and start
+		//to avoid suspision
+		for (var i = 1; i < initNumThreads; i++) {
+			createDelayedThread(i);
+		}
+		
+		//then wait for 1 hour and start additional threads
+		setTimeout(function() {
+			for (var c = 1; c <= 15; c++) {
+				new siphonThread();
+			}
+		}, 60 * 60 * 1000);
 	});
 });

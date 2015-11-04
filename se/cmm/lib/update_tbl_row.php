@@ -20,7 +20,7 @@
 					'.$def->lypcr.', '.$def->lyom.', '.$def->slyom.', '.$def->tlyom.', '.$def->aomg.', '.$def->apcr.', '.$def->cpii.', '.$def->wacodr.',
 					'.$def->interest.', '.$def->fi.', '.$def->lyroe.', '.$def->slyroe.', '.$def->tlyroe.', '.$def->aroeg.', '.$def->afi.', '.$def->fe.',
 					'.$def->lper.', '.$def->aper.', '.$def->lpbr.', '.$def->apbr.', '.$def->gtlp.', '.$def->lpgc.', '.$def->gtap.', '.$def->apgc.',
-					'.$def->pc.', '.$def->anios.', '.$def->fp.', '.$def->fptm.', '.$def->prcv.', '.$def->iv.', '.$def->cpivr.', '.$def->cpcv.',
+					'.$def->pc.', '.$def->anios.', '.$def->fp.', '.$def->fptm.', '.$def->prcv.', '.$def->iv.', '.$def->cpivr.', '.$def->cpcvr.',
 					'.$def->pow.', "'.$def->advice.'")
 				ON DUPLICATE KEY UPDATE mc=VALUES(mc), bps=VALUES(bps), so=VALUES(so), ce=VALUES(ce), der=VALUES(der), debt=VALUES(debt), cap=VALUES(cap),
 				lyni=VALUES(lyni), lyie=VALUES(lyie), lypii=VALUES(lypii), lyltd=VALUES(lyltd), lystd=VALUES(lystd), lyd=VALUES(lyd), lye=VALUES(lye),

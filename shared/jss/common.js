@@ -1096,12 +1096,28 @@ var shpsCmm = {};
 	//to enable a child element vertical scroll, register the child element with module
 	//if you register an element that is not a child/decendent element of the hor scroll element
 	//the module will not function properly
-	var hMw = shpsCmm.horMousewheel = {};
+//	var hMw = shpsCmm.horMousewheel = {};
 	
 	//register wheel flag var correct variable with the window
-	window.addEventListener('wheel', function(evt) {
+//	window.addEventListener('wheel', function(evt) {
 		
+//	});
+	
+	var eM = shpsCmm.evtMgr = {};
+	
+	eM.clickEvt = new MouseEvent('click', {
+		'bubbles': false,
+		'cancelable': true
 	});
+	
+	eM.triggerOn = function(elm, evt) {
+		switch (evt) {
+			case 'click':
+				elm.dispatchEvent(this.clickEvt);
+			default:
+				return false;
+		}
+	};
 })();
 
 var wdwLoaded = false;
