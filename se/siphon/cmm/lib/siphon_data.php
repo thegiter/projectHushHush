@@ -1,9 +1,22 @@
 ﻿<?php
 	defined('root') or die;
 	
+	function curl_get_contents($url) {
+		if (!function_exists('curl_init')){ 
+			die('CURL is not installed!');
+		}
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$output = curl_exec($ch);
+		curl_close($ch);
+		return $output;
+	}
+	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
-		$ctt = file_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
-						
+		$ctt = curl_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
+
 		preg_match('/data_value"\>CN¥(.+) Mil/', $ctt, $matches);
 		
 		$def = new stdClass;
