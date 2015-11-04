@@ -69,6 +69,10 @@
 		$def->slyom = str_replace(',', '', $matches[5]);
 		$def->tlyom = str_replace(',', '', $matches[2]);
 		
+		//in case om was 0
+		$def->slyom = ($def->slyom == 0) ? 1 : $def->slyom;
+		$def->tlyom = ($def->tlyom == 0) ? 1 : $def->tlyom;
+		
 		$def->aomg = (($def->lyom - $def->slyom) / abs($def->slyom) + ($def->slyom - $def->tlyom) / abs($def->tlyom)) / 2;
 
 		$def->apcr = $def->lypcr * (1 + $def->aomg);
