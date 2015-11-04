@@ -75,6 +75,7 @@
 					prcv DECIMAL(33, 30),
 					iv DECIMAL(33, 30),
 					cpivr DECIMAL(32, 30),
+					cpcvr DECIMAL(32, 30),
 					pow DECIMAL(32, 30),
 					advice VARCHAR(10),
 					PRIMARY KEY (tkr)
