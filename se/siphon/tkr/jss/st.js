@@ -41,9 +41,11 @@
 
 			var matches = /\s*(\d+)\s*/.exec(cells[0].textContent);
 			
-			if (matches) {
+			var name = cells[6].textContent;
+			
+			if (matches && /[\S]+/.exec(name)) {//if found digits and name is not empty
 				ticker.ticker = matches[1];
-				ticker.name = cells[6].textContent;
+				ticker.name = name;
 				
 				tkrsArr.push(ticker);
 			}
