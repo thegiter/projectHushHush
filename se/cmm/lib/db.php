@@ -1,13 +1,13 @@
 <?php
 	defined('root') or die;
 	
-	define('DB_NAME', 'shps_se');
+	define('DB_NAME', 'shpscoza_se');
 
 	/** MySQL database username */
-	define('DB_USER', 'shps_se');
+	define('DB_USER', 'shpscoza_se');
 
 	/** MySQL database password */
-	define('DB_PASSWORD', 'shpssepw1');
+	define('DB_PASSWORD', 'shpscozasepw1');
 
 	/** MySQL hostname */
 	define('DB_HOST', 'localhost');
