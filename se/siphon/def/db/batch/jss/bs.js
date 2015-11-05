@@ -69,7 +69,7 @@ shpsCmm.domReady().then(function() {
 					oldAdvice = varsObj.oldAdvice;
 					
 					return js_siphoned(tkr, varsObj.car, varsObj.cc, varsObj.ir);
-				})then(function(def) {
+				}).then(function(def) {
 					//upload to db
 					return shpsCmm.createAjax('post', '/se/cmm/update_db_def.php', 'se='+se+'&tkr='+tkr+'&def='+JSON.stringify(def)+'&old_advice='+oldAdvice, 'json');
 				}).then(function(xhr) {
