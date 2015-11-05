@@ -218,7 +218,7 @@
 		if ($def->iv == 0) {
 			$def->cpivr = 1;
 		} else {
-			$def->cpivr = ($cp - $def->iv) / $def->iv;
+			$def->cpivr = ($cp - $def->iv) / abs($def->iv);
 		}
 		
 		//cpcv ratio on the other hand is a non greedy ratio to sell at a lower price
@@ -227,7 +227,7 @@
 		if ($def->prcv == 0) {
 			$def->cpcvr = 1;
 		} else {
-			$def->cpcvr = ($cp - $def->prcv) / $def->prcv;
+			$def->cpcvr = ($cp - $def->prcv) / abs($def->prcv);
 		}
 		
 		$def->pow = (22.5 - $def->gtap / 2) / 22.5;

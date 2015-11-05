@@ -10,7 +10,7 @@ shpsCmm.domReady().then(function() {
 	function submitChange(evt) {
 		evt.preventDefault();
 		
-		shpsCmm.createAjax('post', 'update_def.php', new FormData(this));
+		shpsCmm.createAjax('post', 'update_def.php', new FormData(this), undefined, undefined, undefined, true);
 	}
 	
 	Promise.all([

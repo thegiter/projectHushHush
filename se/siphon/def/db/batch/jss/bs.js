@@ -2,15 +2,16 @@ shpsCmm.domReady().then(function() {
 	var scb = seCmmBatch;
 	
 	var maxRetrys = 5;
-	
+
+	var numJsThreads = 5;
 	var initNumThreads = 5;
-	var additonalNumThreads = 15;
+	var additionalNumThreads = 15;
 
 	var threadCnt = -1;
 	
 	var tkrRows = [];
 	
-	function siphonThread() {
+	function siphonThread(js) {
 		threadCnt++;
 		
 		var threadNum = threadCnt;
@@ -21,10 +22,61 @@ shpsCmm.domReady().then(function() {
 		function getTicker() {
 			//first child of row is the cell with the ticker
 			return /\s*(\d+)\s*/.exec(tkrRow.children[0].textContent)[1];
-		};
+		}
+		
+		function siphonEnd(def) {
+			for (var i = 2; i < scb.hdrCells.length; i++) {
+				var td = document.createElement('td');
+				
+				var defName = scb.defIdxs[i];
+				var defValue = def[defName];
+				
+				//pass data to be styled
+				scb.style(td, defName, defValue);
+				
+				var rowIdx;
+				
+				//get the row index
+				forEachNodeItem(scb.tkrRows, function(row, idx) {
+					if (row == tkrRow) {
+						rowIdx = idx;
+					}
+				});
+				
+				scb.body.children[rowIdx].appendChild(td);
+			}
+			
+			//siphon next
+			//to avoid suspision, we will wait for 5 secs
+			scb.tMsgCnrs[threadNum].textContent = 'waiting...';
+			
+			setTimeout(function() {
+				scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
+				
+				siphonNext();
+			}, getRandomInt(5000, 10000));
+		}
 		
 		function siphon(tkr) {
 			var se = (tkr.charAt(0) == '6') ? 'SHSE' : 'SZSE';
+			
+			if (js) {
+				var oldAdvice;
+				
+				//get db car cc ir
+				//if db, set to db values
+				shpsCmm.createAjax('post', '/se/cmm/get_db_def_vars.php', 'se='+se+'&tkr='+tkr, 'json').then(function(varsObj) {
+					oldAdvice = varsObj.oldAdvice;
+					
+					return js_siphoned(tkr, varsObj.car, varsObj.cc, varsObj.ir);
+				})then(function(def) {
+					//upload to db
+					return shpsCmm.createAjax('post', '/se/cmm/update_db_def.php', 'se='+se+'&tkr='+tkr+'&def='+JSON.stringify(def)+'&old_advice='+oldAdvice, 'json');
+				}).then(function(xhr) {
+					//siphon end operations
+					siphonEnd(xhr.response);
+				});
+			}
 			
 			shpsCmm.createAjax('post', '/se/siphon/def/db/batch/siphon.php', 'se='+se+'&tkr='+tkr, 'json').then(function(xhr) {
 				//determin if success, set retry cntr to 0
@@ -32,36 +84,7 @@ shpsCmm.domReady().then(function() {
 				if (xhr.response) {//xhr.response will be null if failed
 					retrys = 0;
 					
-					for (var i = 2; i < scb.hdrCells.length; i++) {
-						var td = document.createElement('td');
-						
-						var defName = scb.defIdxs[i];
-						var defValue = xhr.response[defName];
-						
-						//pass data to be styled
-						scb.style(td, defName, defValue);
-						
-						var rowIdx;
-						
-						//get the row index
-						forEachNodeItem(scb.tkrRows, function(row, idx) {
-							if (row == tkrRow) {
-								rowIdx = idx;
-							}
-						});
-						
-						scb.body.children[rowIdx].appendChild(td);
-					}
-					
-					//siphon next
-					//to aoid suspision, we will wait for 5 secs
-					scb.tMsgCnrs[threadNum].textContent = 'waiting...';
-					
-					setTimeout(function() {
-						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
-						
-						siphonNext();
-					}, getRandomInt(5000, 10000));
+					siphonEnd(xhr.response);
 				} else {
 					if (retrys < maxRetrys) {
 						scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retrying...';
@@ -109,10 +132,7 @@ shpsCmm.domReady().then(function() {
 	//min interval between threads is 5 min
 	var minInt = 300;
 	
-	function createDelayedThread(threadIdx) {
-		//choose a random delay
-		var delay = getRandomInt(minInt * threadIdx, 2700);
-		
+	function createDelayedThread(threadIdx, delay, js) {
 		var msgObj = scb.tMsgCnrs[threadIdx];
 		
 		//display delay
@@ -123,7 +143,7 @@ shpsCmm.domReady().then(function() {
 		setTimeout(function() {
 			clearInterval(intId);
 			
-			new siphonThread();
+			new siphonThread(js);
 		}, delay * 1000);
 	}
 	
@@ -142,14 +162,30 @@ shpsCmm.domReady().then(function() {
 		//for each of the rest threads, wait random time and start
 		//to avoid suspision
 		for (var i = 1; i < initNumThreads; i++) {
-			createDelayedThread(i);
+			//choose a random delay
+			var delay = getRandomInt(minInt * i, 2700);
+			
+			createDelayedThread(i, delay);
 		}
 		
 		//then wait for 1 hour and start additional threads
 		setTimeout(function() {
-			for (var c = 1; c <= 15; c++) {
+			for (var c = 1; c <= additionalNumThreads; c++) {
 				new siphonThread();
 			}
 		}, 60 * 60 * 1000);
+		
+		//after a short random delay, start first js thread, then gradually increase threads over 1 hour
+		//choose a random delay
+		var firstDelay = getRandomInt(minInt, 600);
+
+		createDelayedThread(initNumThreads, firstDelay, true);
+		
+		for (var i = 1; i < numJsThreads; i++) {
+			//choose a random delay
+			var delay = getRandomInt(firstDelay + minInt * i, 3600);
+			
+			createDelayedThread(i + initNumThreads, delay, true);
+		}
 	});
 });
