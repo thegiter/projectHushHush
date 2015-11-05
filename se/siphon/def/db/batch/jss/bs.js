@@ -190,10 +190,14 @@ shpsCmm.domReady().then(function() {
 		//after a short random delay, start first js thread, then gradually increase threads over 1 hour
 		//choose a random delay
 		var firstDelay = getRandomInt(minInt, 600);
-
-		createDelayedThread(initNumThreads, firstDelay, true);
 		
-		for (var i = 1; i < numJsThreads; i++) {
+		for (var i = 0; i < numJsThreads; i++) {
+			if (i == 0) {
+				createDelayedThread(initNumThreads, firstDelay, true);
+				
+				continue;
+			}
+			
 			//choose a random delay
 			var delay = getRandomInt(firstDelay + minInt * i, 3600);
 			
