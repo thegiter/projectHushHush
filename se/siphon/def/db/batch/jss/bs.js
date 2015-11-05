@@ -18,7 +18,7 @@ shpsCmm.domReady().then(function() {
 		
 		var threadNum = threadCnt;
 		
-		scb.tMsgCnrs.appendChild(document.createElement('span'));
+		scb.msgCnr.appendChild(document.createElement('span'));
 		scb.tMsgCnrs = scb.msgCnr.children;
 		
 		var retrys = 0;
