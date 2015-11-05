@@ -3,7 +3,7 @@
 		define('root', '../../');
 	}
 	
-	$se = $_POST['se'];
+	$se = strtolower($_POST['se']);
 	
 	switch ($se) {
 		case 'shse':
@@ -29,8 +29,12 @@
 			if (!@mysql_query('UPDATE '.$se.'_defs
 			SET '.$defName.'='.$defValue.'
 			WHERE tkr='.$tkr)) {
-				echo 'insert error';
+				die('insert error');
 			}
 		}
 	}
+	
+	//after updating user variables, we re-siphon the tkr def
+	//it then returns the json data of def obj
+	require root.'se/siphon/def/db/batch/siphon.php';
 ?>

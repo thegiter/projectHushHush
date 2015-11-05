@@ -1,6 +1,6 @@
 <?php
 	if (!defined('root')) {
-		define('root', '../../../');
+		define('root', '../../../../');
 	}
 
 	require_once root.'se/siphon/cmm/lib/siphon_data.php';

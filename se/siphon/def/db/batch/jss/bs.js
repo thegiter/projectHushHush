@@ -3,7 +3,7 @@ shpsCmm.domReady().then(function() {
 	
 	var maxRetrys = 5;
 
-	var numJsThreads = 5;
+	var numJsThreads = 0;
 	var initNumThreads = 5;
 	var additionalNumThreads = 15;
 
@@ -14,7 +14,12 @@ shpsCmm.domReady().then(function() {
 	function siphonThread(js) {
 		threadCnt++;
 		
+		var tStartTs = Date.now();
+		
 		var threadNum = threadCnt;
+		
+		scb.tMsgCnrs.appendChild(document.createElement('span'));
+		scb.tMsgCnrs = scb.msgCnr.children;
 		
 		var retrys = 0;
 		var tkrRow;
@@ -107,6 +112,13 @@ shpsCmm.domReady().then(function() {
 				scb.tMsgCnrs[threadNum].textContent = 'Last stock siphoned, siphon complete!';
 				
 				return false;
+			}
+			
+			//if 1 hour passed, the thread dulicates itself
+			if (Date.now() - tStartTs >= 1000 * 60 * 60) {
+				tStartTs = Date.now();
+				
+				new siphonThread(js);
 			}
 			
 			//pick a random row

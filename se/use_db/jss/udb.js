@@ -7,10 +7,53 @@ shpsCmm.domReady().then(function() {
 		});
 	}
 	
+	function updateRow(row, se, tkr, def) {
+		for (var i = 2; i < scb.hdrCells.length; i++) {
+			var td = document.createElement('td');
+			
+			var defName = scb.defIdxs[i];
+			var defValue = def[defName];
+			
+			//pass data to be styled
+			scb.style(td, defName, defValue);
+			
+			if ((defName == 'car') || (defName == 'cc')) {
+				td.innerHTML = '<form method="post">\
+					<input type="hidden" name="se" value="'+se+'"/><input type="hidden" name="tkr" value="'+tkr+'"/><input type="hidden" name="def_name" value="'+defName+'"/>\
+					<input type="text" name="def_value" value="'+defValue+'"/><button type="submit">Submit</button>\
+				</form>';
+				
+				td.getElementsByTagName('form')[0].addEventListener('submit', submitChange);
+			}
+			
+			defRow.appendChild(td);
+		}
+	}
+	
 	function submitChange(evt) {
 		evt.preventDefault();
 		
-		shpsCmm.createAjax('post', 'update_def.php', new FormData(this), undefined, undefined, undefined, true);
+		scb.tMsgCnrs.textContent = '';
+		
+		var fd = new FormData(this);
+		var se = fd.get('se');
+		var tkr = fd.get('tkr');
+		
+		shpsCmm.createAjax('post', 'update_def.php', fd, undefined, undefined, undefined, true).then(function(xhr) {
+			//after receiving updates on user var, it attempts to re-siphon the def
+			//however, due to network issues, the attempt may fail
+			//if succeed, we update the data
+			if (xhr.response) {
+				var row = evt.target.parentNode.parentNode;
+				
+				//reset row
+				row.innerHTML = '';
+				
+				updateRow(row, se, tkr, xhr.response);
+			} else {//display error
+				scb.tMsgCnrs.textContent = 'siphon error.';
+			}
+		});
 	}
 	
 	Promise.all([
@@ -43,32 +86,13 @@ shpsCmm.domReady().then(function() {
 				
 				if (shseObj[tkr]) {
 					def = shseObj[tkr];
-					se = 'shse';
+					se = 'SHSE';
 				} else {
 					def = szseObj[tkr];
-					se = 'szse';
+					se = 'SZSE';
 				}
 				
-				for (var i = 2; i < scb.hdrCells.length; i++) {
-					var td = document.createElement('td');
-					
-					var defName = scb.defIdxs[i];
-					var defValue = def[defName];
-					
-					//pass data to be styled
-					scb.style(td, defName, defValue);
-					
-					if ((defName == 'car') || (defName == 'cc')) {
-						td.innerHTML = '<form method="post">\
-							<input type="hidden" name="se" value="'+se+'"/><input type="hidden" name="tkr" value="'+tkr+'"/><input type="hidden" name="def_name" value="'+defName+'"/>\
-							<input type="text" name="def_value" value="'+defValue+'"/><button type="submit">Submit</button>\
-						</form>';
-						
-						td.getElementsByTagName('form')[0].addEventListener('submit', submitChange);
-					}
-					
-					defRow.appendChild(td);
-				}
+				updateRow(defRow, se, tkr, def);
 			}
 
 			scb.body.appendChild(defRow);
