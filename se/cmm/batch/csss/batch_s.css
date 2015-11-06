@@ -11,8 +11,9 @@ body > :not(.thead){
 	position:	sticky;
 	top:		0;
 	left:		0;
-	width:		100vw;
+	width:		95vw;
 	z-index:	1;
+	word-wrap:	break-word;
 }
 #msg-cnr > span{
 	margin:	.5em;

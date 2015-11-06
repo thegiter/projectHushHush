@@ -81,29 +81,29 @@ shpsCmm.domReady().then(function() {
 					//siphon end operations
 					siphonEnd(xhr.response);
 				});
-			}
-			
-			shpsCmm.createAjax('post', '/se/siphon/def/db/batch/siphon.php', 'se='+se+'&tkr='+tkr, 'json').then(function(xhr) {
-				//determin if success, set retry cntr to 0
-				//if success, update the table row, else retry
-				if (xhr.response) {//xhr.response will be null if failed
-					retrys = 0;
-					
-					siphonEnd(xhr.response);
-				} else {
-					if (retrys < maxRetrys) {
-						scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retrying...';
+			} else {
+				shpsCmm.createAjax('post', '/se/siphon/def/db/batch/siphon.php', 'se='+se+'&tkr='+tkr, 'json').then(function(xhr) {
+					//determin if success, set retry cntr to 0
+					//if success, update the table row, else retry
+					if (xhr.response) {//xhr.response will be null if failed
+						retrys = 0;
 						
-						retrys++;
-						
-						siphon(tkr);
+						siphonEnd(xhr.response);
 					} else {
-						siphonNext();
-						
-						scb.tMsgCnrs[threadNum].textContent = 'max retrys reached. Ticker skipped.';
+						if (retrys < maxRetrys) {
+							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retrying...';
+							
+							retrys++;
+							
+							siphon(tkr);
+						} else {
+							siphonNext();
+							
+							scb.tMsgCnrs[threadNum].textContent = 'max retrys reached. Ticker skipped.';
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 		
 		function siphonNext() {
@@ -114,8 +114,8 @@ shpsCmm.domReady().then(function() {
 				return false;
 			}
 			
-			//if 1 hour passed, the thread dulicates itself
-			if (Date.now() - tStartTs >= 1000 * 60 * 60) {
+			//if 30 min passed, the thread dulicates itself
+			if (Date.now() - tStartTs >= 1000 * 60 * 30) {
 				tStartTs = Date.now();
 				
 				new siphonThread(js);
@@ -141,8 +141,8 @@ shpsCmm.domReady().then(function() {
 		siphonNext();
 	}
 	
-	//min interval between threads is 5 min
-	var minInt = 300;
+	//min interval between threads is 3 min
+	var minInt = 3 * 60;
 	
 	function createDelayedThread(threadIdx, delay, js) {
 		var msgObj = scb.tMsgCnrs[threadIdx];
@@ -168,24 +168,24 @@ shpsCmm.domReady().then(function() {
 			tkrRows.push(row);
 		});
 		
-		//start one thread, then set time out for additional threads over 45 min
+		//start one thread, then set time out for additional threads over 20 min
 		new siphonThread();
 		
 		//for each of the rest threads, wait random time and start
 		//to avoid suspision
 		for (var i = 1; i < initNumThreads; i++) {
 			//choose a random delay
-			var delay = getRandomInt(minInt * i, 2700);
+			var delay = getRandomInt(minInt * i, 20 * 60);
 			
 			createDelayedThread(i, delay);
 		}
 		
-		//then wait for 1 hour and start additional threads
+		//then wait for 30 min and start additional threads
 		setTimeout(function() {
 			for (var c = 1; c <= additionalNumThreads; c++) {
 				new siphonThread();
 			}
-		}, 60 * 60 * 1000);
+		}, 30 * 60 * 1000);
 		
 		//after a short random delay, start first js thread, then gradually increase threads over 1 hour
 		//choose a random delay
