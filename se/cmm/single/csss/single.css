@@ -21,15 +21,17 @@ h3, h4{
 	margin: 0;
 }
 .aomg-cnr,
+.tlomr-cnr,
 #aomg-cnr{
 	color: red;
 }
 .aomg-cnr[data-positive="1"],
+.tlomr-cnr[data-positive="1"],
 #aomg-cnr[data-positive="1"]{
 	background-color: lime;
 	color: green;
 }
-.pc[data-negative="1"],
+.pc-cnr[data-negative="1"],
 #pc-cnr[data-negative="1"]{
 	color: red;
 }
@@ -38,8 +40,7 @@ h3, h4{
 	background-color: lime;
 	color: green;
 }
-.cpcvr-cnr[data-indicator="sell"],
-#cpivr-cnr[data-indicator="sell"]{
+.cpfptmr-cnr[data-indicator="sell"]{
 	background-color: pink;
 	color: red;
 }

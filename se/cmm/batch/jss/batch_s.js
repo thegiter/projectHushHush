@@ -7,58 +7,6 @@ var seCmmBatch = {};
 		scb.btnHdlr = hdlr;
 	};
 	
-	scb.style = function(elm, defName, defValue) {
-		switch (defName) {
-			case 'aomg':
-				elm.className = 'aomg-cnr';
-			
-				if (defValue >= 0) {
-					elm.dataset.positive = '1';
-				} else {
-					elm.dataset.positive = '0';
-				}
-				
-				break;
-			case 'pc':
-				elm.className = 'pc-cnr';
-				
-				if (defValue != 1) {
-					elm.dataset.negative = 1;
-				} else {
-					elm.dataset.negative = 0;
-				}
-				
-				break;
-			case 'cpivr':
-				elm.className = 'cpivr-cnr';
-				
-				if (defValue <= -.25) {
-					elm.dataset.indicator = 'buy';
-				} else {
-					elm.dataset.indicator = '';
-				}
-				
-				defValue = defValue * 100+'%';
-				
-				break;
-			case 'cpcvr':
-				elm.className = 'cpcvr-cnr';
-				
-				if (defValue > .2) {
-					elm.dataset.indicator = 'sell';
-				} else {
-					elm.dataset.indicator = '';
-				}
-			case 'pow':
-				defValue = defValue * 100+'%';
-				
-				break;
-			default:
-		}
-		
-		elm.textContent = defValue;
-	};
-	
 	scb.ldTkrs = function(se) {
 		return shpsCmm.createAjax('post', '/se/cmm/batch/get_tbl.php', 'se='+se, 'json').then(function(xhr) {
 			if (xhr.response.status) {
@@ -124,4 +72,38 @@ shpsCmm.domReady().then(function() {
 	};
 	
 	scb.btn.addEventListener('click', scb.getData);
+	
+	function toggleSort(evt) {
+		if (this.dMSort.order == 'ds') {
+			this.dMSort.order = 'as';
+			
+			this.dMSort.ascend();
+		} else {
+			this.dMSort.order = 'ds';
+			
+			this.dMSort.descend();
+		}
+	}
+	
+	var tkrCol = document.getElementsByClassName('tkr-col')[0];
+	
+	forEachNodeItem(document.getElementsByClassName('se-sortable'), function(elm) {
+		var idx;
+		
+		forEachNodeItem(scb.hdrCells, function(cell, cellIdx) {
+			if (cell == elm.parentNode) {
+				idx = cellIdx - 2;
+			}
+		});
+		
+		elm.dMSort = new shpsCmm.dataMgr.sort(scb.body, function(row) {
+			if (row.children.length == 0) {
+				return 0;
+			}
+			
+			return row.children[idx].textContent;
+		}, 'num', [tkrCol]);
+		
+		elm.addEventListener('click', toggleSort);
+	});
 });

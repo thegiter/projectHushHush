@@ -89,7 +89,21 @@
 		
 		$def->aomg = (($def->lyom - $def->slyom) / abs($def->slyom) + ($def->slyom - $def->tlyom) / abs($def->tlyom)) / 2;
 
-		$def->apcr = $def->lypcr * (1 + $def->aomg);
+		preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+		
+		$def->lqom = str_replace(',', '', $matches[12]);
+		$def->slqom = str_replace(',', '', $matches[9]);
+		$def->tlqom = str_replace(',', '', $matches[6]);
+		$def->flqom = str_replace(',', '', $matches[3]);
+		
+		$def->t4qaom = ($def->lqom + $def->slqom + $def->tlqom + $def->flqom) / 4;
+		
+		//in case om was 0
+		$def->lyom = ($def->lyom == 0) ? 1 : $def->lyom;
+		
+		$def->tlomr = ($def->t4qaom - $def->lyom) / abs($def->lyom);
+		
+		$def->apcr = $def->lypcr * (1 + $def->tlomr);
 		$def->cpii = $def->cap * $def->apcr;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
@@ -129,8 +143,22 @@
 		$def->tlyroe = ($def->tlyroe == 0) ? 1 : $def->tlyroe;
 		
 		$def->aroeg = (($def->lyroe - $def->slyroe) / abs($def->slyroe) + ($def->slyroe - $def->tlyroe) / abs($def->tlyroe)) / 2;
-			
-		$def->afi = $def->fi * (1 + $def->aroeg);
+		
+		preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>/', $ctt, $matches);
+		
+		$def->lqroe = str_replace(',', '', $matches[12]);
+		$def->slqroe = str_replace(',', '', $matches[9]);
+		$def->tlqroe = str_replace(',', '', $matches[6]);
+		$def->flqroe = str_replace(',', '', $matches[3]);
+		
+		$def->t4qaroe = ($def->lqroe + $def->slqroe + $def->tlqroe + $def->flqroe) / 4;
+		
+		//in case om was 0
+		$def->lyroe = ($def->lyroe == 0) ? 1 : $def->lyroe;
+		
+		$def->tlroer = ($def->t4qaroe - $def->lyroe) / abs($def->lyroe);
+		
+		$def->afi = $def->fi * (1 + $def->tlroer);
 		$def->fe = $def->ce + $def->afi;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
@@ -224,10 +252,10 @@
 		//cpcv ratio on the other hand is a non greedy ratio to sell at a lower price
 		//we are making less profit thus non greedy
 		//it reflects how much profit is made from cv to cp compared to cv
-		if ($def->prcv == 0) {
-			$def->cpcvr = 1;
+		if ($def->fptm == 0) {
+			$def->cpfptmr = 1;
 		} else {
-			$def->cpcvr = ($cp - $def->prcv) / abs($def->prcv);
+			$def->cpfptmr = ($cp - $def->fptm) / abs($def->fptm);
 		}
 		
 		$def->pow = (22.5 - $def->gtap / 2) / 22.5;
@@ -238,7 +266,7 @@
 			$def->advice = 'buy';
 		}
 		
-		if ($def->cpcvr >= $dr) {
+		if ($def->cpfptmr >= $dr) {
 			$def->advice = 'sell';
 		}
 		

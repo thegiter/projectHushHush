@@ -22,7 +22,7 @@ body > :not(.thead){
 	position:	sticky;
 	top:		0;
 	white-space:	nowrap;
-	background-color:	rgba(255, 255, 255, .8);
+	background-color:	rgba(255, 255, 255, .9);
 }
 .thead > td,
 .tkr-col > tr > td,
@@ -40,7 +40,7 @@ body > :not(.thead){
 .tkr-col{
 	position:	sticky;
 	left:		0;
-	background-color:	rgba(255, 255, 255, .7);
+	background-color:	rgba(255, 255, 255, .8);
 }
 .tkr-col > tr,
 .tbody > tr{
@@ -50,4 +50,10 @@ body > :not(.thead){
 .tkr-col > tr,
 .tbody > tr{
 	height:	4em;
+}
+.se-sortable{
+	cursor:	pointer;
+}
+.tbody input{
+	width:	100%;
 }

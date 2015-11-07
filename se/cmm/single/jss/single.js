@@ -1,6 +1,8 @@
 var seSingle = {};
 
 (function() {
+	var dataScriptP = shpsCmm.lnkExtFile.lnked('script', '/se/cmm/jss/se_data.js');
+	
 	var ss = seSingle;
 	
 	//to initialize, the inflation rate and ajax url must be provided
@@ -13,11 +15,18 @@ var seSingle = {};
 
 			irCnr.textContent = ss.ir * 100+'%';
 			
+			//get data structure
+			ss.defIdxs = [];
+			
+			ss.rows = document.getElementsByTagName('table')[0].children;
+			
+			forEachNodeItem(ss.rows, function(tr, idx) {
+				ss.defIdxs[idx] = tr.children[0].dataset.acro;
+			});
+			
 			var form = document.getElementById('ticker-form');
 			
 			var msgCnr = document.getElementById('msg-cnr');
-			
-			var lastDef;
 			
 			form.addEventListener('submit', function(evt) {
 				evt.preventDefault();
@@ -25,76 +34,33 @@ var seSingle = {};
 				msgCnr.textContent = 'Running...';
 				msgCnr.dataset.state = 'running';
 				
-				forEachObjProp(lastDef, function(value, pName) {
-					if (pName == 'interest') {
-						pName = 'int';
-					}
-					
-					document.getElementById(pName+'-cnr').textContent = '';
+				forEachNodeItem(ss.rows, function(tr) {
+					tr.children[1].textContent = '';
 				});
-				
+
 				var fd = new FormData(form);
 				
 				fd.append('ir', ss.ir);
 				
-				shpsCmm.createAjax('POST', ss.url, fd, 'json', undefined, undefined, true).then(function(xhr) {console.log(xhr.response);
+				shpsCmm.createAjax('POST', ss.url, fd, 'json', undefined, undefined, true).then(function(xhr) {
 					//xhr.response is the object containing the defs
-					var def = lastDef = xhr.response;
+					var def = xhr.response;
 					
-					forEachObjProp(def, function(value, pName) {
-						if (pName == 'interest') {
-							pName = 'int';
-						}
+					dataScriptP.then(function() {
+						forEachNodeItem(ss.rows, function(tr, idx) {
+							var td = tr.children[1];
+							
+							var defName = ss.defIdxs[idx];
+							var defValue = def[defName];
+							
+							//pass data to be styled
+							seData.style(td, defName, defValue);
+						}); 
 						
-						var cnr = document.getElementById(pName+'-cnr');
-						
-						switch (pName) {
-							case 'aomg':
-								if (value >= 0) {
-									cnr.dataset.positive = '1';
-								} else {
-									cnr.dataset.positive = '0';
-								}
-								
-								break;
-							case 'pc':
-								if (value != 1) {
-									cnr.dataset.negative = 1;
-								} else {
-									cnr.dataset.negative = 0;
-								}
-								
-								break;
-							case 'cpivr':
-								if (value <= -.25) {
-									cnr.dataset.indicator = 'buy';
-								} else {
-									cnr.dataset.indicator = '';
-								}
-								
-								value = value * 100+'%';
-								
-								break;
-							case 'cpcvr':
-								if (value > .2) {
-									cnr.dataset.indicator = 'sell';
-								} else {
-									cnr.dataset.indicator = '';
-								}
-							case 'pow':
-								value = value * 100+'%';
-								
-								break;
-							default:
-								break;
-						}
-
-						cnr.textContent = value;
+						msgCnr.textContent = 'Done!';
+						msgCnr.dataset.state = 'done';
 					});
-					
-					msgCnr.textContent = 'Done!';
-					msgCnr.dataset.state = 'done';
-				})
+				});
 			});
 		});
 	};

@@ -1103,6 +1103,7 @@ var shpsCmm = {};
 		
 //	});
 	
+	//evt mgr
 	var eM = shpsCmm.evtMgr = {};
 	
 	eM.clickEvt = new MouseEvent('click', {
@@ -1117,6 +1118,109 @@ var shpsCmm = {};
 			default:
 				return false;
 		}
+	};
+	//end evt mgr
+	
+	//data mgr
+	var dM = shpsCmm.dataMgr = {};
+	
+	//the sort class allows you to sort data in ascending and descending order
+	//you can specify an elm containing rows to be sorted
+	//then you must provide a function to fetch the data to be sorted from the row
+	//the row being compared will be passed to the function, and the function must return the data from that row
+	//this allows more flexibility in designing the relationship between the row and the data
+	//finally you can specify additional rows cnrs to be rearranged along with the rows being sorted
+	//eg row 1 is moved to last in the main rows cnr, row 1 in the addtional rows cnr will also be moved to last
+	//dataType can be 'num', 'alpha'
+	//additionalRowsCnrs must be an array, even if only 1 cnr is provided
+	dM.sort = function(rowsCnr, getDataFct, dataType, additionalRowsCnrs) {
+		this.rowsCnr = rowsCnr;
+		this.getDataFct = getDataFct;
+		this.dataType = dataType;
+		this.additionalRowsCnrs = additionalRowsCnrs;
+	};
+	
+	dM.sort.prototype.createTmpArr = function() {
+		this.tmpArr = [];
+		
+		var theThis = this;
+		
+		forEachNodeItem(this.rowsCnr.children, function(row, idx) {
+			row.dMSortOldIdx = idx;
+			
+			theThis.tmpArr.push(row);
+		});
+	};
+	
+	dM.sort.prototype.numAs = function() {
+		var theThis = this;
+		
+		this.tmpArr.sort(function(a, b) {
+			return theThis.getDataFct(a) - theThis.getDataFct(b);
+		});
+	};
+	
+	dM.sort.prototype.numDs = function() {
+		var theThis = this;
+
+		this.tmpArr.sort(function(a, b) {
+			return theThis.getDataFct(b) - theThis.getDataFct(a);
+		});
+	};
+	
+	dM.sort.prototype.applySort = function() {
+		var additionalCnrsTmpArr = [];
+		
+		//init tmpArr
+		this.additionalRowsCnrs.forEach(function() {
+			additionalCnrsTmpArr.push([]);
+		});
+		
+		var theThis = this;
+		
+		//sort out the additional cnrs first, then apply everything together
+		//its like a good resturant arrange to serve main meals for customers at the same time
+		//for a better serving experience
+		this.tmpArr.forEach(function(row, idx) {
+			theThis.additionalRowsCnrs.forEach(function(cnr, cnrIdx) {
+				additionalCnrsTmpArr[cnrIdx].push(cnr.children[row.dMSortOldIdx]);
+			});
+		});
+		
+		//apply everything row by row
+		//clear the main cnr
+		//then clear each of the additionalRowsCnrs
+		this.rowsCnr.innerHTML = '';
+		
+		this.additionalRowsCnrs.forEach(function(cnr) {
+			cnr.innerHTML = '';
+		});
+		
+		//for each row
+		this.tmpArr.forEach(function(row, idx) {
+			//append to main cnr, then each of the addtional rows cnrs
+			theThis.rowsCnr.appendChild(row);
+			
+			theThis.additionalRowsCnrs.forEach(function(cnr, cnrIdx) {
+				cnr.appendChild(additionalCnrsTmpArr[cnrIdx][idx]);
+			});
+		});
+	};
+	
+	dM.sort.prototype.ascend = function() {
+		this.createTmpArr();
+
+		this[this.dataType+'As']();
+		
+		this.applySort();
+	};
+	
+	dM.sort.prototype.descend = function() {
+		this.createTmpArr();
+
+		this[this.dataType+'Ds']();
+		
+		this.applySort();
 	};
 })();
 

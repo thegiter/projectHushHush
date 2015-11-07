@@ -26,7 +26,7 @@ shpsCmm.domReady().then(function() {
 				td.getElementsByTagName('form')[0].addEventListener('submit', submitChange);
 			}
 			
-			defRow.appendChild(td);
+			row.appendChild(td);
 		}
 	}
 	
@@ -39,7 +39,7 @@ shpsCmm.domReady().then(function() {
 		var se = fd.get('se');
 		var tkr = fd.get('tkr');
 		
-		shpsCmm.createAjax('post', 'update_def.php', fd, undefined, undefined, undefined, true).then(function(xhr) {
+		shpsCmm.createAjax('post', 'update_def.php', fd, 'json', undefined, undefined, true).then(function(xhr) {
 			//after receiving updates on user var, it attempts to re-siphon the def
 			//however, due to network issues, the attempt may fail
 			//if succeed, we update the data
