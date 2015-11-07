@@ -236,7 +236,9 @@
 		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		
-		$cp = $def->mc / $def->so;
+		preg_match('/\<font\s+class\=\"stock_header_price\"\>\<img[^\>]+\>.*\>([^\<\%]+)\<\/font\>/', $ctt, $matches);
+
+		$def->cp = str_replace(',', '', $matches[1]);
 		
 		//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
 		//which is 25%, meaning iv to cp must be 25% of iv
@@ -246,7 +248,7 @@
 		if ($def->iv == 0) {
 			$def->cpivr = 1;
 		} else {
-			$def->cpivr = ($cp - $def->iv) / abs($def->iv);
+			$def->cpivr = ($def->cp - $def->iv) / abs($def->iv);
 		}
 		
 		//cpcv ratio on the other hand is a non greedy ratio to sell at a lower price
@@ -255,7 +257,7 @@
 		if ($def->fptm == 0) {
 			$def->cpfptmr = 1;
 		} else {
-			$def->cpfptmr = ($cp - $def->fptm) / abs($def->fptm);
+			$def->cpfptmr = ($def->cp - $def->fptm) / abs($def->fptm);
 		}
 		
 		$def->pow = (22.5 - $def->gtap / 2) / 22.5;
