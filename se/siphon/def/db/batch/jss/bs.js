@@ -29,7 +29,7 @@
 			
 			function getTicker() {
 				//first child of row is the cell with the ticker
-				return /\s*(\d+)\s*/.exec(tkrRow.children[0].textContent)[1];
+				return /\S+/.exec(tkrRow.children[0].textContent)[0];
 			}
 			
 			function siphonEnd(def) {

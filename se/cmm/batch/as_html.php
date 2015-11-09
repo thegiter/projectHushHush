@@ -10,7 +10,7 @@
 		</h1>
 		
 		<form id="se-form" method="post">
-			<label>Choose Stock Exchange:</label><input id="se-ipt-shse" type="radio" value="SHSE" name="se" required="required"/><label for="se-ipt-shse">SHSE</label><input id="se-ipt-szse" type="radio" value="SZSE" name="se"/><label for="se-ipt-szse">SZSE</label><br/>
+			<label>Choose Stock Exchange:</label><input id="se-ipt-shse" type="radio" value="SHSE" name="se" required="required"/><label for="se-ipt-shse">SHSE</label><input id="se-ipt-szse" type="radio" value="SZSE" name="se"/><label for="se-ipt-szse">SZSE</label><input id="se-ipt-jse" type="radio" value="JSE" name="se"/><label for="se-ipt-jse">JSE</label><br/>
 			<button type="submit">Load Stock List</button>
 		</form>
 		

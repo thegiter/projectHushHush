@@ -16,8 +16,8 @@
 		} else {//then excute sql query
 			//get all tickers from the se table
 			if (!($advice_tbl = @mysql_query('SELECT * FROM advice_updates'))) {
-				die;
-			} else {
+	//			die;
+	//		} else {
 				$sells = [];
 				$buys = [];
 				
@@ -29,9 +29,12 @@
 					}
 				}
 				
-				$msg = 'Dear My Master Boss:\r\n
-				\r\n
-				We have detected the following changes to market today.';
+				$msg = '<p>
+					Dear My Master Boss:
+				</p>
+				<p>
+					We have detected the following changes to market today.
+				</p>';
 				
 				function construct_tkrs_msg($arr) {
 					foreach ($arr as $tkrRow) {
@@ -43,30 +46,45 @@
 						
 						$name = mysql_fetch_array($name_result)['name'];
 						
-						$msg .= '\r\n
-						'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
+						$msg .= '<li>
+							'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'].'
+						</li>';
 					}
 				}
 				
 				if (count($sells) > 0 ) {
-					$msg .= '\r\n
-					\r\n
-					New sells\r\n
-					Our raw rough unrefined advice suggests to sell these stocks:';
+					$msg .= '<h3>
+						New sells
+					</h3>
+					
+					<p>
+						Our raw rough unrefined advice suggests to sell these stocks:
+						
+						<ul>';
 					
 					construct_tkrs_msg($sells);
+					
+					$msg .= '</ul>
+					</p>';
 				}
 				
 				if (count($buys) > 0) {
-					$msg .= '\r\n
-					\r\n
-					New buys\r\n
-					Our raw rough unrefined advice suggests to buy these stocks:';
+					$msg .= '<h3>
+						New buys
+					</h3>
+					
+					<p>
+						Our raw rough unrefined advice suggests to buy these stocks:
+						
+						<ul>';
 					
 					construct_tkrs_msg($buys);
+					
+					$msg .= '</ul>
+					</p>';
 				}
-				
-				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za');
+
+				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za\r\nMIME-Version: 1.0\r\nContent-type: text/html\r\n');
 				
 				mysql_query('TRUNCATE table advice_updates');
 			}

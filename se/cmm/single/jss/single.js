@@ -18,7 +18,7 @@ var seSingle = {};
 			//get data structure
 			ss.defIdxs = [];
 			
-			ss.rows = document.getElementsByTagName('table')[0].children;
+			ss.rows = document.getElementsByTagName('table')[0].getElementsByTagName('tr');
 			
 			forEachNodeItem(ss.rows, function(tr, idx) {
 				ss.defIdxs[idx] = tr.children[0].dataset.acro;

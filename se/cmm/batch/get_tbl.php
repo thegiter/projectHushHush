@@ -6,6 +6,7 @@
 	switch ($_POST['se']) {
 		case 'SHSE':
 		case 'SZSE':
+		case 'JSE':
 			break;
 		default:
 			die('invalid stock exchange');
@@ -32,7 +33,7 @@
 						<td>
 							'.$tkr['tkr'].'
 						</td><td>
-							'.$tkr['name'].'
+							'.htmlspecialchars($tkr['name']).'
 						</td>
 					</tr>';
 				}

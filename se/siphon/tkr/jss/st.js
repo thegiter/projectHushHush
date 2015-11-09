@@ -22,13 +22,19 @@
 				ifWdw.location.href = 'tl/szse.html';
 				
 				break;
+			case 'JSE':
+				ifWdw.location.href = 'tl/jse.html';
+				
+				break;
 			default:
 				return false;
 		}
 	});
 	
 	var btn = document.getElementById('sp-btn');
-	var trCntr = 0; var tkrCntr = 0;
+	var trCntr = 0;
+	var tkrCntr = 0;
+	
 	function recuringGetTkrs(cnr, tkrsArr) {//for when there are too many tickers
 		//now, we loop through each table row, starting from the second row, and construct our data
 		var theRows = cnr.getElementsByTagName('tr');
@@ -56,6 +62,21 @@
 		if (cnr.getElementsByTagName('tr').length > 0) {
 			recuringGetTkrs(cnr, tkrsArr);
 		}
+	}
+	
+	function upload(tickers, se) {
+		msgCnr.textContent = 'Uploading...';
+				
+		//tickers now contain all the ticker data for the page
+		//we upload the data to server
+		shpsCmm.createAjax('post', 'save_to_db.php', 'tkrs_json='+encodeURIComponent(JSON.stringify(tickers))+'&se='+se).then(function(xhr) {
+			//check when server respond if successful
+			if (xhr.responseText == 'success') {
+				msgCnr.textContent = 'Done!';
+			} else {
+				msgCnr.textContent = 'Failed. Response: '+xhr.responseText;
+			}
+		});
 	}
 	
 	btn.addEventListener('click', function() {
@@ -92,6 +113,8 @@
 					tickers.push(ticker);
 				}
 				
+				upload(tickers, se);
+				
 				break;
 			case 'SZSE':
 				//get the table
@@ -99,22 +122,36 @@
 				
 				recuringGetTkrs(theTbl.getElementsByTagName('tbody')[0], tickers);
 				
+				upload(tickers, se);
+				
+				break;
+			case 'JSE':
+				var trs = ifDoc.getElementsByTagName('table')[1].getElementsByTagName('tbody')[0].children;
+				
+				//loop through each row
+				//first row is heading, start from 2nd row
+				for (var i = 1; i < trs.length; i++) {
+					var tr = trs[i];
+					//first cell is name, second is tkr
+					//if name is not like ZAdigits
+					var sName = tr.children[0].children[0].textContent;
+					
+					if (!(/((ZA\d+)|\bPref\b|\bprf\b|\bprefs\b)/i.exec(sName))) {
+						//create ticker
+						var tkr = /\S+/.exec(tr.children[1].children[0].textContent)[0];
+
+						tickers.push({
+							ticker: tkr,
+							name: sName
+						});
+					}
+				}
+
+				upload(tickers, se);
+				
 				break;
 			default:
 				return false;
 		}
-
-		msgCnr.textContent = 'Uploading...';
-				
-		//tickers now contain all the ticker data for the page
-		//we upload the data to server
-		shpsCmm.createAjax('post', 'save_to_db.php', 'tkrs_json='+JSON.stringify(tickers)+'&se='+se).then(function(xhr) {
-			//check when server respond if successful
-			if (xhr.responseText == 'success') {
-				msgCnr.textContent = 'Done!';
-			} else {
-				msgCnr.textContent = 'Failed. Response: '+xhr.responseText;
-			}
-		});
 	});
 });

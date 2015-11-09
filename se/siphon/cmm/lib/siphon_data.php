@@ -18,7 +18,7 @@
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
 
-		preg_match('/data_value"\>CN¥(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
 		
 		$def = new stdClass;
 
@@ -26,7 +26,7 @@
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/');
 						
-		preg_match('/data_value"\>CN¥(.+) \(As of/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|$)(.+) \(As of/', $ctt, $matches);
 		
 		$def->bps = str_replace(',', '', $matches[1]);
 		

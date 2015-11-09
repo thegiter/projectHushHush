@@ -6,6 +6,7 @@
 	switch ($_GET['se']) {
 		case 'shse':
 		case 'szse':
+		case 'jse':
 			break;
 		default:
 			die('invalid stock exchange for table');

@@ -9,6 +9,7 @@
 	switch ($se) {
 		case 'SHSE':
 		case 'SZSE':
+		case 'JSE':
 			$se = strtolower($se);
 			
 			break;
