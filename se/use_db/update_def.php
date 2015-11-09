@@ -29,7 +29,7 @@
 			if (!@mysql_query('UPDATE '.$se.'_defs
 			SET '.$defName.'='.$defValue.'
 			WHERE tkr='.$tkr)) {
-				die('insert error');
+				die('tkr variable insert / update error');
 			}
 		}
 	}
