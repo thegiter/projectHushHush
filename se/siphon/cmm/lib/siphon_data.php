@@ -22,13 +22,13 @@
 		
 		$def = new stdClass;
 
-		$def->mc = str_replace(',', '', $matches[1]);
+		$def->mc = str_replace(',', '', $matches[2]);
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/');
 						
 		preg_match('/data_value"\>(CN¥|$)(.+) \(As of/', $ctt, $matches);
 		
-		$def->bps = str_replace(',', '', $matches[1]);
+		$def->bps = str_replace(',', '', $matches[2]);
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/BS_share/'.$ticker.'/Shares%2BOutstanding%2B%2528EOP%2529/');
 						
