@@ -34,7 +34,8 @@
 				aper=VALUES(aper), lpbr=VALUES(lpbr), apbr=VALUES(apbr), gtlp=VALUES(gtlp), lpgc=VALUES(lpgc), gtap=VALUES(gtap), apgc=VALUES(apgc),
 				pc=VALUES(pc), anios=VALUES(anios), fp=VALUES(fp), fptm=VALUES(fptm), prcv=VALUES(prcv), iv=VALUES(iv), cpivr=VALUES(cpivr),
 				cpfptmr=VALUES(cpfptmr), pow=VALUES(pow), advice=VALUES(advice)')) {
-					die('insert / update def row error');
+					die('insert / update def row error
+					'.json_encode($def));
 				}
 			}
 		}
