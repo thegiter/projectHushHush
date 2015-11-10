@@ -16,14 +16,14 @@
 		} else {//then excute sql query
 			//get all tickers from the se table
 			if (!($advice_tbl = @mysql_query('SELECT * FROM advice_updates'))) {
+				die('select table error');
+			} else {
 				$msg = '<p>
 					This is a simple html email test.
 				<p>';
 				
 				mail('297154048@outlook.com', 'Simple Mail Test', $msg, 'From:no-reply@shps.co.za\r\nMIME-Version: 1.0\r\nContent-type: text/html\r\n');
 
-				die('select table error');
-			} else {
 				if (mysql_num_rows($advice_tbl) <= 0) {
 					die('no advice updates found');
 				}
