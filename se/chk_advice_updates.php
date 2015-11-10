@@ -18,9 +18,9 @@
 			if (!($advice_tbl = @mysql_query('SELECT * FROM advice_updates'))) {
 				die('select table error');
 			} else {
-				$msg = 'line 1\n
-				\n
-					line 2 after empty line.\n';
+				$msg = 'line 1
+				
+				line 2 after empty line.';
 				
 				mail('297154048@outlook.com', 'Simple Mail Test', $msg, 'From:no-reply@shps.co.za');
 
