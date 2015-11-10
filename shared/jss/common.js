@@ -1222,6 +1222,65 @@ var shpsCmm = {};
 		
 		this.applySort();
 	};
+	
+	//the filter class allows you to specify filter criteria
+	//you must then specify the cnr of rows to be filtered, as well as a function to use to get the data inside each row
+	//to compare with the criterion
+	//the row being compared will be passed to the function, as well as the index of the criterion,
+	//so the function can return the data corresponds to the criterion
+	//you then can specify additional cnrs of rows to be filtered along with the main cnr
+	//e.g if row 1 in main is filtered out, row 1s in additional cnrs will also be filtered out
+	var dmF = dM.filter = function(rowsCnr, getDataFct, additionalRowsCnrs) {
+		this.rowsCnr = rowsCnr;
+		this.getDataFct = getDataFct;
+		this.additionalRowsCnrs = additionalRowsCnrs;
+		this.typeArr = [];
+	};
+	
+	dmF.prototype.addEvt = function(elm, iType, cb) {
+		switch (iType) {
+			case 'dropdown':
+				elm.addEventListener('change', cb);
+			
+				break;
+			default:
+		}
+	};
+	
+	dmF.prototype.applyFilter = function() {
+		//process rows one by one
+		//for each row, check each criterion and filter type,
+		
+		//if condition is satisfied, check next criterion,
+		//if one condition is not satisfied,  skip and hide the row
+		if (this.typeArr.some(function(obj, idx) {//some return true for not satisfied
+			
+		})) {
+			//hide row and additional rows
+		} else {
+			//show row and additional rows
+		}
+	};
+	
+	//elm is the criterion input element, and idx is the index of the criterion
+	//iType is the type of input
+	//iType can be input, dropdown, checkboxes, batchinput
+	//fType is the type of filter
+	//fType can be include, exclude,
+	//cType is the type of criteria
+	//cType can be exact, greater, less, greaterEqual, lessEqual
+	dmF.prototype.setCriterion = function(elm, iType, idx, fType, cType) {
+		this.typeArr[idx] = {
+			elm: elm,
+			fType: fType,
+			cType: cType
+		};
+		
+		this.addEvt(elm, iType, function(evt) {
+			
+		});
+	};
+	//end data mgr
 })();
 
 var wdwLoaded = false;
