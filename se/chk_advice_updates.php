@@ -38,24 +38,19 @@
 				We have detected the following changes to market today.';
 				
 				function construct_tkrs_msg($arr) {
+					$msg = '';
+					
 					foreach ($arr as $tkrRow) {
 						$name_result = mysql_query('SELECT name FROM shse_tkrs WHERE tkr='.$tkrRow['tkr']);
 						
-						if (!$name_result) {
+						if (!mysql_fetch_array($name_result)) {
 							$name_result = mysql_query('SELECT name FROM szse_tkrs WHERE tkr='.$tkrRow['tkr']);
 						}
 						
 						$name = mysql_fetch_array($name_result)['name'];
 						
-						$msg .= 'function test';
-						$msg .= 'db tkr test';
-						$msg .= $tkrRow['tkr'];
-						$msg .= 'db name test';
-						$msg .= $name;
-						$msg .= 'db advice test';
-						$msg .= $tkrRow['old_advice'].$tkrRow['new_advice'];
-						//$msg .= '
-						//'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
+						$msg .= '
+						'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
 					}
 					
 					return $msg;
