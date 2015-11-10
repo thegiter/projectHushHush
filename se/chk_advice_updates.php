@@ -43,14 +43,14 @@
 					foreach ($arr as $tkrRow) {
 						$name_result = mysql_query('SELECT name FROM shse_tkrs WHERE tkr='.$tkrRow['tkr']);
 						
-						if (!mysql_fetch_array($name_result)) {
+						if (mysql_num_rows($name_result) <= 0) {
 							$name_result = mysql_query('SELECT name FROM szse_tkrs WHERE tkr='.$tkrRow['tkr']);
 						}
 						
 						$name = mysql_fetch_array($name_result)['name'];
 						
 						$msg .= '
-						'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
+						'.$tkrRow['tkr'].'\t\t'.$name.'\t\told advice: '.$tkrRow['old_advice'].'\t\tnew advice: '.$tkrRow['new_advice'];
 					}
 					
 					return $msg;
