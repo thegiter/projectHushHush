@@ -57,6 +57,8 @@
 						//$msg .= '
 						//'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
 					}
+					
+					return $msg;
 				}
 				
 				if (count($sells) > 0 ) {
@@ -66,7 +68,7 @@
 					
 					Our raw rough unrefined advice suggests to sell these stocks:';
 					
-					construct_tkrs_msg($sells);
+					$msg .= construct_tkrs_msg($sells);
 				}
 				
 				if (count($buys) > 0) {
@@ -76,7 +78,7 @@
 					
 					Our raw rough unrefined advice suggests to buy these stocks:';
 					
-					construct_tkrs_msg($buys);
+					$msg .= construct_tkrs_msg($buys);
 				}
 
 				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za');
