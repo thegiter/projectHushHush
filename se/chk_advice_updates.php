@@ -18,12 +18,6 @@
 			if (!($advice_tbl = @mysql_query('SELECT * FROM advice_updates'))) {
 				die('select table error');
 			} else {
-				$msg = 'line 1
-				
-				line 2 after empty line.';
-				
-				mail('297154048@outlook.com', 'Simple Mail Test', $msg, 'From:no-reply@shps.co.za');
-
 				if (mysql_num_rows($advice_tbl) <= 0) {
 					die('no advice updates found');
 				}
@@ -39,12 +33,9 @@
 					}
 				}
 				
-				$msg = '<p>
-					Dear My Master Boss:
-				</p>
-				<p>
-					We have detected the following changes to market today.
-				</p>';
+				$msg = 'Dear My Master Boss:
+				
+				We have detected the following changes to market today.';
 				
 				function construct_tkrs_msg($arr) {
 					foreach ($arr as $tkrRow) {
@@ -56,45 +47,32 @@
 						
 						$name = mysql_fetch_array($name_result)['name'];
 						
-						$msg .= '<li>
-							'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'].'
-						</li>';
+						$msg .= '
+						'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
 					}
 				}
 				
 				if (count($sells) > 0 ) {
-					$msg .= '<h3>
-						New sells
-					</h3>
+					$msg .= '
 					
-					<p>
-						Our raw rough unrefined advice suggests to sell these stocks:
-						
-						<ul>';
+					New sells
+					
+					Our raw rough unrefined advice suggests to sell these stocks:';
 					
 					construct_tkrs_msg($sells);
-					
-					$msg .= '</ul>
-					</p>';
 				}
 				
 				if (count($buys) > 0) {
-					$msg .= '<h3>
-						New buys
-					</h3>
+					$msg .= '
 					
-					<p>
-						Our raw rough unrefined advice suggests to buy these stocks:
-						
-						<ul>';
+					New buys
+					
+					Our raw rough unrefined advice suggests to buy these stocks:';
 					
 					construct_tkrs_msg($buys);
-					
-					$msg .= '</ul>
-					</p>';
 				}
 
-				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za\r\nMIME-Version: 1.0\r\nContent-type: text/html\r\n');
+				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za');
 				
 //				mysql_query('TRUNCATE table advice_updates');
 			}
