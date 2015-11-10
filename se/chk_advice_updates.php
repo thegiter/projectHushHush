@@ -47,8 +47,15 @@
 						
 						$name = mysql_fetch_array($name_result)['name'];
 						
-						$msg .= '
-						'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
+						$msg .= 'function test';
+						$msg .= 'db tkr test';
+						$msg .= $tkrRow['tkr'];
+						$msg .= 'db name test';
+						$msg .= $name;
+						$msg .= 'db advice test';
+						$msg .= $tkrRow['old_advice'].$tkrRow['new_advice'];
+						//$msg .= '
+						//'.$tkrRow['tkr'].'		'.$name.'		old advice: '.$tkrRow['old_advice'].'		new advice: '.$tkrRow['new_advice'];
 					}
 				}
 				
