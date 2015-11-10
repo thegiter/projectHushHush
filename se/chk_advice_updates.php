@@ -50,7 +50,7 @@
 						$name = mysql_fetch_array($name_result)['name'];
 						
 						$msg .= '
-						'.$tkrRow['tkr'].'\t\t'.$name.'\t\told advice: '.$tkrRow['old_advice'].'\t\tnew advice: '.$tkrRow['new_advice'];
+						'.$tkrRow['tkr'].'  '.$name.'  told advice: '.$tkrRow['old_advice'].'  new advice: '.$tkrRow['new_advice'];
 					}
 					
 					return $msg;
@@ -78,7 +78,7 @@
 
 				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za');
 				
-//				mysql_query('TRUNCATE table advice_updates');
+				mysql_query('TRUNCATE table advice_updates');
 			}
 		}
 	}
