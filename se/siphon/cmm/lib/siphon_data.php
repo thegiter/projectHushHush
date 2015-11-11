@@ -163,7 +163,7 @@
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
 						
-		preg_match('/data_value"\>(.+) \(As of/', $ctt, $matches);
+		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
 		
 		if (!$matches) {
 			//check if no pe ratio, due to negative earnings
@@ -185,7 +185,7 @@
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/');
 						
-		preg_match('/data_value"\>(.+) \(As of/', $ctt, $matches);
+		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
 		
 		if (!$matches) {
 			//check if no pb ratio, due to too much liability and negative book value

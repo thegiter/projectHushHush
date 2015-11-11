@@ -106,4 +106,42 @@ shpsCmm.domReady().then(function() {
 		
 		elm.addEventListener('click', toggleSort);
 	});
+	
+	var filterElms = [
+		{
+			elm: document.getElementById('advice-filter'),
+			getCFct: function(elm) {
+				var value = elm.value;
+				
+				if (value == undefined) {
+					value = 'not set';
+				}
+				
+				return value;
+			},
+			iType: 'dropdown',
+			fType: 'include',
+			cType: 'exact'
+		}
+	];
+	
+	var filter = new shpsCmm.dataMgr.filter(scb.body, function(row, idx) {
+		if (row.children.length == 0) {
+			return '';
+		}
+		
+		return row.children[idx].textContent;
+	}, [tkrCol]);
+	
+	filterElms.forEach(function(filterObj) {
+		var idx;
+		
+		forEachNodeItem(scb.hdrCells, function(cell, cellIdx) {
+			if (cell == filterObj.elm.parentNode) {
+				idx = cellIdx - 2;
+			}
+		});
+		
+		filter.setCriterion(filterObj.elm, filterObj.getCFct, filterObj.iType, idx, filterObj.fType, filterObj.cType);
+	});
 });

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 	if (!defined('root')) {
 		define('root', '../');
 	}
@@ -50,7 +50,9 @@
 						$name = mysql_fetch_array($name_result)['name'];
 						
 						$msg .= '
-						'.$tkrRow['tkr'].'  '.$name.'  told advice: '.$tkrRow['old_advice'].'  new advice: '.$tkrRow['new_advice'];
+						'.$tkrRow['tkr'].'  '.$name.'
+						old advice: '.$tkrRow['old_advice'].'
+						new advice: '.$tkrRow['new_advice'];
 					}
 					
 					return $msg;

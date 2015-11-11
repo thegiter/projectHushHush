@@ -1247,37 +1247,119 @@ var shpsCmm = {};
 		}
 	};
 	
-	dmF.prototype.applyFilter = function() {
-		//process rows one by one
-		//for each row, check each criterion and filter type,
+	//if cValue is 'not set', it is considered a match
+	dmF.prototype.chkCNotMatch = function(row, cObj, idx) {
+		//get the criterion value, and the data value
+		//and compare according to ctype and ftype
+		var dValue = this.getDataFct(row, idx);
+		var cValue = cObj.getCFct(cObj.elm);
+
+		if (cValue == 'not set') {
+			return false;
+		}
 		
-		//if condition is satisfied, check next criterion,
-		//if one condition is not satisfied,  skip and hide the row
-		if (this.typeArr.some(function(obj, idx) {//some return true for not satisfied
-			
-		})) {
-			//hide row and additional rows
+		var result;
+		
+		switch (cObj.cType) {
+			case 'exact':
+				if (dValue == cValue) {
+					result = false;
+				} else {
+					result = true;
+				}
+				
+				break;
+			case 'greater':
+				if (dValue > cValue) {
+					result = false;
+				} else {
+					result = true;
+				}
+				
+				break;
+			case 'less':
+				if (dValue < cValue) {
+					result = false;
+				} else {
+					result = true;
+				}
+				
+				break;
+			case 'greaterEqual':
+				if (dValue >= cValue) {
+					result = false;
+				} else {
+					result = true;
+				}
+				
+				break;
+			case 'lessEqual':
+				if (dValue <= cValue) {
+					result = false;
+				} else {
+					result = true;
+				}
+				
+				break;
+			default:
+				return true;
+		}
+		
+		if (cObj.fType == 'include') {
+			return result;
 		} else {
-			//show row and additional rows
+			return !result;
 		}
 	};
 	
-	//elm is the criterion input element, and idx is the index of the criterion
+	dmF.prototype.applyFilter = function() {
+		var theThis = this;
+		
+		//process rows one by one
+		//for each row, check each criterion and filter type,
+		forEachNodeItem(this.rowsCnr.children, function(row, rIdx) {
+			//if condition is satisfied, check next criterion,
+			//if one condition is not satisfied,  skip and hide the row
+			if (theThis.typeArr.some(function(obj, idx) {//some return true for not satisfied
+				return theThis.chkCNotMatch(row, obj, idx);
+			})) {
+				//hide row and additional rows
+				row.classList.add('dsp-non');
+				
+				theThis.additionalRowsCnrs.forEach(function(cnr) {
+					cnr.children[rIdx].classList.add('dsp-non');
+				});
+			} else {
+				//show row and additional rows
+				row.classList.remove('dsp-non');
+				
+				theThis.additionalRowsCnrs.forEach(function(cnr) {
+					cnr.children[rIdx].classList.remove('dsp-non');
+				});
+			}
+		});
+	};
+	
+	//getCFct is the function that will return the value of the criterion
+	//and idx is the index of the criterion
 	//iType is the type of input
 	//iType can be input, dropdown, checkboxes, batchinput
 	//fType is the type of filter
 	//fType can be include, exclude,
 	//cType is the type of criteria
 	//cType can be exact, greater, less, greaterEqual, lessEqual
-	dmF.prototype.setCriterion = function(elm, iType, idx, fType, cType) {
+	dmF.prototype.setCriterion = function(elm, getCFct, iType, idx, fType, cType) {
 		this.typeArr[idx] = {
 			elm: elm,
+			getCFct: getCFct,
 			fType: fType,
 			cType: cType
 		};
 		
+		var theThis = this;
+		
 		this.addEvt(elm, iType, function(evt) {
-			
+			theThis.applyFilter();
 		});
 	};
 	//end data mgr

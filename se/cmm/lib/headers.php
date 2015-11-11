@@ -282,6 +282,13 @@
 			<h4>
 				Rough Raw Unrefined Advice
 			</h4>
+			
+			<select id="advice-filter" name="advice">
+				<option>not set</option>
+				<option>hold</option>
+				<option>buy</option>
+				<option>sell</option>
+			</select>
 		</td>'
 	];
 ?>
