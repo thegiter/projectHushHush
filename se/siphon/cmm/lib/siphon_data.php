@@ -230,7 +230,7 @@
 			$def->so = 1;
 		}
 		
-		$def->aabpr = $def->apbr * (1 + $def->tlroer);//adjusted avrg pb ratio
+		$def->aapbr = $def->apbr * (1 + $def->tlroer);//adjusted avrg pb ratio
 		
 		$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * $def->aapbr;
 		
