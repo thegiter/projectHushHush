@@ -138,6 +138,8 @@
 		$def->slyroe = str_replace(',', '', $matches[5]);
 		$def->tlyroe = str_replace(',', '', $matches[2]);
 		
+		$def->aroe = ($def->lyroe + $def->slyroe + $def->tlyroe) / 3;
+		
 		//in case roe was 0
 		$def->slyroe = ($def->slyroe == 0) ? 1 : $def->slyroe;
 		$def->tlyroe = ($def->tlyroe == 0) ? 1 : $def->tlyroe;
@@ -205,10 +207,12 @@
 		
 		$def->apbr = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
 
-		$def->gtlp = $def->lper / $car * ($def->lpbr / $car);
+		$std_roe = 17;
+		
+		$def->gtlp = $def->lper / (1 + $def->tlomr + $def->tlroer) * ($def->lpbr / ($def->t4qaroe / $std_roe)) / $car;
 		$def->lpgc = ($def->gtlp > 22.5) ? 0 : 1;
 		
-		$def->gtap = $def->aper / $car * ($def->apbr / $car);
+		$def->gtap = $def->aper / (1 + $def->aomg + $def->aroeg) * ($def->apbr / ($def->aroe / $std_roe)) / $car;
 		$def->apgc = ($def->gtap > 22.5) ? 0 : 1;
 		
 		$def->pc = $def->lpgc * $def->apgc * $cc;
@@ -226,11 +230,13 @@
 			$def->so = 1;
 		}
 		
-		$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * $def->apbr;
+		$def->aabpr = $def->apbr * (1 + $def->tlroer);//adjusted avrg pb ratio
+		
+		$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * $def->aapbr;
 		
 		$def->fptm = $def->fp / (1 + $ir);
 		
-		$def->prcv = $def->ce * $def->apbr * $cc * $def->apgc / $def->so;
+		$def->prcv = $def->ce * $def->aapbr * $cc * $def->apgc / $def->so;
 		
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		

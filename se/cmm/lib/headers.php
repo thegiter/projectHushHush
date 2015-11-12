@@ -191,7 +191,7 @@
 			Compatitive Advantage Rating
 		</td>',
 		'<td data-acro="lper">
-			<h3>
+			<h3 class="se-sortable">
 				Latest P/E Ratio
 			</h3>
 		</td>',
@@ -264,7 +264,7 @@
 			</h2>
 		</td>',
 		'<td data-acro="cpivr">
-			<h2>
+			<h2 class="se-sortable">
 				Current Price vs Intrinsic Value
 			</h2>
 		</td>',
