@@ -209,13 +209,25 @@
 
 		$std_roe = 17;
 		
-		$def->gtlp = $def->lper / (1 + $def->tlomr + $def->tlroer) * ($def->lpbr / ($def->t4qaroe / $std_roe)) / $car;
+		$alper = $def->lper / (1 * (1 + $def->tlomr) * (1 + $def->tlroer));
+		$alpbr = $def->lpbr / ($def->t4qaroe / $std_roe);
+		
+		$alper = ($alper < 0) ? 999.9999 : $alper;
+		$alpbr = ($alpbr < 0) ? 999.9999 : $alpbr;
+		
+		$def->gtlp = $alper * $alpbr / $car;
 		$def->lpgc = ($def->gtlp > 22.5) ? 0 : 1;
 		
-		$def->gtap = $def->aper / (1 + $def->aomg + $def->aroeg) * ($def->apbr / ($def->aroe / $std_roe)) / $car;
+		$aaper = $def->aper / (1 * (1 + $def->aomg) * (1 + $def->aroeg));
+		$aapbr = $def->apbr / ($def->aroe / $std_roe);
+
+		$aaper = ($aaper < 0) ? 999.9999 : $aaper;
+		$aapbr = ($aapbr < 0) ? 999.9999 : $aapbr;
+		
+		$def->gtap = $aaper * $aapbr / $car;
 		$def->apgc = ($def->gtap > 22.5) ? 0 : 1;
 		
-		$def->pc = $def->lpgc * $def->apgc * $cc;
+		$def->pc = $def->lpgc * $cc;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/');
 						
