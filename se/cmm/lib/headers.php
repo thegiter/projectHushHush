@@ -87,29 +87,9 @@
 				Last Year Operating Margin
 			</h3>
 		</td>',
-		'<td data-acro="lqom">
-			<h3>
-				Last Quarter Operating Margin
-			</h3>
-		</td>',
-		'<td data-acro="slqom">
-			<h3>
-				Second Last Quarter Operating Margin
-			</h3>
-		</td>',
-		'<td data-acro="tlqom">
-			<h3>
-				Third Last Quarter Operating Margin
-			</h3>
-		</td>',
-		'<td data-acro="flqom">
-			<h3>
-				Fourth Last Quarter Operating Margin
-			</h3>
-		</td>',
-		'<td data-acro="t4qaom">
+		'<td data-acro="t12maom">
 			<h3 class="se-sortable">
-				Trailing 4 Quarters Average Operating Margin
+				Trailing 12 Month Average Operating Margin
 			</h3>
 		</td>',
 		'<td data-acro="tlomr">
@@ -147,29 +127,9 @@
 				Last Year Return on Equity
 			</h3>
 		</td>',
-		'<td data-acro="lqroe">
+		'<td data-acro="t12maroe">
 			<h3>
-				Last Quarter Return on Equity
-			</h3>
-		</td>',
-		'<td data-acro="slqroe">
-			<h3>
-				Second Last Quarter Return on Equity
-			</h3>
-		</td>',
-		'<td data-acro="tlqroe">
-			<h3>
-				Third Last Quarter Return on Equity
-			</h3>
-		</td>',
-		'<td data-acro="flqroe">
-			<h3>
-				Fourth Last Quarter Return on Equity
-			</h3>
-		</td>',
-		'<td data-acro="t4qaroe">
-			<h3>
-				Trailing 4 Quarters Average Return on Equity
+				Trailing 12 Month Average Return on Equity
 			</h3>
 		</td>',
 		'<td data-acro="tlroer">

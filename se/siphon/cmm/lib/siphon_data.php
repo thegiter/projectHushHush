@@ -91,17 +91,15 @@
 
 		preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
 		
-		$def->lqom = str_replace(',', '', $matches[12]);
-		$def->slqom = str_replace(',', '', $matches[9]);
-		$def->tlqom = str_replace(',', '', $matches[6]);
-		$def->flqom = str_replace(',', '', $matches[3]);
-		
-		$def->t4qaom = ($def->lqom + $def->slqom + $def->tlqom + $def->flqom) / 4;
+		$def->t12maom = str_replace(',', '', $matches[12]);
+		$def->lt12maom = str_replace(',', '', $matches[9]);
+		$def->st12maom = str_replace(',', '', $matches[6]);
+		$def->tt12maom = str_replace(',', '', $matches[3]);
 		
 		//in case om was 0
 		$def->lyom = ($def->lyom == 0) ? 1 : $def->lyom;
 		
-		$def->tlomr = ($def->t4qaom - $def->lyom) / abs($def->lyom);
+		$def->tlomr = ($def->t12maom - $def->lyom) / abs($def->lyom);
 		
 		$def->apcr = $def->lypcr * (1 + $def->tlomr);
 		$def->cpii = $def->cap * $def->apcr;
@@ -148,17 +146,15 @@
 		
 		preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>/', $ctt, $matches);
 		
-		$def->lqroe = str_replace(',', '', $matches[12]);
-		$def->slqroe = str_replace(',', '', $matches[9]);
-		$def->tlqroe = str_replace(',', '', $matches[6]);
-		$def->flqroe = str_replace(',', '', $matches[3]);
-		
-		$def->t4qaroe = ($def->lqroe + $def->slqroe + $def->tlqroe + $def->flqroe) / 4;
+		$def->t12maroe = str_replace(',', '', $matches[12]);
+		$def->lt12maroe = str_replace(',', '', $matches[9]);
+		$def->slt12maroe = str_replace(',', '', $matches[6]);
+		$def->tlt12maroe = str_replace(',', '', $matches[3]);
 		
 		//in case om was 0
 		$def->lyroe = ($def->lyroe == 0) ? 1 : $def->lyroe;
 		
-		$def->tlroer = ($def->t4qaroe - $def->lyroe) / abs($def->lyroe);
+		$def->tlroer = ($def->t12maroe - $def->lyroe) / abs($def->lyroe);
 		
 		$def->afi = $def->fi * (1 + $def->tlroer);
 		$def->fe = $def->ce + $def->afi;
