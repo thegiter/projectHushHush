@@ -100,10 +100,11 @@
 		$def->slt12maom = str_replace(',', '', $matches[6]);
 		$def->tlt12maom = str_replace(',', '', $matches[3]);
 		
-		//in case om was 0
-		$def->lyom = ($def->lyom == 0) ? 1 : $def->lyom;
+		$at12maom = ($def->t12maom + $def->lt12maom + $def->slt12maom + $def->tlt12maom) / 4;
 		
-		$def->tlomr = ($def->t12maom - $def->lyom) / 100;
+		$lower_aom = ($at12maom < $def->t12maom) ? $at12maom : $def->t12maom;
+		
+		$def->tlomr = ($lower_aom - $def->lyom) / 100;
 		
 		$def->apcr = $def->lypcr * (1 + $def->tlomr);
 		$def->cpii = $def->cap * $def->apcr;
@@ -155,10 +156,14 @@
 		$def->slt12maroe = str_replace(',', '', $matches[6]);
 		$def->tlt12maroe = str_replace(',', '', $matches[3]);
 		
+		$at12maroe = ($def->t12maroe + $def->lt12maroe + $def->slt12maroe + $def->tlt12maroe) / 4;
+		
+		$lower_aroe = ($at12maroe < $def->t12maroe) ? $at12maroe : $def->t12maroe;
+		
 		//in case om was 0
 		$def->lyroe = ($def->lyroe == 0) ? 1 : $def->lyroe;
 		
-		$def->tlroer = ($def->t12maroe - $def->lyroe) / abs($def->lyroe);
+		$def->tlroer = ($lower_aroe - $def->lyroe) / abs($def->lyroe);
 		
 		$def->afi = $def->fi * (1 + $def->tlroer);
 		$def->fe = $def->ce + $def->afi;

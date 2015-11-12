@@ -111,6 +111,12 @@
 			<h3>
 				Weighted Average Cost of Debt Ratio
 			</h3>
+			
+			<label>Exlude:</label>
+			<select id="wacodr-filter" name="wacodr">
+				<option>not set</option>
+				<option>\>\= 9999.9999</option>
+			</select>
 		</td>',
 		'<td data-acro="interest">
 			<h4>
