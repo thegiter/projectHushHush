@@ -93,8 +93,8 @@
 		
 		$def->t12maom = str_replace(',', '', $matches[12]);
 		$def->lt12maom = str_replace(',', '', $matches[9]);
-		$def->st12maom = str_replace(',', '', $matches[6]);
-		$def->tt12maom = str_replace(',', '', $matches[3]);
+		$def->slt12maom = str_replace(',', '', $matches[6]);
+		$def->tlt12maom = str_replace(',', '', $matches[3]);
 		
 		//in case om was 0
 		$def->lyom = ($def->lyom == 0) ? 1 : $def->lyom;
@@ -206,7 +206,7 @@
 		$std_roe = 17;
 		
 		$alper = $def->lper / (1 * (1 + $def->tlomr) * (1 + $def->tlroer));
-		$alpbr = $def->lpbr / ($def->t4qaroe / $std_roe);
+		$alpbr = $def->lpbr / ($def->t12maroe / $std_roe);
 		
 		$alper = ($alper < 0) ? 999.9999 : $alper;
 		$alpbr = ($alpbr < 0) ? 999.9999 : $alpbr;
