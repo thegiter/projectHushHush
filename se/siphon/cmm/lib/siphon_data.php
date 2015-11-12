@@ -75,8 +75,12 @@
 		$def->lycap = $def->lye + $def->lyd;
 		$def->lypcr = $def->lypii / $def->lycap;
 		
+		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
+		
+		$def->lpba = str_replace(',', '', $matches[1]) / 10;
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
-						
+
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
 		$def->lyom = str_replace(',', '', $matches[8]);
@@ -99,7 +103,7 @@
 		//in case om was 0
 		$def->lyom = ($def->lyom == 0) ? 1 : $def->lyom;
 		
-		$def->tlomr = ($def->t12maom - $def->lyom) / abs($def->lyom);
+		$def->tlomr = ($def->t12maom - $def->lyom) / 100;
 		
 		$def->apcr = $def->lypcr * (1 + $def->tlomr);
 		$def->cpii = $def->cap * $def->apcr;
@@ -202,25 +206,23 @@
 		preg_match('/Annual Data[\s\S]+pb[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
 		$def->apbr = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
-
-		$std_roe = 17;
 		
-		$alper = $def->lper / (1 * (1 + $def->tlomr) * (1 + $def->tlroer));
-		$alpbr = $def->lpbr / ($def->t12maroe / $std_roe);
+		$alper = $def->lper;
+		$def->alpbr = $def->lpbr / $def->lpba;
 		
 		$alper = ($alper < 0) ? 999.9999 : $alper;
-		$alpbr = ($alpbr < 0) ? 999.9999 : $alpbr;
+		$def->alpbr = ($def->alpbr < 0) ? 999.9999 : $def->alpbr;
 		
-		$def->gtlp = $alper * $alpbr / $car;
+		$def->gtlp = $alper * $def->alpbr / $car;
 		$def->lpgc = ($def->gtlp > 22.5) ? 0 : 1;
 		
-		$aaper = $def->aper / (1 * (1 + $def->aomg) * (1 + $def->aroeg));
-		$aapbr = $def->apbr / ($def->aroe / $std_roe);
+		$aaper = $def->aper;
+		$def->aapbr = $def->apbr;
 
 		$aaper = ($aaper < 0) ? 999.9999 : $aaper;
-		$aapbr = ($aapbr < 0) ? 999.9999 : $aapbr;
+		$def->aapbr = ($def->aapbr < 0) ? 999.9999 : $def->aapbr;
 		
-		$def->gtap = $aaper * $aapbr / $car;
+		$def->gtap = $aaper * $def->aapbr / $car;
 		$def->apgc = ($def->gtap > 22.5) ? 0 : 1;
 		
 		$def->pc = $def->lpgc * $cc;
@@ -238,13 +240,11 @@
 			$def->so = 1;
 		}
 		
-		$def->aapbr = $def->apbr * (1 + $def->tlroer);//adjusted avrg pb ratio
-		
-		$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * $def->aapbr;
+		$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * ($def->lpba * (1 + $def->tlroer));
 		
 		$def->fptm = $def->fp / (1 + $ir);
 		
-		$def->prcv = $def->ce * $def->aapbr * $cc * $def->apgc / $def->so;
+		$def->prcv = $def->pc * $def->bps * $def->lpba;
 		
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		

@@ -150,6 +150,11 @@
 		'<td data-acro="car" class="input">
 			Compatitive Advantage Rating
 		</td>',
+		'<td data-acro="lpba">
+			<h3>
+				Latest P/B Adjustment
+			</h3>
+		</td>',
 		'<td data-acro="lper">
 			<h3 class="se-sortable">
 				Latest P/E Ratio
