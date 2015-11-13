@@ -262,11 +262,11 @@
 			$def->so = 1;
 		}
 		
-		$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * ($def->lpba * (1 + $def->tlroer));
+		$def->fp = ($def->fe / ($def->so + $def->anios)) * ($def->lpba * (1 + $def->tlroer));
 		
 		$def->fptm = $def->fp / (1 + $ir);
 		
-		$def->prcv = $def->pc * $def->bps * $def->lpba;
+		$def->prcv = $def->bps * $def->lpba;
 		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		

@@ -101,7 +101,7 @@ shpsCmm.domReady().then(function() {
 				return 0;
 			}
 			
-			return row.children[idx].textContent;
+			return /(\-)?[\d\.]+/.exec(row.children[idx].textContent)[0];
 		}, 'num', [tkrCol]);
 		
 		elm.addEventListener('click', toggleSort);
@@ -110,6 +110,21 @@ shpsCmm.domReady().then(function() {
 	var filterElms = [
 		{
 			elm: document.getElementById('advice-filter'),
+			getCFct: function(elm) {
+				var value = elm.value;
+				
+				if (value == undefined) {
+					value = 'not set';
+				}
+				
+				return value;
+			},
+			iType: 'dropdown',
+			fType: 'include',
+			cType: 'exact'
+		},
+		{
+			elm: document.getElementById('pc-filter'),
 			getCFct: function(elm) {
 				var value = elm.value;
 				

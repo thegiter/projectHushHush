@@ -208,6 +208,12 @@
 			<h2>
 				Price Condition
 			</h2>
+			
+			<select id="pc-filter" name="pc">
+				<option>not set</option>
+				<option>1</option>
+				<option>0</option>
+			</select>
 		</td>',
 		'<td data-acro="anios">
 			<h3>
