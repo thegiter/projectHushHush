@@ -114,7 +114,7 @@
 			function siphonNext() {
 				//if no more rows, terminate
 				if (tkrRows.length <= 0) {
-					scb.msgCnr.removeChild(scb.tMsgCnrs[threadNum]);
+					scb.tMsgCnrs[threadNum].classList.add('dsp-non');
 					
 					return false;
 				}

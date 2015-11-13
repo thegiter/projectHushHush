@@ -137,6 +137,48 @@ shpsCmm.domReady().then(function() {
 			iType: 'dropdown',
 			fType: 'include',
 			cType: 'exact'
+		},
+		{
+			elm: document.getElementById('lper-filter'),
+			getCFct: function(elm) {
+				var match = /[\d\.]+/.exec(elm.value);
+				
+				var value;
+				
+				if (match) {
+					value = match[0];
+				} else {
+					value = elm.value;
+				}
+				
+				return value;
+			},
+			iType: 'dropdown',
+			fType: 'exclude',
+			cType: 'greaterEqual'
+		},
+		{
+			elm: document.getElementById('wacodr-filter'),
+			getCFct: function(elm) {
+				var match = /[\d\.]+/.exec(elm.value);
+				
+				var value;
+				
+				if (match) {
+					value = match[0];
+				} else {
+					value = elm.value;
+				}
+				
+				if (value == undefined) {
+					value = 'not set';
+				}
+				
+				return value;
+			},
+			iType: 'dropdown',
+			fType: 'exclude',
+			cType: 'greaterEqual'
 		}
 	];
 	

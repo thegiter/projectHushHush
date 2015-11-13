@@ -165,6 +165,12 @@
 			<h3 class="se-sortable">
 				Latest P/E Ratio
 			</h3>
+			
+			<label>Exlude:</label>
+			<select id="lper-filter" name="lper">
+				<option>not set</option>
+				<option>>= 999.9999</option>
+			</select>
 		</td>',
 		'<td data-acro="lpbr">
 			<h3>
