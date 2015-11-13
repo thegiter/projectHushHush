@@ -114,7 +114,7 @@
 			function siphonNext() {
 				//if no more rows, terminate
 				if (tkrRows.length <= 0) {
-					scb.tMsgCnrs[threadNum].textContent = 'Last stock siphoned, siphon complete!';
+					scb.msgCnr.removeChild(scb.tMsgCnrs[threadNum]);
 					
 					return false;
 				}

@@ -14,43 +14,13 @@
 		} else {//then excute sql query
 			//we assume table already exist
 			if (!@mysql_query('ALTER TABLE shse_defs
-			change t4qaom t12maom DECIMAL(7, 4),
-			change slqom lt12maom DECIMAL(7, 4),
-			change tlqom slt12maom DECIMAL(7, 4),
-			change flqom tlt12maom DECIMAL(7, 4),
-			change tlomr tlomr DECIMAL(33, 30),
-			change t4qaroe t12maroe DECIMAL(7, 4),
-			change slqroe lt12maroe DECIMAL(7, 4),
-			change tlqroe slt12maroe DECIMAL(7, 4),
-			change flqroe tlt12maroe DECIMAL(7, 4),
-			change tlroer tlroer DECIMAL(33, 30)')) {
-				die('shse rename cols error');
+			ADD lpba DECIMAL(33, 30)')) {
+				die('shse add cols error');
 			}
 			
 			if (!@mysql_query('ALTER TABLE szse_defs
-			change t4qaom t12maom DECIMAL(7, 4),
-			change slqom lt12maom DECIMAL(7, 4),
-			change tlqom slt12maom DECIMAL(7, 4),
-			change flqom tlt12maom DECIMAL(7, 4),
-			change tlomr tlomr DECIMAL(33, 30),
-			change t4qaroe t12maroe DECIMAL(7, 4),
-			change slqroe lt12maroe DECIMAL(7, 4),
-			change tlqroe slt12maroe DECIMAL(7, 4),
-			change flqroe tlt12maroe DECIMAL(7, 4),
-			change tlroer tlroer DECIMAL(33, 30)')) {
-				die('szse rename cols error');
-			}
-			
-			if (!@mysql_query('ALTER TABLE shse_defs
-			DROP lqom,
-			DROP lqroe')) {
-				die('shse remove cols error');
-			}
-			
-			if (!@mysql_query('ALTER TABLE szse_defs
-			DROP lqom,
-			DROP lqroe')) {
-				die('szse remove cols error');
+			ADD lpba DECIMAL(33, 30)')) {
+				die('szse add cols error');
 			}
 			
 			echo 'Table altered!';

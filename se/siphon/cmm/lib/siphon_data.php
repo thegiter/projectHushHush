@@ -16,6 +16,9 @@
 	}
 	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
+		$dr = .2;//discount rate is the minimum profit rate to justify the investment
+		$mos = -.45;//margin of safety
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
 
 		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
@@ -79,17 +82,19 @@
 		
 		$lroc = str_replace(',', '', $matches[1]);
 		
-		$vrr = 14;
+		$vrr = 12;
 		
-		$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
+		/*$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
 		
 		$crr = 100 / $alroc;
 		
 		$vcr = $vrr / $crr;
 		
-		$ver = $vcr / (1 + $def->der);
+		$ver = $vcr / (1 + $def->der);*/
+		
+		$ver = $def->cap * $lroc / 100 * $vrr / $def->ce;
 
-		$def->lpba = $ver;
+		$def->lpba = $ver / (1 + $dr);
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 
@@ -225,7 +230,7 @@
 		$def->apbr = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
 		
 		$alper = $def->lper;
-		$def->alpbr = $def->lpbr / $def->lpba;
+		$def->alpbr = $def->lpbr;
 		
 		$alper = ($alper < 0) ? 999.9999 : $alper;
 		$def->alpbr = ($def->alpbr < 0) ? 999.9999 : $def->alpbr;
@@ -263,8 +268,6 @@
 		
 		$def->prcv = $def->pc * $def->bps * $def->lpba;
 		
-		$dr = .2;//discount rate is the minimum profit rate to justify the investment
-		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		
 		preg_match('/\<font\s+class\=\"stock_header_price\"\>\<img[^\>]+\>.*\>([^\<\%]+)\<\/font\>/', $ctt, $matches);
@@ -295,7 +298,7 @@
 		
 		$def->advice = 'hold';
 		
-		if ($def->cpivr < -.25) {
+		if ($def->cpivr < $mos) {
 			$def->advice = 'buy';
 		}
 		

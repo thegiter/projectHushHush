@@ -115,7 +115,7 @@
 			<label>Exlude:</label>
 			<select id="wacodr-filter" name="wacodr">
 				<option>not set</option>
-				<option>\>\= 9999.9999</option>
+				<option>>= 9999.9999</option>
 			</select>
 		</td>',
 		'<td data-acro="interest">

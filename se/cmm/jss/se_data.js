@@ -2,6 +2,7 @@ var seData = {};
 
 (function() {
 	var dr = .2;
+	var mos = -.45;
 	
 	var sd = seData;
 	
@@ -30,7 +31,7 @@ var seData = {};
 			case 'cpivr':
 				elm.className = 'cpivr-cnr';
 				
-				if (defValue < -.25) {
+				if (defValue < mos) {
 					elm.dataset.indicator = 'buy';
 				} else {
 					elm.dataset.indicator = '';
