@@ -77,7 +77,9 @@
 		
 		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
 		
-		$def->lpba = str_replace(',', '', $matches[1]) / 10;
+		$lroc = str_replace(',', '', $matches[1]);
+		
+		$def->lpba =  $lroc * (1 / (1 + ($lroc - 10) / 100))) / 10;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 
