@@ -79,7 +79,17 @@
 		
 		$lroc = str_replace(',', '', $matches[1]);
 		
-		$def->lpba =  $lroc * (1 / (1 + ($lroc - 10) / 100))) / 10;
+		$vrr = 14;
+		
+		$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
+		
+		$crr = 100 / $alroc;
+		
+		$vcr = $vrr / $crr;
+		
+		$ver = $vcr / (1 + $def->der);
+
+		$def->lpba = $ver;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 
