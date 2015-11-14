@@ -1,5 +1,5 @@
 <?php
-	header('Access-Control-Allow-Origin: http://'.$_SERVER['SERVER_NAME']);
+	header('Access-Control-Allow-Origin: http://'.str_replace('/ses\d+/', 'www', $_SERVER['SERVER_NAME']);
 
 	if (!defined('root')) {
 		define('root', '../../../../../');
