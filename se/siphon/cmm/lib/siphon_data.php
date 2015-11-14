@@ -180,7 +180,9 @@
 		
 		$def->tlroer = $lower_aroe / $def->lyroe;
 		
-		$def->afi = $def->fi * $def->tlroer;
+		$roeai = $def->lyni * $def->tlroer;
+		
+		$def->afi = ($def->fi + $roeai) / 2;
 		
 		$fe = $def->ce + $def->afi;
 		
