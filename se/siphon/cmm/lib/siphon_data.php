@@ -200,7 +200,11 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		$roeai = $def->fi * $def->tlroer;
+		if ($def->fi < 0) {
+			$roeai = $def->fi * abs($def->tlroer);
+		} else {
+			$roeai = $def->fi * $def->tlroer;
+		}
 		
 		$def->afi = ($def->fi + $roeai) / 2;
 		
