@@ -137,7 +137,7 @@
 			$def->tlomr = $lower_aom / $def->lyom;
 		}
 		
-		$def->apcr = $def->lypcr * (($def->tlomr - 1) * $oinir + 1);
+		$def->apcr = $def->lypcr * $oinir * $def->tlomr;
 		$def->cpii = $def->cap * $def->apcr;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
