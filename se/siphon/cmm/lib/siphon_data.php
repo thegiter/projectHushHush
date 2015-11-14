@@ -103,6 +103,7 @@
 		$oinir = $def->lyoi / $def->lyni;
 		
 		$oinir = ($oinir > 1) ? 1 : $oinir;
+		$oinir = ($oinir < -1) ? -1 : $oinir;
 		
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -199,7 +200,7 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		$roeai = $def->lyni * $def->tlroer;
+		$roeai = $def->fi * $def->tlroer;
 		
 		$def->afi = ($def->fi + $roeai) / 2;
 		
