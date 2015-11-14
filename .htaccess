@@ -488,6 +488,10 @@ RewriteRule ^about/xx_tpl\.php$ - [L]
 RewriteCond %{QUERY_STRING} !^ir=true$
 RewriteRule ^udr_cst/$ a/mother/non/fucking/existent.file [L]
 
+## SE Subdomain ############################################
+RewriteCond %{HTTP_HOST} ^ses\d+
+RewriteRule . se/siphon/def/db/batch/siphon.php [L]
+
 # Root (General) ###########################################
 RewriteRule ^manifest.php$ - [L]
 RewriteRule ^(.+/)?$ $1index.php?di=true [L,QSA]

@@ -116,10 +116,14 @@
 		
 		$lower_aom = ($at12maom < $def->t12maom) ? $at12maom : $def->t12maom;
 		
-		//in case om was 0
-		$def->lyom = ($def->lyom <= 0) ? 1 : $def->lyom;
+		$def->t12maom = $lower_aom;
 		
-		$def->tlomr = $lower_aom / $def->lyom;
+		//in case om was 0
+		if ($def->lyom <= 0) {
+			$def->tlomr = 0;
+		} else {
+			$def->tlomr = $lower_aom / $def->lyom;
+		}
 		
 		$def->apcr = $def->lypcr * $def->tlomr;
 		$def->cpii = $def->cap * $def->apcr;
@@ -175,10 +179,14 @@
 		
 		$lower_aroe = ($at12maroe < $def->t12maroe) ? $at12maroe : $def->t12maroe;
 		
-		//in case om was 0
-		$def->lyroe = ($def->lyroe <= 0) ? 1 : $def->lyroe;
+		$def->t12maroe = $lower_aroe;
 		
-		$def->tlroer = $lower_aroe / $def->lyroe;
+		//in case om was 0
+		if ($def->lyroe <= 0) {
+			$def->tlroer = 0;
+		} else {
+			$def->tlroer = $lower_aroe / $def->lyroe;
+		}
 		
 		$roeai = $def->lyni * $def->tlroer;
 		
