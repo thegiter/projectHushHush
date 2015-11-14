@@ -134,7 +134,7 @@
 		if ($def->lyom <= 0) {
 			$def->tlomr = 0;
 		} else {
-			$def->tlomr = $lower_aom / $def->lyom - $capgr;
+			$def->tlomr = $lower_aom / $def->lyom;
 		}
 		
 		$def->apcr = $def->lypcr * (($def->tlomr - 1) * $oinir + 1);
