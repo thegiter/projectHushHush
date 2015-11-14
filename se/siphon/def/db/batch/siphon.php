@@ -1,4 +1,6 @@
 <?php
+	header('Access-Control-Allow-Origin: http://'.$_SERVER['SERVER_NAME']);
+
 	if (!defined('root')) {
 		define('root', '../../../../../');
 	}
