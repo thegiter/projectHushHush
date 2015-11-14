@@ -79,6 +79,8 @@
 		$def->lycap = $def->lye + $def->lyd;
 		$def->lypcr = $def->lypii / $def->lycap;
 		
+		$capgr = $def->cap / $def->lycap;
+		
 		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
 		
 		$lroc = str_replace(',', '', $matches[1]);
@@ -93,6 +95,15 @@
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 
+		preg_match('/fiscal year[\s\S]+Operating Income.+\(A\: Dec.[\s\S]+\<td\>\=\<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+		
+		$def->lyoi = str_replace(',', '', $matches[1]);
+		
+		//measures the impact of operating income on net income
+		$oinir = $def->lyoi / $def->lyni;
+		
+		$oinir = ($oinir > 1) ? 1 : $oinir;
+		
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
 		$def->lyom = str_replace(',', '', $matches[8]);
@@ -122,10 +133,10 @@
 		if ($def->lyom <= 0) {
 			$def->tlomr = 0;
 		} else {
-			$def->tlomr = $lower_aom / $def->lyom;
+			$def->tlomr = $lower_aom / $def->lyom - $capgr;
 		}
 		
-		$def->apcr = $def->lypcr * $def->tlomr;
+		$def->apcr = $def->lypcr * (($def->tlomr - 1) * $oinir + 1);
 		$def->cpii = $def->cap * $def->apcr;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
@@ -314,7 +325,7 @@
 			$def->advice = 'buy';
 		}
 		
-		if ($def->cpfptmr >= $dr) {
+		if ($def->cpfptmr >= $dr || $cc <= 0) {
 			$def->advice = 'sell';
 		}
 		
