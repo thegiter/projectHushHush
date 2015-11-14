@@ -18,7 +18,8 @@
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$mos = -.45;//margin of safety
-		
+		$vir = 10;//value to income ratio		
+				
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
 
 		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
@@ -82,8 +83,6 @@
 		
 		$lroc = str_replace(',', '', $matches[1]);
 		
-		$vrr = 12;
-		
 		/*$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
 		
 		$crr = 100 / $alroc;
@@ -91,10 +90,6 @@
 		$vcr = $vrr / $crr;
 		
 		$ver = $vcr / (1 + $def->der);*/
-		
-		$ver = $def->cap * $lroc / 100 * $vrr / $def->ce;
-
-		$def->lpba = $ver / (1 + $dr);
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 
@@ -121,9 +116,12 @@
 		
 		$lower_aom = ($at12maom < $def->t12maom) ? $at12maom : $def->t12maom;
 		
-		$def->tlomr = ($lower_aom - $def->lyom) / 100;
+		//in case om was 0
+		$def->lyom = ($def->lyom <= 0) ? 1 : $def->lyom;
 		
-		$def->apcr = $def->lypcr * (1 + $def->tlomr);
+		$def->tlomr = $lower_aom / $def->lyom;
+		
+		$def->apcr = $def->lypcr * $def->tlomr;
 		$def->cpii = $def->cap * $def->apcr;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
@@ -178,12 +176,13 @@
 		$lower_aroe = ($at12maroe < $def->t12maroe) ? $at12maroe : $def->t12maroe;
 		
 		//in case om was 0
-		$def->lyroe = ($def->lyroe == 0) ? 1 : $def->lyroe;
+		$def->lyroe = ($def->lyroe <= 0) ? 1 : $def->lyroe;
 		
-		$def->tlroer = ($lower_aroe - $def->lyroe) / abs($def->lyroe);
+		$def->tlroer = $lower_aroe / $def->lyroe;
 		
-		$def->afi = $def->fi * (1 + $def->tlroer);
-		$def->fe = $def->ce + $def->afi;
+		$def->afi = $def->fi * $def->tlroer;
+		
+		$fe = $def->ce + $def->afi;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
 						
@@ -262,11 +261,14 @@
 			$def->so = 1;
 		}
 		
-		$def->fp = ($def->fe / ($def->so + $def->anios)) * ($def->lpba * (1 + $def->tlroer));
+		$cv = $def->lyni * $vir / (1 + $dr) * $car;
+		$fv = $def->afi * $vir / (1 + $dr) * $car;
+		
+		$def->fp = ($fv / ($def->so + $def->anios));
 		
 		$def->fptm = $def->fp / (1 + $ir);
 		
-		$def->prcv = $def->bps * $def->lpba;
+		$def->prcv = $cv / $def->so;
 		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		

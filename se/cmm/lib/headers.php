@@ -148,18 +148,8 @@
 				Adjusted Future Income
 			</h4>
 		</td>',
-		'<td data-acro="fe">
-			<h4>
-				Future Equity
-			</h4>
-		</td>',
 		'<td data-acro="car" class="input">
 			Compatitive Advantage Rating
-		</td>',
-		'<td data-acro="lpba">
-			<h3>
-				Latest P/B Adjustment
-			</h3>
 		</td>',
 		'<td data-acro="lper">
 			<h3 class="se-sortable">
@@ -240,6 +230,11 @@
 			<h4>
 				Price Relfecting Current Value
 			</h4>
+		</td>',
+		'<td data-acro="cp">
+			<h3>
+				Current Price
+			</h3>
 		</td>',
 		'<td data-acro="iv">
 			<h2>
