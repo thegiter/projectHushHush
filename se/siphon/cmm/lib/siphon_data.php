@@ -319,11 +319,11 @@
 		
 		if ($def->lyni == 0) {
 			$def->igr = 1;
-		} else if ($def->lyni < 0) {
-			$def->igr = 0;
 		} else {
 			$def->igr = $def->t12mni / $def->lyni;
 		}
+		
+		$def->igr = ($def->igr < 1) ? 1 : $def->igr;
 		
 		$lyv = $def->lyni * $vir * $def->igr / (1 + $dr);
 		$cv = $def->t12mni * $vir * $def->igr / (1 + $dr);
