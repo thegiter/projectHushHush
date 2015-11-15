@@ -230,7 +230,7 @@
 	
 		$def->pci = $pcv->pi;
 
-		if (($def->pci == 0) || ($def->t12mni < 0)) {
+		if (($def->pci <= 0) || ($def->t12mni < 0)) {
 			$def->pa = 0;
 		} else {
 			$def->pa = $def->t12mni / $def->pci;
