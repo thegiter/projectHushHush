@@ -1,137 +1,161 @@
 ﻿<?php
-	echo 'mc: ';
+	$dr = .2;//discount rate is the minimum profit rate to justify the investment
+	$mos = -.45;//margin of safety
+	$vir = 10;//value to earnings ratio		
+	$ir = .012;
 	
-	$bps = 3.17;
-	
-	echo '
-	bps eop: '.$bps;
-	
-	$so = 93.5;
+	function projectedIncome($oni, $opcr, $ooi, $oyom, $ot12maom, $pequity, $pder, $wacodr, $oyroe, $ot12maroe) {
+		$result = new stdClass;
 
-	echo '
-	so eop: '.$so;
-	
-	$ce = $bps * $so;
-	
-	echo '
-	equity eop: '.$ce;
-	
-	$der = 0;
+		//measures the impact of operating income on net income
+		$oinir = $ooi / $oni;//1
+		
+		$oinir = ($oinir > 1) ? 1 : $oinir;
+		$oinir = ($oinir < -1) ? -1 : $oinir;
+		
+		//in case om was 0
+		if ($oyom <= 0) {
+			$tlomr = 0;
+		} else {
+			$tlomr = $ot12maom / $oyom;
+		}
+		
+		$result->tlomr = $tlomr;
 
-	$debt = $ce * $der;
-	$cap = $debt + $ce;
+		$ppcr = $opcr * $oinir * $tlomr;
+echo ' projected pcr: '.$ppcr;
+
+		$pdebt = $pequity * $pder;
+		$pcap = $pequity + $pdebt;
+		$ppii = $pcap * $ppcr;
+		
+		$pinterest = $pdebt * $wacodr;
+		$result->pinterest = $pinterest;
+		$pi = $ppii - $pinterest;
+		
+			//in case om was 0
+		if ($oyroe <= 0) {
+			$tlroer = 0;
+		} else {
+			$tlroer = $ot12maroe / $oyroe;//44 / 49 = .8
+		}
+		
+		if ($pi < 0) {
+			$roeai = $pi * abs($tlroer);
+		} else {
+			$roeai = $pi * $tlroer;
+		}
+		
+		$result->pi = ($pi + $roeai) / 2;
+		
+		return $result;
+	}
 	
-	$lyni = 139.5;
+	$def = new stdClass;
+
+	$def->bps = 3.61;
+		
+	$def->so = 324794;
+
+	$def->ce = $def->bps * $def->so;
+echo '
+ce: '.$def->ce;
+	$def->der = .52;
+echo '
+der: '.$def->der;
+
+	$def->lyni = 179461;
+echo '
+lyni: '.$def->lyni;
+
+	$def->t12mni = 180232;
+
+	$def->lyie = -269398;
+
+	$def->lyltd = 550090;
+	$def->lystd = 0;
 	
-	$lyie = -28.7;
+	$def->lyd = $def->lyltd + $def->lystd;
+echo '
+ly debt: '.$def->lyd;
+	$def->lye = 1031066;
 	
-	$lypii = $lyni - $lyie;
+	$def->cdebt = $def->ce * $def->der;//0
+		
+	$def->ccap = $def->cdebt + $def->ce;//556
+
+	$def->lypii = $def->lyni - $def->lyie;//139.9
+		
+	$def->lycap = $def->lye + $def->lyd;//296.8
+	$def->lypcr = $def->lypii / $def->lycap;//.45
+		
+	/*$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
 	
-	$lyltd = 0;
-	$lystd = 0;
+	$crr = 100 / $alroc;
 	
-	$lyd = 0;
+	$vcr = $vrr / $crr;
 	
-	$lye = 296.8;
+	$ver = $vcr / (1 + $def->der);*/
+
+	$def->lyoi = 230944;
 	
-	$lycap = $lye + $lyd;
-	$lypcr = $lypii / $lycap;
+	$def->t12moi = 230521;
 	
+	$def->lyom = 44.34;
 	
+	$def->t12maom = 47.33;
+	$def->lt12maom = 47.34;
+	$def->slt12maom = 49.51;
+	$def->tlt12maom = 27.35;
 	
-	$apb = 25.35 * (1 / (1 + 15.35 / 100)) / 10;
+	$at12maom = ($def->t12maom + $def->lt12maom + $def->slt12maom + $def->tlt12maom) / 4;
 	
-	echo '
-	avr pb: '.$apb;
+	$lower_aom = ($at12maom < $def->t12maom) ? $at12maom : $def->t12maom;
+	//$lower_aom = $def->t12maom;
 	
-	$lyom = 49.12;
-	
-	$t12maom = 35.69;
-	$at12maom = 23.095;
-	
-	$lower_aom = ($at12maom < $t12maom) ? $at12maom : $t12maom;
-	
-	$tlomr = ($lower_aom - $lyom) / 100;
-	
-	$def->apcr = $def->lypcr * (1 + $def->tlomr);
-	$def->cpii = $def->cap * $def->apcr;
-	
-	$ctt = curl_get_contents('http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
-					
-	preg_match('/Cost of Debt \=.* ([^\=]+)\%\./', $ctt, $matches);
+	$def->t12maom = $lower_aom;
 	
 	//cost of debt can be invalid sometimes, due to company paying interest when there was no debt
 	//we can't just say cost of debt is 0 in this case, but without cost of debt, we can not calculate the proper interest expense
 	//we will have to skip the stock by setting cost of debt to very high
-	if (!$matches) {
-		//check if no cost of debt
-		preg_match('/Cost of Debt \=[^\=]*\=\%\./', $ctt, $matches);
-		
-		if (!$matches) {
-			$def->wacodr = 9999.9999;
-		} else {
-			//error;
-			die('cost of debt error');
-		}
-	} else {
-		$def->wacodr = str_replace(',', '', $matches[1]) / 100;
-	}
+	$def->wacodr = 0.54;
 	
-	$def->interest = $def->debt * $def->wacodr;
-	$def->fi = $def->cpii - $def->interest;
+	$def->lyroe = 19.15;
 
-	$ctt = curl_get_contents('http://www.gurufocus.com/term/ROE/'.$ticker.'/Return%2Bon%2BEquity/');
-					
-	preg_match('/Annual Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
-	
-	$def->lyroe = str_replace(',', '', $matches[8]);
-	$def->slyroe = str_replace(',', '', $matches[5]);
-	$def->tlyroe = str_replace(',', '', $matches[2]);
-	
-	$def->aroe = ($def->lyroe + $def->slyroe + $def->tlyroe) / 3;
-	
-	//in case roe was 0
-	$def->slyroe = ($def->slyroe == 0) ? 1 : $def->slyroe;
-	$def->tlyroe = ($def->tlyroe == 0) ? 1 : $def->tlyroe;
-	
-	$def->aroeg = (($def->lyroe - $def->slyroe) / abs($def->slyroe) + ($def->slyroe - $def->tlyroe) / abs($def->tlyroe)) / 2;
-	
-	preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>/', $ctt, $matches);
-	
-	$def->t12maroe = str_replace(',', '', $matches[12]);
-	$def->lt12maroe = str_replace(',', '', $matches[9]);
-	$def->slt12maroe = str_replace(',', '', $matches[6]);
-	$def->tlt12maroe = str_replace(',', '', $matches[3]);
+	$def->t12maroe = 17.05;
+	$def->lt12maroe = 17.9;
+	$def->slt12maroe = 20.09;
+	$def->tlt12maroe = 10.87;
 	
 	$at12maroe = ($def->t12maroe + $def->lt12maroe + $def->slt12maroe + $def->tlt12maroe) / 4;
 	
 	$lower_aroe = ($at12maroe < $def->t12maroe) ? $at12maroe : $def->t12maroe;
+	//$lower_aroe = $def->t12maroe;
 	
-	//in case om was 0
-	$def->lyroe = ($def->lyroe == 0) ? 1 : $def->lyroe;
+	$def->t12maroe = $lower_aroe;
 	
-	$def->tlroer = ($lower_aroe - $def->lyroe) / abs($def->lyroe);
+	$pcv = projectedIncome($def->lyni, $def->lypcr, $def->lyoi, $def->lyom, $def->t12maom, $def->ce, $def->der, $def->wacodr, $def->lyroe, $def->t12maroe);
 	
-	$def->afi = $def->fi * (1 + $def->tlroer);
-	$def->fe = $def->ce + $def->afi;
+	$def->pci = $pcv->pi;
+echo '
+projected current income: '.$def->pci;
+
+	$def->pa = ($def->pci == 0) ? 0 : $def->t12mni / $def->pci;
+echo '
+projection accuracy: '.$def->pa;
+
+	$def->fe = $def->ce + $def->pci;
 	
-	$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
-					
-	preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
+	$pfv = projectedIncome($def->t12mni, $def->lypcr, $def->t12moi, $def->lyom, $def->t12maom, $def->fe, $def->der, $def->wacodr, $def->lyroe, $def->t12maroe);
 	
-	if (!$matches) {
-		//check if no pe ratio, due to negative earnings
-		preg_match('/data_value"\>\(As of/', $ctt, $matches);
-		
-		if (!$matches) {
-			$def->lper = 999.9999;
-		} else {
-			//error;
-			die('pe ratio error');
-		}
-	} else {
-		$def->lper = str_replace(',', '', $matches[1]);
-	}
+	$def->pfi = $pfv->pi;
+echo '
+projected future income: '.$def->pfi;
+
+	$def->apfi = $def->pfi * $def->pa;
+echo '
+adjusted projected fi: '.$def->apfi;
+/*		$def->lper = str_replace(',', '', $matches[1]);
 	
 	preg_match('/Annual Data[\s\S]+pe[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 	
@@ -160,7 +184,7 @@
 	$def->apbr = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
 	
 	$alper = $def->lper;
-	$def->alpbr = $def->lpbr / $def->lpba;
+	$def->alpbr = $def->lpbr;
 	
 	$alper = ($alper < 0) ? 999.9999 : $alper;
 	$def->alpbr = ($def->alpbr < 0) ? 999.9999 : $def->alpbr;
@@ -178,12 +202,8 @@
 	$def->apgc = ($def->gtap > 22.5) ? 0 : 1;
 	
 	$def->pc = $def->lpgc * $cc;
-	
-	$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/');
-					
-	preg_match('/Annual Data[\s\S]+Net Issuance of Stock[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
-	
-	$def->anios = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
+*/
+	$def->anios = 50.67;
 	
 	//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 	//if there is anios, this would result in future price significantly lower than cp
@@ -191,21 +211,33 @@
 	if ($def->so == 0) {
 		$def->so = 1;
 	}
+
+	$igr = $def->t12mni / $def->lyni;
+echo '
+incomg growth rate: '.$igr;
 	
-	$def->fp = $def->pc * ($def->fe / ($def->so + $def->anios)) * ($def->lpba * (1 + $def->tlroer));
+	$lyv = $def->lyni * $vir / (1 + $dr);
+	$cv = $def->t12mni * $vir * $igr / (1 + $dr);
+	$fv = $def->apfi * $vir * $igr / (1 + $dr);
+echo '
+fv: '.$fv;
+	$def->fp = $fv / ($def->so + $def->anios);
 	
 	$def->fptm = $def->fp / (1 + $ir);
-	
-	$def->prcv = $def->pc * $def->bps * $def->lpba;
-	
-	$dr = .2;//discount rate is the minimum profit rate to justify the investment
-	
+echo '
+fptm: '.$def->fptm;
+	$def->prcv = $cv / $def->so;
+echo '
+prcv: '.$def->prcv;
+	$def->prlyv = $lyv / $def->so;
+echo '
+prlyv: '.$def->prlyv;
 	$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
-	
-	preg_match('/\<font\s+class\=\"stock_header_price\"\>\<img[^\>]+\>.*\>([^\<\%]+)\<\/font\>/', $ctt, $matches);
-
-	$def->cp = str_replace(',', '', $matches[1]);
-	
+echo '
+iv: '.$def->iv;
+	$def->cp = 3.21;
+echo '
+cp: '.$def->cp;
 	//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
 	//which is 25%, meaning iv to cp must be 25% of iv
 	//by setting it to 25%, we make sure we buyin as low as possible so we are safe
@@ -216,7 +248,8 @@
 	} else {
 		$def->cpivr = ($def->cp - $def->iv) / abs($def->iv);
 	}
-	
+echo '
+cpivr: '.$def->cpivr;
 	//cpcv ratio on the other hand is a non greedy ratio to sell at a lower price
 	//we are making less profit thus non greedy
 	//it reflects how much profit is made from cv to cp compared to cv
@@ -225,16 +258,19 @@
 	} else {
 		$def->cpfptmr = ($def->cp - $def->fptm) / abs($def->fptm);
 	}
-	
-	$def->pow = (22.5 - $def->gtap / 2) / 22.5;
+echo '
+cpfptmr'.$def->cpfptmr;
+//	$def->pow = (22.5 - $def->gtap / 2) / 22.5;
 	
 	$def->advice = 'hold';
-	
-	if ($def->cpivr < -.25) {
+
+	if ($def->cpivr < $mos) {
 		$def->advice = 'buy';
 	}
 	
 	if ($def->cpfptmr >= $dr) {
 		$def->advice = 'sell';
 	}
+echo '
+advice: '.$def->advice;
 ?>

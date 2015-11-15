@@ -15,6 +15,36 @@
 		return $output;
 	}
 	
+	function projectedIncome($oni, $opcr, $ooi, $tlomr, $pequity, $pder, $wacodr, $tlroer) {
+		$result = new stdClass;
+
+		//measures the impact of operating income on net income
+		$oinir = $ooi / $oni;//1
+		
+		$oinir = ($oinir > 1) ? 1 : $oinir;
+		$oinir = ($oinir < -1) ? -1 : $oinir;
+		
+		$ppcr = $opcr * $oinir * $tlomr;
+
+		$pdebt = $pequity * $pder;
+		$pcap = $pequity + $pdebt;
+		$ppii = $pcap * $ppcr;
+		
+		$pinterest = $pdebt * $wacodr;
+		$result->pinterest = $pinterest;
+		$pi = $ppii - $pinterest;
+		
+		if ($pi < 0) {
+			$roeai = $pi * abs($tlroer);
+		} else {
+			$roeai = $pi * $tlroer;
+		}
+		
+		$result->pi = ($pi + $roeai) / 2;
+		
+		return $result;
+	}
+	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$mos = -.45;//margin of safety
@@ -57,6 +87,10 @@
 		
 		$def->lyni = str_replace(',', '', $matches[2]);
 		
+		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
+		
+		$def->t12mni = str_replace(',', '', $matches[2]);
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/InterestExpense/'.$ticker.'/Interest%2BExpense/');
 						
 		preg_match('/Annual Data[\s\S]+Interest Expense[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
@@ -79,8 +113,6 @@
 		$def->lycap = $def->lye + $def->lyd;
 		$def->lypcr = $def->lypii / $def->lycap;
 		
-		$capgr = $def->cap / $def->lycap;
-		
 		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
 		
 		$lroc = str_replace(',', '', $matches[1]);
@@ -93,17 +125,17 @@
 		
 		$ver = $vcr / (1 + $def->der);*/
 		
+		$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Operating Income').'/'.$ticker.'/Operating%2BIncome/');
+		
+		preg_match('/Annual Data[\s\S]+Operating Income[\s\S]+\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		$def->lyoi = str_replace(',', '', $matches[2]);
+		
+		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
+		
+		$def->t12moi = str_replace(',', '', $matches[2]);
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
-
-		preg_match('/fiscal year[\s\S]+Operating Income.+\(A\: Dec.[\s\S]+\<td\>\=\<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
-		
-		$def->lyoi = str_replace(',', '', $matches[1]);
-		
-		//measures the impact of operating income on net income
-		$oinir = $def->lyoi / $def->lyni;
-		
-		$oinir = ($oinir > 1) ? 1 : $oinir;
-		$oinir = ($oinir < -1) ? -1 : $oinir;
 		
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -137,9 +169,6 @@
 			$def->tlomr = $lower_aom / $def->lyom;
 		}
 		
-		$def->apcr = $def->lypcr * $oinir * $def->tlomr;
-		$def->cpii = $def->cap * $def->apcr;
-		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
 						
 		preg_match('/Cost of Debt \=.* ([^\=]+)\%\./', $ctt, $matches);
@@ -160,9 +189,6 @@
 		} else {
 			$def->wacodr = str_replace(',', '', $matches[1]) / 100;
 		}
-		
-		$def->interest = $def->debt * $def->wacodr;
-		$def->fi = $def->cpii - $def->interest;
 
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/ROE/'.$ticker.'/Return%2Bon%2BEquity/');
 						
@@ -200,16 +226,20 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		if ($def->fi < 0) {
-			$roeai = $def->fi * abs($def->tlroer);
-		} else {
-			$roeai = $def->fi * $def->tlroer;
-		}
+		$pcv = projectedIncome($def->lyni, $def->lypcr, $def->lyoi, $def->tlomr, $def->ce, $def->der, $def->wacodr, $def->tlroer);
+	
+		$def->pci = $pcv->pi;
+
+		$def->pa = ($def->pci == 0) ? 0 : $def->t12mni / $def->pci;
 		
-		$def->afi = ($def->fi + $roeai) / 2;
+		$def->fe = $def->ce + $def->pci;
 		
-		$fe = $def->ce + $def->afi;
-		
+		$pfv = projectedIncome($def->t12mni, $def->lypcr, $def->t12moi, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
+	
+		$def->pfi = $pfv->pi;
+
+		$def->apfi = $def->pfi * $def->pa;
+	
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
 						
 		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
@@ -287,14 +317,19 @@
 			$def->so = 1;
 		}
 		
-		$cv = $def->lyni * $vir / (1 + $dr) * $car;
-		$fv = $def->afi * $vir / (1 + $dr) * $car;
+		$def->igr = $def->t12mni / $def->lyni;
 		
-		$def->fp = ($fv / ($def->so + $def->anios));
+		$lyv = $def->lyni * $vir * $def->igr / (1 + $dr);
+		$cv = $def->t12mni * $vir * $def->igr / (1 + $dr);
+		$fv = $def->apfi * $vir * $def->igr / (1 + $dr);
 		
+		$def->fp = $fv / ($def->so + $def->anios);
+	
 		$def->fptm = $def->fp / (1 + $ir);
-		
+
 		$def->prcv = $cv / $def->so;
+
+		$def->prlyv = $lyv / $def->so;
 		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		

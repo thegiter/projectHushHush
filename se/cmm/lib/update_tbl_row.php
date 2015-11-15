@@ -2,11 +2,9 @@
 	defined('root') or die;
 	
 	$def_names = ['mc', 'bps', 'so', 'ce', 'der', 'debt', 'cap', 'lyni', 'lyie', 'lypii', 'lyltd', 'lystd', 'lyd', 'lye', 'lycap',
-	'lypcr', 'lyom', 'slyom', 'tlyom', 'aomg', 't12maom', 'lt12maom', 'slt12maom', 'tlt12maom', 'tlomr', 'apcr', 'cpii', 'wacodr', 'interest', 'fi',
-	'lyroe', 'slyroe',
-	'tlyroe', 'aroeg', 't12maroe', 'lt12maroe', 'slt12maroe', 'tlt12maroe', 'tlroer', 'afi', 'lper', 'aper', 'lpbr', 'apbr', 'gtlp', 'lpgc', 'gtap',
-	'apgc', 'pc',
-	'anios', 'fp', 'fptm', 'prcv', 'iv', 'cpivr', 'cpfptmr', 'pow', 'advice'];
+	'lypcr', 'lyom', 'slyom', 'tlyom', 'aomg', 't12maom', 'lt12maom', 'slt12maom', 'tlt12maom', 'tlomr', 'wacodr', 'lyroe', 'slyroe',
+	'tlyroe', 'aroeg', 't12maroe', 'lt12maroe', 'slt12maroe', 'tlt12maroe', 'tlroer', 'lper', 'aper', 'lpbr', 'apbr', 'gtlp', 'lpgc', 'gtap',
+	'apgc', 'pc', 'anios', 'fp', 'fptm', 'prcv', 'iv', 'cpivr', 'cpfptmr', 'pow', 'advice'];
 	
 	function se_update_tbl_row_siphoned($tbl_name, $tkr, $def) {
 		global $def_names;

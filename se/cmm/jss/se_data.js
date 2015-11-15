@@ -11,7 +11,7 @@ var seData = {};
 			case 'tlomr':
 				elm.className = 'tlomr-cnr';
 			
-				if (defValue >= 0) {
+				if (defValue >= 1) {
 					elm.dataset.positive = '1';
 				} else {
 					elm.dataset.positive = '0';

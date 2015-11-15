@@ -97,16 +97,6 @@
 				Trailing Operating Margin vs Last Year Operating Margin
 			</h2>
 		</td>',
-		'<td data-acro="apcr">
-			<h4>
-				Adjusted PII to Capital Ratio
-			</h4>
-		</td>',
-		'<td data-acro="cpii">
-			<h4>
-				Future Pre-Interest Income
-			</h4>
-		</td>',
 		'<td data-acro="wacodr">
 			<h3>
 				Weighted Average Cost of Debt Ratio
@@ -117,16 +107,6 @@
 				<option>not set</option>
 				<option>>= 9999.9999</option>
 			</select>
-		</td>',
-		'<td data-acro="interest">
-			<h4>
-				Interest
-			</h4>
-		</td>',
-		'<td data-acro="fi">
-			<h4>
-				Future Income
-			</h4>
 		</td>',
 		'<td data-acro="lyroe">
 			<h3>
@@ -143,9 +123,24 @@
 				Trailing Return on Equity vs Last Year Return on Equity
 			</h2>
 		</td>',
-		'<td data-acro="afi">
+		'<td data-acro="pci">
 			<h4>
-				Adjusted Future Income
+				Projected Current Income
+			</h4>
+		</td>',
+		'<td data-acro="pa">
+			<h2>
+				Projection Accuracy
+			</h2>
+		</td>',
+		'<td data-acro="pfi">
+			<h4>
+				Projected Future Income
+			</h4>
+		</td>',
+		'<td data-acro="apfi">
+			<h4>
+				Adjusted Projected Future Income
 			</h4>
 		</td>',
 		'<td data-acro="car" class="input">
@@ -215,6 +210,11 @@
 			<h3>
 				Average Net Issuance of Stock of Last 3 Years
 			</h3>
+		</td>',
+		'<td data-acro="igr">
+			<h4>
+				Income Growth Rate
+			</h4>
 		</td>',
 		'<td data-acro="fp">
 			<h4>
