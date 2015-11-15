@@ -236,7 +236,7 @@
 			$def->pa = $def->t12mni / $def->pci;
 		}
 		
-		$def->fe = $def->ce + $def->pci;
+		$def->fe = $def->ce + $def->t12mni;
 		
 		$pfv = projectedIncome($def->t12mni, $def->lypcr, $def->t12moi, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
 	
