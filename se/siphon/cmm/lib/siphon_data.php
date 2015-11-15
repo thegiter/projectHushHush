@@ -15,15 +15,9 @@
 		return $output;
 	}
 	
-	function projectedIncome($oni, $opcr, $ooi, $tlomr, $pequity, $pder, $wacodr, $tlroer) {
+	function projectedIncome($oinir, $opcr, $tlomr, $pequity, $pder, $wacodr, $tlroer) {
 		$result = new stdClass;
 
-		//measures the impact of operating income on net income
-		$oinir = $ooi / $oni;//.6
-		
-		$oinir = ($oinir > 1) ? 1 : $oinir;
-		$oinir = ($oinir < -1) ? -1 : $oinir;
-		
 		$ppcr = $opcr * $oinir * $tlomr;
 
 		$pdebt = $pequity * $pder;
@@ -135,6 +129,12 @@
 		
 		$def->t12moi = str_replace(',', '', $matches[2]);
 		
+		//measures the impact of operating income on net income
+		$oinir = $def->lyoi / $def->lyni;//.6
+		
+		$oinir = ($oinir > 1) ? 1 : $oinir;
+		$oinir = ($oinir < -1) ? -1 : $oinir;
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 		
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
@@ -226,7 +226,7 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		$pcv = projectedIncome($def->lyni, $def->lypcr, $def->lyoi, $def->tlomr, $def->ce, $def->der, $def->wacodr, $def->tlroer);
+		$pcv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->ce, $def->der, $def->wacodr, $def->tlroer);
 	
 		$def->pci = $pcv->pi;
 
@@ -238,11 +238,11 @@
 		
 		$def->fe = $def->ce + $def->t12mni;
 		
-		$pfv = projectedIncome($def->lyni, $def->lypcr, $def->lyoi, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
+		$pfv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
 	
 		$def->pfi = $pfv->pi;
 
-		$def->apfi = $def->pfi * $def->pa;
+		$def->apfi = $def->pfi * $def->pa * $oinir;
 	
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
 						
