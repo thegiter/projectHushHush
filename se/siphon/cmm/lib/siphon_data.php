@@ -19,7 +19,7 @@
 		$result = new stdClass;
 
 		//measures the impact of operating income on net income
-		$oinir = $ooi / $oni;//1
+		$oinir = $ooi / $oni;//.6
 		
 		$oinir = ($oinir > 1) ? 1 : $oinir;
 		$oinir = ($oinir < -1) ? -1 : $oinir;
@@ -238,7 +238,7 @@
 		
 		$def->fe = $def->ce + $def->t12mni;
 		
-		$pfv = projectedIncome($def->t12mni, $def->lypcr, $def->t12moi, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
+		$pfv = projectedIncome($def->lyni, $def->lypcr, $def->lyoi, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
 	
 		$def->pfi = $pfv->pi;
 
