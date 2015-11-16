@@ -321,10 +321,15 @@
 			$def->so = 1;
 		}
 		
+		$coinir = $def->t12moi / $def->t12mni;
+		
+		$coinir = ($coinir > 1) ? 1 : $coinir;
+		$coinir = ($oinir < -1) ? -1 : $coinir;
+		
 		if ($def->lyni == 0) {
 			$def->igr = 1;
 		} else {
-			$def->igr = $def->t12mni / $def->lyni;
+			$def->igr = $def->t12mni * $coinir / $def->lyni;
 		}
 		
 		$def->igr = ($def->igr < 1) ? 1 : $def->igr;
