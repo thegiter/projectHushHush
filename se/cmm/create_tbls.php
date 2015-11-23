@@ -59,7 +59,7 @@
 				lt12maom DECIMAL(7, 4),
 				slt12maom DECIMAL(7, 4),
 				tlt12maom DECIMAL(7, 4),
-				tlomr DECIMAL(33, 30);
+				tlomr DECIMAL(33, 30),
 				wacodr DECIMAL(34, 30),
 				lyroe DECIMAL(7, 4),
 				slyroe DECIMAL(7, 4),
