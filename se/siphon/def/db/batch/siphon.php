@@ -66,7 +66,7 @@
 	se_update_tbl_row_siphoned($tbl_name, $tkr, $def);
 	
 	//we check if advice changed to sell or buy, and update to advice table
-	if ((($def->advice == 'buy') || ($def->advice == 'sell')) && (!isset($old_advice) || ($def->advice != $old_advice))) {
+	if ((($def->advice == 'buy') || ($def->advice == 'sell') || ($def->advice == 'be ready to sell')) && (!isset($old_advice) || ($def->advice != $old_advice))) {
 		//update tbl
 		if (!@mysql_query('INSERT INTO advice_updates(tkr, old_advice, new_advice)
 		VALUES("'.$tkr.'", "'.$old_advice.'", "'.$def->advice.'")

@@ -24,12 +24,23 @@
 				
 				$sells = [];
 				$buys = [];
+				$readies = [];
 				
 				while ($tkr_advice = mysql_fetch_array($advice_tbl)) {
-					if ($tkr_advice['new_advice'] == 'sell') {
-						array_push($sells, $tkr_advice);
-					} else {
-						array_push($buys, $tkr_advice);
+					switch ($tkr_advice['new_advice']) {
+						case 'sell':
+							array_push($sells, $tkr_advice);
+							
+							break;
+						case 'buy':
+							array_push($buys, $tkr_advice);
+							
+							break;
+						case 'be ready to sell':
+							array_push($readies, $tkr_advice);
+							
+							break;
+						default:
 					}
 				}
 				
@@ -78,7 +89,17 @@
 					$msg .= construct_tkrs_msg($buys);
 				}
 
-				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za');
+				if (count($readies) > 0 ) {
+					$msg .= '
+					
+					New Sells Maturing Soon
+					
+					Our raw rough unrefined advice suggests to be ready to sell these stocks:';
+					
+					$msg .= construct_tkrs_msg($readies);
+				}
+				
+				mail('297154048@outlook.com', 'SHPS SE Update', $msg, 'From:no-reply@shps.co.za;charset=utf-8');
 				
 				mysql_query('TRUNCATE table advice_updates');
 			}
