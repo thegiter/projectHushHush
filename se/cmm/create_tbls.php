@@ -95,7 +95,7 @@
 				cpivr DECIMAL(32, 30),
 				cpfptmr DECIMAL(32, 30),
 				pow DECIMAL(32, 30),
-				advice VARCHAR(10),
+				advice VARCHAR(32),
 				PRIMARY KEY (tkr)
 			)');
 				
