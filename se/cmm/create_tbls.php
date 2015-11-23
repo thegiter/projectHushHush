@@ -59,6 +59,7 @@
 				lt12maom DECIMAL(7, 4),
 				slt12maom DECIMAL(7, 4),
 				tlt12maom DECIMAL(7, 4),
+				tlomr DECIMAL(33, 30);
 				wacodr DECIMAL(34, 30),
 				lyroe DECIMAL(7, 4),
 				slyroe DECIMAL(7, 4),
@@ -68,6 +69,7 @@
 				lt12maroe DECIMAL(7, 4),
 				slt12maroe DECIMAL(7, 4),
 				tlt12maroe DECIMAL(7, 4),
+				tlroer DECIMAL(33, 30),
 				pci DECIMAL(40, 30),
 				pa DECIMAL(32, 30),
 				fe DECIMAL(40, 30),
