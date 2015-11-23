@@ -22,7 +22,7 @@
 			
 			if ($result->num_rows > 0) {
 				//drop table
-				$result = $mysqli->query('DROP TABLE "'.$se.'_defs"');
+				$result = $mysqli->query('DROP TABLE '.$se.'_defs');
 				
 				if (!$result) {
 					die('drop table failed: '.$se);
