@@ -231,6 +231,11 @@
 				Price Relfecting Current Value
 			</h4>
 		</td>',
+		'<td data-acro="prlyv">
+			<h4>
+				Price Relfecting Last Year\'s Value
+			</h4>
+		</td>',
 		'<td data-acro="cp">
 			<h3>
 				Current Price
@@ -266,6 +271,7 @@
 				<option>hold</option>
 				<option>buy</option>
 				<option>sell</option>
+				<option>be ready to sell</option>
 			</select>
 		</td>'
 	];

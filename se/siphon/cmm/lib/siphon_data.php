@@ -334,6 +334,10 @@
 		
 		$def->igr = ($def->igr < 1) ? 1 : $def->igr;
 		
+		if ($def->igr > 20) {
+			$def->igr = 0;
+		}
+		
 		$lyv = $def->lyni * $vir * $def->igr / (1 + $dr);
 		$cv = $def->t12mni * $vir * $def->igr / (1 + $dr);
 		$fv = $def->apfi * $vir * $def->igr / (1 + $dr);
@@ -344,6 +348,8 @@
 
 		$def->prcv = $cv / $def->so;
 
+		$def->prcv0g = $def->t12mni * $vir / (1 + $dr);
+		
 		$def->prlyv = $lyv / $def->so;
 		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
@@ -378,6 +384,10 @@
 		
 		if ($def->cpivr < $mos) {
 			$def->advice = 'buy';
+		}
+		
+		if ($def->cpfptmr >= ($dr - .02)) {
+			$def->advice = 'be ready to sell';
 		}
 		
 		if ($def->cpfptmr >= $dr || $cc <= 0) {
