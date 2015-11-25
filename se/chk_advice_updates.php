@@ -55,9 +55,13 @@
 					}
 				}
 				
-				$msg = 'Dear My Master Boss:
+				$msg = '<p>
+					Dear My Master Boss:
+				</p>
 				
-				We have detected the following changes to market today.';
+				<p>
+					We have detected the following changes to market today.
+				</p>';
 				
 				function construct_tkrs_msg($arr) {
 					$msg = '';
