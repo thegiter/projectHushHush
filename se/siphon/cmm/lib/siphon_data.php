@@ -354,8 +354,30 @@
 		
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		
-		preg_match('/\<font\s+class\=\"stock_header_price\"\>\<img[^\>]+\>.*\>([^\<\%]+)\<\/font\>/', $ctt, $matches);
+		//guru focus's price update is too slow, we use reutors
+		//parse ticker into reuters format
+		preg_match('/([A-Z]{4})\:(\d{6})/', $ticker, $tkr_matches);
+		
+		switch ($tkr_matches[1]) {
+			case 'SHSE':
+				$r_se = 'SS';
+				
+				break;
+			case 'SZSE':
+				$r_se = 'SZ';
+				
+				break;
+			default:
+				echo 'invalid SE, rueters conversion failed.';
+		}
+		
+		$tkr = $tkr_matches[2];
+		
+		$ctt = curl_get_contents('http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.'.'.$r_se);
+		
+		preg_match('/'.$tkr.'\.'.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.]+)\<\/span\>\<span\>CNY\<\/span\>/', $ctt, $matches);
 
+		//$def->cp = $matches[0];
 		$def->cp = str_replace(',', '', $matches[1]);
 		
 		//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
