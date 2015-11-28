@@ -329,7 +329,13 @@
 		if ($def->lyni == 0) {
 			$def->igr = 1;
 		} else {
-			$def->igr = $def->t12mni * $coinir / $def->lyni;
+			$lower_ar = ($def->tlomr < $def->tlroer) ? $def->tlomr : $def->tlroer;
+			
+			$ar = $lower_ar;
+			
+			//$ar = ($lower_ar < 1) ? $lower_ar : 1;
+			
+			$def->igr = $def->t12mni * $coinir / $def->lyni + $ar - 1;
 		}
 		
 		$def->igr = ($def->igr < 1) ? 1 : $def->igr;
