@@ -386,6 +386,10 @@
 		//$def->cp = $matches[0];
 		$def->cp = str_replace(',', '', $matches[1]);
 		
+		if (($def->cp !== 0) && !$def->cp) {
+			echo 'get current price failed';
+		}
+		
 		//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
 		//which is 25%, meaning iv to cp must be 25% of iv
 		//by setting it to 25%, we make sure we buyin as low as possible so we are safe
