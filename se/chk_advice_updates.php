@@ -85,33 +85,45 @@
 				}
 				
 				if (count($sells) > 0 ) {
-					$msg .= '
+					$msg .= '<h3>
+						New sells
+					</h3>
 					
-					New sells
-					
-					Our raw rough unrefined advice suggests to sell these stocks:';
-					
-					$msg .= construct_tkrs_msg($sells);
+					<p>
+						Our raw rough unrefined advice suggests to sell these stocks:
+						
+						<ul>
+							'.construct_tkrs_msg($sells).'
+						</ul>
+					</p>';
 				}
 				
 				if (count($buys) > 0) {
-					$msg .= '
+					$msg .= '<h3>
+						New buys
+					</h3>
 					
-					New buys
-					
-					Our raw rough unrefined advice suggests to buy these stocks:';
-					
-					$msg .= construct_tkrs_msg($buys);
+					<p>
+						Our raw rough unrefined advice suggests to buy these stocks:
+						
+						<ul>
+							'.construct_tkrs_msg($buys).'
+						</ul>
+					</p>';
 				}
 
 				if (count($readies) > 0 ) {
-					$msg .= '
+					$msg .= '<h3>
+						New Sells Maturing Soon
+					</h3>
 					
-					New Sells Maturing Soon
-					
-					Our raw rough unrefined advice suggests to be ready to sell these stocks:';
-					
-					$msg .= construct_tkrs_msg($readies);
+					<p>
+						Our raw rough unrefined advice suggests to be ready to sell these stocks:
+						
+						<ul>
+							'.construct_tkrs_msg($readies).'
+						</ul>
+					</p>';
 				}
 				
 				mail_utf8('297154048@outlook.com', 'SHPS Automatic Emailer (No reply)', 'no-reply@shps.co.za', 'SHPS SE Update', $msg);
