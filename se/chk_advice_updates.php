@@ -75,10 +75,9 @@
 						
 						$name = mysql_fetch_array($name_result)['name'];
 						
-						$msg .= '
-						'.$tkrRow['tkr'].'  '.$name.'
-						old advice: '.$tkrRow['old_advice'].'
-						new advice: '.$tkrRow['new_advice'];
+						$msg .= '<li>
+							<span style="margin-left:5px;margin-right:5px">'.$tkrRow['tkr'].'</span><span style="margin-left:5px;margin-right:5px">'.$name.'</span><span style="margin-left:5px;margin-right:5px">old advice: '.$tkrRow['old_advice'].'</span><span style="margin-left:5px;margin-right:5px">new advice: '.$tkrRow['new_advice'].'</span>
+						</li>';
 					}
 					
 					return $msg;
