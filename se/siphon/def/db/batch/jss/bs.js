@@ -6,9 +6,9 @@
 	
 		var maxRetrys = 5;
 
-		var numJsThreads = 0;
+		var numJsThreads = 0;//due to same domain policy, js thread wont work
 		var initNumThreads = 5;
-		var additionalNumThreads = 15;
+		var additionalNumThreads = 5;
 
 		var threadCnt = -1;
 		
