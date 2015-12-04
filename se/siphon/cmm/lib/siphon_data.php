@@ -12,6 +12,8 @@
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$output = curl_exec($ch);
 		curl_close($ch);
+		unset($ch);
+		
 		return $output;
 	}
 	
