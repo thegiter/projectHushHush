@@ -45,7 +45,7 @@
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$mos = -.45;//margin of safety
 		$vir = 10;//value to income ratio		
-				
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
 
 		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
@@ -340,7 +340,7 @@
 			$def->igr = $def->t12mni * $coinir / $def->lyni + $ar - 1;
 		}
 		
-		$def->igr = ($def->igr < 1) ? 1 : $def->igr;
+		//$def->igr = ($def->igr < 1) ? 1 : $def->igr;
 		
 		if ($def->igr > 20) {
 			$def->igr = 0;
@@ -413,6 +413,10 @@
 		}
 		
 		$def->pow = (22.5 - $def->gtap / 2) / 22.5;
+		
+	//	$mosremain = 1 + $mos;
+		
+	//	$def->amos = $mos - $mosremain * (1 - ($mosremain - .01) / (($mosremain - .01) + .01 / $mos1p * $def->cp))
 		
 		$def->advice = 'hold';
 		
