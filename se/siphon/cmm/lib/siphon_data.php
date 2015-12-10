@@ -41,10 +41,36 @@
 		return $result;
 	}
 	
+	function projectedIgr($cigr, $ar, $ni, $vir, $so, $mp) {
+		$aigr = $cigr + $ar - 1;
+		
+		$p0g = $ni * $vir / $so;
+		
+		//price growth potential
+		$pgpr = ($mp - $p0g) / $mp;
+		
+		$aigr *= $pgpr;
+		
+		//deviation and volatility calculation here
+		
+		//$def->igr = ($def->igr < 1) ? 1 : $def->igr;
+		
+		if ($aigr > 20) {
+			$aigr = 0;
+		}
+		
+		return $aigr;
+	}
+	
+	function estimatedValue($ni, $vir, $pigr, $dr) {
+		return $ni * $vir * $pigr / (1 + $dr);
+	}
+	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$mos = -.45;//margin of safety
 		$vir = 10;//value to income ratio		
+		$mp = 200;//abitrary number of the max possible price
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
 
@@ -329,37 +355,43 @@
 		$coinir = ($oinir < -1) ? -1 : $coinir;
 		
 		if ($def->lyni == 0) {
-			$def->igr = 1;
+			$def->cigr = 1;
 		} else {
-			$lower_ar = ($def->tlomr < $def->tlroer) ? $def->tlomr : $def->tlroer;
-			
-			$ar = $lower_ar;
-			
-			//$ar = ($lower_ar < 1) ? $lower_ar : 1;
-			
-			$def->igr = $def->t12mni * $coinir / $def->lyni + $ar - 1;
+			$def->cigr = $def->t12mni * $coinir / $def->lyni;
 		}
 		
-		//$def->igr = ($def->igr < 1) ? 1 : $def->igr;
+		//value is current income worth + expectation of future income growth (positive or negative)
+		//lyv is lyni + the current igr (assuming one was to predict the igr accurately last year)
+		$lyv = $def->lyni * $vir * $def->cigr / (1 + $dr);
 		
-		if ($def->igr > 20) {
-			$def->igr = 0;
-		}
+		$def->prlyv = $lyv / $def->so;
 		
-		$lyv = $def->lyni * $vir * $def->igr / (1 + $dr);
-		$cv = $def->t12mni * $vir * $def->igr / (1 + $dr);
-		$fv = $def->apfi * $vir * $def->igr / (1 + $dr);
+		//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
+		//thus, we use the current igr, but adjust it with a few factors
+		$lower_ar = ($def->tlomr < $def->tlroer) ? $def->tlomr : $def->tlroer;
+			
+		$ar = $lower_ar;
+			
+		//$ar = ($lower_ar < 1) ? $lower_ar : 1;
 		
-		$def->fp = $fv / ($def->so + $def->anios);
-	
-		$def->fptm = $def->fp / (1 + $ir);
-
+		$def->cpigr = projectedIgr($def->cigr, $ar, $def->t12mni, $vir, $def->so, $mp);
+		
+		$cv = estimatedValue($def->t12mni, $vir, $def->cpigr, $dr);
+		
 		$def->prcv = $cv / $def->so;
 
 		$def->prcv0g = $def->t12mni * $vir / (1 + $dr);
 		
-		$def->prlyv = $lyv / $def->so;
+		$pso = $def->so + $def->anios;
 		
+		$def->fpigr = projectedIgr($def->cpigr, $ar, $def->apfi, $vir, $pso, $mp);
+		
+		$fv = estimatedValue($def->apfi, $vir, $def->fpigr, $dr);
+		
+		$def->fp = $fv / $pso;
+	
+		$def->fptm = $def->fp / (1 + $ir);
+
 		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
 		
 		//guru focus's price update is too slow, we use reutors
@@ -393,8 +425,8 @@
 		}
 		
 		//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
-		//which is 25%, meaning iv to cp must be 25% of iv
-		//by setting it to 25%, we make sure we buyin as low as possible so we are safe
+		//which is 45%, meaning iv to cp must be 45% of iv
+		//by setting it to 45%, we make sure we buyin as low as possible so we are safe
 		//it is non greedy because we are not risking at buying at higher price
 		//unless iv is 0
 		if ($def->iv == 0) {
@@ -403,9 +435,9 @@
 			$def->cpivr = ($def->cp - $def->iv) / abs($def->iv);
 		}
 		
-		//cpcv ratio on the other hand is a non greedy ratio to sell at a lower price
+		//cpfptmr ratio on the other hand is a non greedy ratio to sell at a lower price
 		//we are making less profit thus non greedy
-		//it reflects how much profit is made from cv to cp compared to cv
+		//it reflects how much profit is made from fptm to cp compared to fptm
 		if ($def->fptm == 0) {
 			$def->cpfptmr = 1;
 		} else {

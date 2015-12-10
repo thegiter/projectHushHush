@@ -211,9 +211,34 @@
 				Average Net Issuance of Stock of Last 3 Years
 			</h3>
 		</td>',
-		'<td data-acro="igr">
+		'<td data-acro="cigr">
 			<h4>
-				Income Growth Rate
+				Current Income Growth Rate
+			</h4>
+		</td>',
+		'<td data-acro="prlyv">
+			<h4>
+				Price Relfecting Last Year\'s Value
+			</h4>
+		</td>',
+		'<td data-acro="cpigr">
+			<h4>
+				Current Projected Income Growth Rate
+			</h4>
+		</td>',
+		'<td data-acro="prcv">
+			<h4>
+				Price Relfecting Current Value
+			</h4>
+		</td>',
+		'<td data-acro="prcv0g">
+			<h4>
+				Price Relfecting Current Value Of No Growth Potential
+			</h4>
+		</td>',
+		'<td data-acro="fpigr">
+			<h4>
+				Future Projected Income Growth Rate
 			</h4>
 		</td>',
 		'<td data-acro="fp">
@@ -226,25 +251,15 @@
 				Future Price in Today\'s Money
 			</h4>
 		</td>',
-		'<td data-acro="prcv">
-			<h4>
-				Price Relfecting Current Value
-			</h4>
-		</td>',
-		'<td data-acro="prlyv">
-			<h4>
-				Price Relfecting Last Year\'s Value
-			</h4>
+		'<td data-acro="iv">
+			<h2>
+				Intrinsic Value
+			</h2>
 		</td>',
 		'<td data-acro="cp">
 			<h3>
 				Current Price
 			</h3>
-		</td>',
-		'<td data-acro="iv">
-			<h2>
-				Intrinsic Value
-			</h2>
 		</td>',
 		'<td data-acro="cpivr">
 			<h2 class="se-sortable">
