@@ -46,12 +46,14 @@
 		
 		$p0g = $ni * $vir / $so;
 		
-		//price growth potential
+		//price growth potential, conteracts the omg or roeg
 		$pgpr = ($mp - $p0g) / $mp;
 		
 		$aigr *= $pgpr;
 		
 		//deviation and volatility calculation here
+		
+		//if om is already high, growth potential is also less
 		
 		//$def->igr = ($def->igr < 1) ? 1 : $def->igr;
 		
@@ -380,11 +382,15 @@
 		
 		$def->prcv = $cv / $def->so;
 
-		$def->prcv0g = $def->t12mni * $vir / (1 + $dr);
+		$def->prcv0g = $def->t12mni * $vir / (1 + $dr) / $def->so;
 		
 		$pso = $def->so + $def->anios;
 		
-		$def->fpigr = projectedIgr($def->cpigr, $ar, $def->apfi, $vir, $pso, $mp);
+		if ($def->cpigr == 0) {
+			$def->fpigr = 0;
+		} else {
+			$def->fpigr = projectedIgr($def->cpigr, $ar, $def->apfi, $vir, $pso, $mp);
+		}
 		
 		$fv = estimatedValue($def->apfi, $vir, $def->fpigr, $dr);
 		
