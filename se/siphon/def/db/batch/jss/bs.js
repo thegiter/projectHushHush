@@ -41,7 +41,7 @@
 						var defValue = def[defName];
 						
 						//pass data to be styled
-						seData.style(td, defName, defValue);
+						seData.style(td, defName, defValue, def);
 						
 						var rowIdx;
 						

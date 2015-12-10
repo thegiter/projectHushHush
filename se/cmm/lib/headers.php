@@ -261,6 +261,11 @@
 				Current Price
 			</h3>
 		</td>',
+		'<td data-acro="amos">
+			<h4>
+				Adjusted Margin of Safety
+			</h4>
+		</td>',
 		'<td data-acro="cpivr">
 			<h2 class="se-sortable">
 				Current Price vs Intrinsic Value

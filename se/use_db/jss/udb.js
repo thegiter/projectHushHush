@@ -19,7 +19,7 @@
 					var defValue = def[defName];
 					
 					//pass data to be styled
-					seData.style(td, defName, defValue);
+					seData.style(td, defName, defValue, def);
 					
 					if ((defName == 'car') || (defName == 'cc')) {
 						td.innerHTML = '<form method="post">\

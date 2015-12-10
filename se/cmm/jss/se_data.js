@@ -2,11 +2,10 @@ var seData = {};
 
 (function() {
 	var dr = .2;
-	var mos = -.45;
 	
 	var sd = seData;
 	
-	sd.style = function(elm, defName, defValue) {
+	sd.style = function(elm, defName, defValue, def) {
 		switch (defName) {
 			case 'tlomr':
 				elm.className = 'tlomr-cnr';
@@ -28,10 +27,14 @@ var seData = {};
 				}
 				
 				break;
+			case 'amos':
+				defValue = defValue * 100+'%';
+				
+				break;
 			case 'cpivr':
 				elm.className = 'cpivr-cnr';
 				
-				if (defValue < mos) {
+				if (defValue < def.amos) {
 					elm.dataset.indicator = 'buy';
 				} else {
 					elm.dataset.indicator = '';
