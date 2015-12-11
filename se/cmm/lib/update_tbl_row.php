@@ -61,7 +61,8 @@
 				if (!@mysql_query($q_string)) {
 					die('insert / update def row error
 					'.$q_string.'
-					'.json_encode($def));
+					'.json_encode($def).'
+					'.mysql_error());
 				}
 			}
 		}
