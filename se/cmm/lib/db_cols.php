@@ -44,6 +44,15 @@
 		'pa' => 'DECIMAL(32, 30)',
 		'fe' => 'DECIMAL(40, 30)',
 		'pfi' => 'DECIMAL(40, 30)',
-		'apfi' => 'DECIMAL(40, 30)'
+		'apfi' => 'DECIMAL(40, 30)',
+		'car' => 'DECIMAL(4, 2)',
+		'lper' => 'DECIMAL(7, 4)',
+		'aper' => 'DECIMAL(33, 30)',
+		'lpbr' => 'DECIMAL(7, 4)',
+		'apbr' => 'DECIMAL(33, 30)',
+		'gtlp' => 'DECIMAL(35, 30)',
+		'lpgc' => 'BOOLEAN',
+		'gtap' => 'DECIMAL(35, 30)',
+		'apgc' => 'BOOLEAN'
 	];
 ?>
