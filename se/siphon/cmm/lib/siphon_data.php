@@ -430,6 +430,17 @@
 			echo 'get current price failed';
 		}
 		
+		//mos = dr adjusted for igr deviation
+		//max mos is 100%, min is dr
+		$mos = $dr;
+		$mosremain = 1 - $mos;
+		
+		//deviation 0 to 19, when deviation is > 19, mos is 100%
+		//when deviation is 0, mos no change
+		$fpigrd = abs($def->fpigr - 1);
+		
+		$def->amos = -($mos + $mosremain * $fpigrd / 19);
+		
 		//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
 		//which is 45%, meaning iv to cp must be 45% of iv
 		//by setting it to 45%, we make sure we buyin as low as possible so we are safe
@@ -453,17 +464,6 @@
 		$def->pow = (22.5 - $def->gtap / 2) / 22.5;
 		
 		$def->advice = 'hold';
-		
-		//mos = dr adjusted for igr deviation
-		//max mos is 100%, min is dr
-		$mos = $dr;
-		$mosremain = 1 - $mos;
-		
-		//deviation 0 to 19, when deviation is > 19, mos is 100%
-		//when deviation is 0, mos no change
-		$fpigrd = abs($def->fpigr - 1);
-		
-		$def->amos = -($mos + $mosremain * (1 / 19 * $fpigrd));
 		
 		if ($def->cpivr < $def->amos) {
 			$def->advice = 'buy';
