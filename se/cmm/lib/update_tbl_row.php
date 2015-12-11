@@ -38,7 +38,13 @@
 					if ($def_name == 'advice') {
 						$q_string .= '"'.$def->{$def_name}.'"';
 					} else {
-						$q_string .= $def->{$def_name};
+						$value = $def->{$def_name};
+						
+						if (!$value) {
+							$value = 'null';
+						}
+						
+						$q_string .= $value;
 					}
 					
 					if (!($idx >= (count($def_names) - 1)) ) {

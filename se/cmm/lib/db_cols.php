@@ -53,6 +53,24 @@
 		'gtlp' => 'DECIMAL(35, 30)',
 		'lpgc' => 'BOOLEAN',
 		'gtap' => 'DECIMAL(35, 30)',
-		'apgc' => 'BOOLEAN'
+		'apgc' => 'BOOLEAN',
+		'cc' => 'BOOLEAN',
+		'pc' => 'BOOLEAN',
+		'anios' => 'DECIMAL(40, 30)',
+		'cigr' => 'DECIMAL(34, 30)',
+		'prlyv' => 'DECIMAL(33, 30)',
+		'cpigr' => 'DECIMAL(32, 30)',
+		'prcv' => 'DECIMAL(33, 30)',
+		'prcv0g' => 'DECIMAL(33, 30)',
+		'fpigr' => 'DECIMAL(32, 30)',
+		'fp' => 'DECIMAL(33, 30)',
+		'fptm' => 'DECIMAL(33, 30)',
+		'iv' => 'DECIMAL(33, 30)',
+		'cp' => 'DECIMAL(7, 3)',
+		'amos' => 'DECIMAL(31, 30)',
+		'cpivr' => 'DECIMAL(32, 30)',
+		'cpfptmr' => 'DECIMAL(32, 30)',
+		'pow' => 'DECIMAL(32, 30)',
+		'advice' => 'VARCHAR(32)'
 	];
 ?>
