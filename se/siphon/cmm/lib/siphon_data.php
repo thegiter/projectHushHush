@@ -1,21 +1,20 @@
 ﻿<?php
 	defined('root') or die;
 	
+	if (!function_exists('curl_init')){ 
+		die('CURL is not installed!');
+	}
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	
 	//often file_get_contents is disabled, using this is as a workaround
 	function curl_get_contents($url) {
-		if (!function_exists('curl_init')){ 
-			die('CURL is not installed!');
-		}
+		global $ch;
 		
-		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$output = curl_exec($ch);
-		//may be bugged
-		//curl_close($ch);
-		unset($ch);
 		
-		return $output;
+		return curl_exec($ch);
 	}
 	
 	function projectedIncome($oinir, $opcr, $tlomr, $pequity, $pder, $wacodr, $tlroer) {
@@ -476,6 +475,11 @@
 		if ($def->cpfptmr >= $dr || $cc <= 0) {
 			$def->advice = 'sell';
 		}
+		
+		global $ch;
+		
+		curl_close($ch);//may be bugged
+		unset($GLOBALS['ch']);//ch defined in siphon_data.php global space
 		
 		return $def;
 	}
