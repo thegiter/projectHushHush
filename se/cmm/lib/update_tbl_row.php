@@ -3,6 +3,8 @@
 	
 	require_once root.'se/cmm/lib/db_cols.php';
 	
+	$def_names = [];
+	
 	foreach ($def_cols as $name => $type) {
 		array_push($def_names, $name);
 	}
