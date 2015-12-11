@@ -70,7 +70,7 @@
 	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
-		$mos = -.45;//margin of safety
+		//$mos = -.45;//margin of safety
 		$vir = 10;//value to income ratio		
 		$mp = 200;//abitrary number of the max possible price
 		
@@ -398,7 +398,20 @@
 	
 		$def->fptm = $def->fp / (1 + $ir);
 
-		$def->iv = $def->fptm / (1 + $dr);//iv is how much below the fptm in order to get the profit specified by discount rate
+		//deviation 0 to 19, when deviation is > 19, moe is 100%
+		//when deviation is 0, moe is 0
+		$fpigrd = abs($def->fpigr - 1);
+		
+		$def->dwmoe = $fpigrd / 19;
+		
+		//fptm adjusted for margin of error
+		//upward moe is same as dr, because we want to tolerate as little moe as possible
+		//dr is the non greedy margin for selling (when above projection), 
+		//and the selling point is where the moe ends and we stop tolerating price deviations
+		//downward moe is dynamically calculate depending of different type of stock
+		//more precisely depending on the standard deviation of the stock
+		//but in this case, we are just using growth rate
+		$def->afptm = $def->fptm * (1 - $def->dwmoe);
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
@@ -430,26 +443,12 @@
 			echo 'get current price failed';
 		}
 		
-		//mos = dr adjusted for igr deviation
-		//max mos is 100%, min is dr
-		$mos = $dr;
-		$mosremain = 1 - $mos;
-		
-		//deviation 0 to 19, when deviation is > 19, mos is 100%
-		//when deviation is 0, mos no change
-		$fpigrd = abs($def->fpigr - 1);
-		
-		$def->amos = -($mos + $mosremain * $fpigrd / 19);
-		
-		//cpiv ratio is a non greedy ratio to buy in to get the max safe margin
-		//which is 45%, meaning iv to cp must be 45% of iv
-		//by setting it to 45%, we make sure we buyin as low as possible so we are safe
-		//it is non greedy because we are not risking at buying at higher price
+		//afptmcpr ratio is a non greedy ratio to buy in to get the dr
 		//unless iv is 0
-		if ($def->iv == 0) {
-			$def->cpivr = 1;
+		if ($def->afptm <= 0) {
+			$def->afptmcpr = -1;
 		} else {
-			$def->cpivr = ($def->cp - $def->iv) / abs($def->iv);
+			$def->afptmcpr = ($def->afptm - $def->cp) / $def->cp;
 		}
 		
 		//cpfptmr ratio on the other hand is a non greedy ratio to sell at a lower price
@@ -465,7 +464,7 @@
 		
 		$def->advice = 'hold';
 		
-		if ($def->cpivr < $def->amos) {
+		if ($def->afptmcpr > $dr) {
 			$def->advice = 'buy';
 		}
 		

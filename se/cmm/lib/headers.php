@@ -251,9 +251,14 @@
 				Future Price in Today\'s Money
 			</h4>
 		</td>',
-		'<td data-acro="iv">
+		'<td data-acro="dwmoe">
+			<h4>
+				Downward Margin of Error
+			</h4>
+		</td>',
+		'<td data-acro="afptm">
 			<h2>
-				Intrinsic Value
+				Adjusted Future Price in Today\'s Money (Assuming Max Error)
 			</h2>
 		</td>',
 		'<td data-acro="cp">
@@ -261,14 +266,9 @@
 				Current Price
 			</h3>
 		</td>',
-		'<td data-acro="amos">
-			<h4>
-				Adjusted Margin of Safety
-			</h4>
-		</td>',
-		'<td data-acro="cpivr">
+		'<td data-acro="afptmcpr">
 			<h2 class="se-sortable">
-				Current Price vs Intrinsic Value
+				Adjusted Future Price in Today\'s Money vs Current Price
 			</h2>
 		</td>',
 		'<td data-acro="cpfptmr">

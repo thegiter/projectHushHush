@@ -27,14 +27,14 @@ var seData = {};
 				}
 				
 				break;
-			case 'amos':
+			case 'dwmoe':
 				defValue = defValue * 100+'%';
 				
 				break;
-			case 'cpivr':
+			case 'afptmcpr':
 				elm.className = 'cpivr-cnr';
 				
-				if (defValue < def.amos) {
+				if (defValue > dr) {
 					elm.dataset.indicator = 'buy';
 				} else {
 					elm.dataset.indicator = '';

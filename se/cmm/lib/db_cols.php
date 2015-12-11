@@ -65,10 +65,10 @@
 		'fpigr' => 'DECIMAL(32, 30)',
 		'fp' => 'DECIMAL(33, 30)',
 		'fptm' => 'DECIMAL(33, 30)',
-		'iv' => 'DECIMAL(33, 30)',
+		'dwmoe' => 'DECIMAL(31, 30)',
+		'afptm' => 'DECIMAL(33, 30)',
 		'cp' => 'DECIMAL(7, 3)',
-		'amos' => 'DECIMAL(31, 30)',
-		'cpivr' => 'DECIMAL(32, 30)',
+		'afptmcpr' => 'DECIMAL(32, 30)',
 		'cpfptmr' => 'DECIMAL(32, 30)',
 		'pow' => 'DECIMAL(32, 30)',
 		'advice' => 'VARCHAR(32)'
