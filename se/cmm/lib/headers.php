@@ -232,9 +232,9 @@
 			</h4>
 		</td>',
 		'<td data-acro="prcv0g">
-			<h4>
+			<h2>
 				Price Relfecting Current Value Of No Growth Potential
-			</h4>
+			</h2>
 		</td>',
 		'<td data-acro="fpigr">
 			<h4>
