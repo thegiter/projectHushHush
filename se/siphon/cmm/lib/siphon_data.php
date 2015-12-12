@@ -406,6 +406,8 @@
 		
 		$def->dwmoe = ($def->dwmoe < 0) ? 0 : $def->dwmoe;
 		
+		$afpigr = $def->fpigr * (1 - $def->dwmoe);
+		
 		//fptm adjusted for margin of error
 		//upward moe is same as dr, because we want to tolerate as little moe as possible
 		//dr is the non greedy margin for selling (when above projection), 
@@ -413,7 +415,7 @@
 		//downward moe is dynamically calculate depending of different type of stock
 		//more precisely depending on the standard deviation of the stock
 		//but in this case, we are just using growth rate
-		$def->afptm = $def->fptm * (1 - $def->dwmoe);
+		$def->afptm = estimatedValue($def->apfi, $vir, $afpigr, $dr) / $pso;
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
