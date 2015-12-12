@@ -397,12 +397,8 @@
 		$def->fp = $fv / $pso;
 	
 		$def->fptm = $def->fp / (1 + $ir);
-
-		//deviation 0 to 19, when deviation is > 19, moe is 100%
-		//when deviation is 0, moe is 0
-		$fpigrd = abs($def->fpigr - 1);
 		
-		$def->dwmoe = 1 - 20 / $def->cigr / $fpigrd;
+		$def->dwmoe = 1 - 20 / $def->cigr / $def->fpigr;
 		
 		$def->dwmoe = ($def->dwmoe < 0) ? 0 : $def->dwmoe;
 		
