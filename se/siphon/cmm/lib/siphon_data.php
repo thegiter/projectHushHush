@@ -402,7 +402,9 @@
 		//when deviation is 0, moe is 0
 		$fpigrd = abs($def->fpigr - 1);
 		
-		$def->dwmoe = $fpigrd / 19;
+		$def->dwmoe = 1 - 20 / $def->cigr / $fpigrd;
+		
+		$def->dwmoe = ($def->dwmoe < 0) ? 0 : $def->dwmoe;
 		
 		//fptm adjusted for margin of error
 		//upward moe is same as dr, because we want to tolerate as little moe as possible
