@@ -20,20 +20,20 @@
 	function projectedIncome($oinir, $opcr, $tlomr, $cap, $debt, $wacodr, $tlroer) {
 		$result = new stdClass;
 
-		$ppcr = $opcr * $oinir * $tlomr;//0.53 * .96 = .51
+		$ppcr = $opcr * $oinir * $tlomr;//0.35 * .96 = .336
 
-		$ppii = $cap * $ppcr;//1581156 * .51 = 806389
+		$ppii = $cap * $ppcr;//1581156 * .336 = 531268
 		
 		$pinterest = $debt * $wacodr;//550090 * .54 = 297048
 		$result->pinterest = $pinterest;
-		$pi = $ppii - $pinterest;//806389 - 297048 = 509340
+		$pi = $ppii - $pinterest;//531268 - 297048 = 234220
 		
 		$proer = $tlomr;
 		
 		if ($pi < 0) {
 			$roeai = $pi * abs($proer);
 		} else {
-			$roeai = $pi * $proer;//3100 * 9.3 = 28830
+			$roeai = $pi * $proer;//234220 * .917 = 214813
 		}
 		
 		$result->pi = ($pi + $roeai) / 2;
@@ -188,7 +188,6 @@
 		$oinir = ($oinir < -1) ? -1 : $oinir;
 		$coinir = ($coinir > 1) ? 1 : $coinir;
 		$coinir = ($coinir < -1) ? -1 : $coinir;
-		
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 		
@@ -409,7 +408,7 @@
 		
 		$def->prcv = $cv / $def->so;
 
-		$def->prcv0g = $def->t12mni * $vir / (1 + $dr) / $def->so;
+		$def->prcv0g = $def->t12mni * $vir * $coinir / (1 + $dr) / $def->so;
 		
 		$pso = $def->so + $def->anios;
 		
@@ -470,7 +469,7 @@
 			echo 'get current price failed';
 		}
 		
-		$def->iv = $def->apfi * $vir / $pso / (1 + $ir);
+		$def->iv = $def->prcv0g;
 		
 		$lower_p = ($def->iv < $def->afptm) ? $def->iv : $def->afptm;
 		
