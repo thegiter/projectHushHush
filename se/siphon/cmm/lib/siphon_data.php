@@ -119,7 +119,13 @@
 		
 		$def->lyie = str_replace(',', '', $matches[2]);
 		
+		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
+		
+		$def->t12mie = str_replace(',', '', $matches[2]);
+		
 		$def->lypii = $def->lyni - $def->lyie;
+		
+		$def->t12mpii = $def->t12mni - $def->t12mie;
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/ROC/'.$ticker.'/Return%2Bon%2BCapital/');
 						
@@ -134,6 +140,8 @@
 		
 		$def->lycap = $def->lye + $def->lyd;
 		$def->lypcr = $def->lypii / $def->lycap;
+		
+		$def->t12mpcr = $def->t12mpii / $def->cap;
 		
 		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
 		
@@ -272,11 +280,11 @@
 			$def->pa = $def->t12mni / $def->pci;
 		}
 		
-		$pfv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->cap, $def->debt, $def->wacodr, $def->tlroer);
+		$pfv = projectedIncome($oinir, $def->t12mpcr, $def->tlomr, $def->cap, $def->debt, $def->wacodr, $def->tlroer);
 	
 		$def->pfi = $pfv->pi;
 
-		$def->apfi = $def->pfi * $def->pa * $oinir;
+		$def->apfi = $def->pfi * $oinir;
 	
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
 						
