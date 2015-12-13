@@ -20,15 +20,15 @@
 	function projectedIncome($oinir, $opcr, $tlomr, $cap, $debt, $wacodr, $tlroer) {
 		$result = new stdClass;
 
-		$ppcr = $opcr * $oinir * $tlomr;//0.05 * 2.15 = .1
+		$ppcr = $opcr * $oinir * $tlomr;//0.53 * .96 = .51
 
-		$ppii = $cap * $ppcr;//38782 * .1 = 3878.2
+		$ppii = $cap * $ppcr;//1581156 * .51 = 806389
 		
-		$pinterest = $debt * $wacodr;//12973 * .06 = 778
+		$pinterest = $debt * $wacodr;//550090 * .54 = 297048
 		$result->pinterest = $pinterest;
-		$pi = $ppii - $pinterest;//3878.2 - 778 = 3100
+		$pi = $ppii - $pinterest;//806389 - 297048 = 509340
 		
-		$proer = $tlmor;
+		$proer = $tlomr;
 		
 		if ($pi < 0) {
 			$roeai = $pi * abs($proer);
@@ -105,7 +105,7 @@
 		$def->debt = $def->ce * $def->der;
 		$def->cap = $def->debt + $def->ce;
 		
-		preg_match('/Annual Data[\s\S]+deb2equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		preg_match('/Annual Data[\s\S]+deb2equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
 		$def->slyder = str_replace(',', '', $matches[2]);
 		
