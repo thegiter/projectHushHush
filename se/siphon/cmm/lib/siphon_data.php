@@ -28,10 +28,12 @@
 		$result->pinterest = $pinterest;
 		$pi = $ppii - $pinterest;//3878.2 - 778 = 3100
 		
+		$proer = $tlmor;
+		
 		if ($pi < 0) {
-			$roeai = $pi * abs($tlroer);
+			$roeai = $pi * abs($proer);
 		} else {
-			$roeai = $pi * $tlroer;//3100 * 9.3 = 28830
+			$roeai = $pi * $proer;//3100 * 9.3 = 28830
 		}
 		
 		$result->pi = ($pi + $roeai) / 2;
@@ -284,7 +286,7 @@
 	
 		$def->pfi = $pfv->pi;
 
-		$def->apfi = $def->pfi * $oinir;
+		$def->apfi = $def->pfi * $def->pa * $oinir;
 	
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
 						
