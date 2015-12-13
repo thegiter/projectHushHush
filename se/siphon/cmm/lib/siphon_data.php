@@ -415,10 +415,10 @@
 		if ($def->cpigr == 0) {
 			$def->fpigr = 0;
 		} else {
-			$def->fpigr = projectedIgr($def->cpigr, $ar, $def->apfi, $vir, $pso, $mp);
+			$def->fpigr = projectedIgr($def->cpigr, $ar, $def->t12mni, $vir, $pso, $mp);
 		}
 		
-		$fv = estimatedValue($def->apfi, $vir, $def->fpigr, $dr);
+		$fv = estimatedValue($def->t12mni, $vir, $def->fpigr, $dr);
 		
 		$def->fp = $fv / $pso;
 	
