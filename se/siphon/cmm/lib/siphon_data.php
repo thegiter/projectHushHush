@@ -264,7 +264,7 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		$pcv = projectedIncome($oinir, $def->lypcr, $lytlomr, $def->ce, $def->der, $def->wacodr, $lytlroer);
+		$pcv = projectedIncome($oinir, $def->lypcr, $lytlomr, $def->lye, $def->debt / $def->lye, $def->wacodr, $lytlroer);
 	
 		$def->pci = $pcv->pi;
 
@@ -274,9 +274,7 @@
 			$def->pa = $def->t12mni / $def->pci;
 		}
 		
-		$def->fe = $def->ce + $def->t12mni;
-		
-		$pfv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->fe, $def->der, $def->wacodr, $def->tlroer);
+		$pfv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->ce, $def->der, $def->wacodr, $def->tlroer);
 	
 		$def->pfi = $pfv->pi;
 
@@ -451,12 +449,14 @@
 			echo 'get current price failed';
 		}
 		
-		//afptmcpr ratio is a non greedy ratio to buy in to get the dr
+		$def->iv = $def->apfi * $vir / $pso / (1 + $ir);
+		
+		//ivcpr ratio is a non greedy ratio to buy in to get the dr
 		//unless iv is 0
-		if ($def->afptm <= 0) {
-			$def->afptmcpr = -1;
+		if ($def->iv <= 0) {
+			$def->ivcpr = -1;
 		} else {
-			$def->afptmcpr = ($def->afptm - $def->cp) / $def->cp;
+			$def->ivcpr = ($def->iv - $def->cp) / $def->cp;
 		}
 		
 		//cpfptmr ratio on the other hand is a non greedy ratio to sell at a lower price

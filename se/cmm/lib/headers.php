@@ -243,12 +243,12 @@
 		</td>',
 		'<td data-acro="fp">
 			<h4>
-				Future Price
+				Potential Future Price Cieling
 			</h4>
 		</td>',
 		'<td data-acro="fptm">
 			<h4>
-				Future Price in Today\'s Money
+				Potential Future Price Cieling in Today\'s Money
 			</h4>
 		</td>',
 		'<td data-acro="dwmoe">
@@ -257,8 +257,13 @@
 			</h4>
 		</td>',
 		'<td data-acro="afptm">
+			<h4>
+				Adjusted Potential Future Price Cieling
+			</h4>
+		</td>',
+		'<td data-acro="iv">
 			<h2>
-				Adjusted Future Price in Today\'s Money (Assuming Max Error)
+				Intrinsic Value
 			</h2>
 		</td>',
 		'<td data-acro="cp">
@@ -266,14 +271,14 @@
 				Current Price
 			</h3>
 		</td>',
-		'<td data-acro="afptmcpr">
+		'<td data-acro="ivcpr">
 			<h2 class="se-sortable">
-				Adjusted Future Price in Today\'s Money vs Current Price
+				Intrinsic Value vs Current Price
 			</h2>
 		</td>',
 		'<td data-acro="cpfptmr">
 			<h4>
-				Current Price vs Future Price in Today\'s Money
+				Current Price vs Adjusted Potentail Future Price Cieling
 			</h4>
 		</td>',
 		'<td data-acro="pow">
