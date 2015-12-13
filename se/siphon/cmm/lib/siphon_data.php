@@ -161,9 +161,13 @@
 		
 		//measures the impact of operating income on net income
 		$oinir = $def->lyoi / $def->lyni;//.6
+		$coinir = $def->t12moi / $def->t12mni;
 		
 		$oinir = ($oinir > 1) ? 1 : $oinir;
 		$oinir = ($oinir < -1) ? -1 : $oinir;
+		$coinir = ($coinir > 1) ? 1 : $coinir;
+		$coinir = ($coinir < -1) ? -1 : $coinir;
+		
 		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
 		
@@ -176,6 +180,8 @@
 		//in case om was 0
 		$def->slyom = ($def->slyom == 0) ? 1 : $def->slyom;
 		$def->tlyom = ($def->tlyom == 0) ? 1 : $def->tlyom;
+		
+		$lytlomr = $def->lyom / $def->slyom;
 		
 		$def->aomg = (($def->lyom - $def->slyom) / abs($def->slyom) + ($def->slyom - $def->tlyom) / abs($def->tlyom)) / 2;
 
@@ -234,6 +240,8 @@
 		$def->slyroe = ($def->slyroe == 0) ? 1 : $def->slyroe;
 		$def->tlyroe = ($def->tlyroe == 0) ? 1 : $def->tlyroe;
 		
+		$lytlroer = $def->lyroe / $def->slyroe;
+		
 		$def->aroeg = (($def->lyroe - $def->slyroe) / abs($def->slyroe) + ($def->slyroe - $def->tlyroe) / abs($def->tlyroe)) / 2;
 		
 		preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>/', $ctt, $matches);
@@ -256,7 +264,7 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		$pcv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->ce, $def->der, $def->wacodr, $def->tlroer);
+		$pcv = projectedIncome($oinir, $def->lypcr, $lytlomr, $def->ce, $def->der, $def->wacodr, $lytlroer);
 	
 		$def->pci = $pcv->pi;
 
@@ -411,7 +419,7 @@
 		//downward moe is dynamically calculate depending of different type of stock
 		//more precisely depending on the standard deviation of the stock
 		//but in this case, we are just using growth rate
-		$def->afptm = estimatedValue($def->apfi, $vir, $afpigr, $dr) / $pso;
+		$def->afptm = estimatedValue($def->apfi, $vir, $afpigr, $dr) / $pso / (1 + $ir);
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
