@@ -31,7 +31,7 @@ var seData = {};
 				defValue = defValue * 100+'%';
 				
 				break;
-			case 'afptmcpr':
+			case 'ivcpr':
 				elm.className = 'cpivr-cnr';
 				
 				if (defValue > dr) {
