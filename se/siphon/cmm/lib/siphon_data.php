@@ -437,7 +437,7 @@
 		//downward moe is dynamically calculate depending of different type of stock
 		//more precisely depending on the standard deviation of the stock
 		//but in this case, we are just using growth rate
-		$def->afptm = estimatedValue($def->apfi, $vir, $afpigr, $dr) / $pso / (1 + $ir);
+		$def->afptm = estimatedValue($def->t12mni, $vir, $afpigr, $dr) / $pso / (1 + $ir);
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
