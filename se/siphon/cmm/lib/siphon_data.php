@@ -105,6 +105,10 @@
 		$def->debt = $def->ce * $def->der;
 		$def->cap = $def->debt + $def->ce;
 		
+		preg_match('/Annual Data[\s\S]+deb2equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		$def->slyder = str_replace(',', '', $matches[2]);
+		
 		$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Net Income').'/'.$ticker.'/Net%2BIncome/');
 						
 		preg_match('/Annual Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
@@ -141,9 +145,18 @@
 		$def->lye = str_replace(',', '', $matches[5]);
 		
 		$def->lycap = $def->lye + $def->lyd;
-		$def->lypcr = $def->lypii / $def->lycap;
 		
-		$def->t12mpcr = $def->t12mpii / $def->cap;
+		$ctt = curl_get_contents('http://www.gurufocus.com/term/'.urlencode('Total Equity').'/'.$ticker.'/Total%2BEquity/');
+						
+		preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		$def->slye = str_replace(',', '', $matches[2]);
+		
+		$def->slycap = (1 + $def->slyder) * $def->slye;
+		
+		$def->lypcr = $def->lypii / $def->slycap;
+		
+		$def->t12mpcr = $def->t12mpii / $def->lycap;
 		
 		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
 		
