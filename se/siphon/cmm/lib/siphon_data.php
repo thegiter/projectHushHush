@@ -17,23 +17,21 @@
 		return curl_exec($ch);
 	}
 	
-	function projectedIncome($oinir, $opcr, $tlomr, $pequity, $pder, $wacodr, $tlroer) {
+	function projectedIncome($oinir, $opcr, $tlomr, $cap, $debt, $wacodr, $tlroer) {
 		$result = new stdClass;
 
-		$ppcr = $opcr * $oinir * $tlomr;
+		$ppcr = $opcr * $oinir * $tlomr;//0.05 * 2.15 = .1
 
-		$pdebt = $pequity * $pder;
-		$pcap = $pequity + $pdebt;
-		$ppii = $pcap * $ppcr;
+		$ppii = $cap * $ppcr;//38782 * .1 = 3878.2
 		
-		$pinterest = $pdebt * $wacodr;
+		$pinterest = $debt * $wacodr;//12973 * .06 = 778
 		$result->pinterest = $pinterest;
-		$pi = $ppii - $pinterest;
+		$pi = $ppii - $pinterest;//3878.2 - 778 = 3100
 		
 		if ($pi < 0) {
 			$roeai = $pi * abs($tlroer);
 		} else {
-			$roeai = $pi * $tlroer;
+			$roeai = $pi * $tlroer;//3100 * 9.3 = 28830
 		}
 		
 		$result->pi = ($pi + $roeai) / 2;
@@ -160,7 +158,7 @@
 		$def->t12moi = str_replace(',', '', $matches[2]);
 		
 		//measures the impact of operating income on net income
-		$oinir = $def->lyoi / $def->lyni;//.6
+		$oinir = $def->lyoi / $def->lyni;//1
 		$coinir = $def->t12moi / $def->t12mni;
 		
 		$oinir = ($oinir > 1) ? 1 : $oinir;
@@ -264,7 +262,7 @@
 			$def->tlroer = $lower_aroe / $def->lyroe;
 		}
 		
-		$pcv = projectedIncome($oinir, $def->lypcr, $lytlomr, $def->lye, $def->debt / $def->lye, $def->wacodr, $lytlroer);
+		$pcv = projectedIncome($oinir, $def->lypcr, $lytlomr, $def->lycap, $def->lyd, $def->wacodr, $lytlroer);
 	
 		$def->pci = $pcv->pi;
 
@@ -274,7 +272,7 @@
 			$def->pa = $def->t12mni / $def->pci;
 		}
 		
-		$pfv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->ce, $def->der, $def->wacodr, $def->tlroer);
+		$pfv = projectedIncome($oinir, $def->lypcr, $def->tlomr, $def->cap, $def->debt, $def->wacodr, $def->tlroer);
 	
 		$def->pfi = $pfv->pi;
 
@@ -451,12 +449,14 @@
 		
 		$def->iv = $def->apfi * $vir / $pso / (1 + $ir);
 		
+		$lower_p = ($def->iv < $def->afptm) ? $def->iv : $def->afptm;
+		
 		//ivcpr ratio is a non greedy ratio to buy in to get the dr
 		//unless iv is 0
-		if ($def->iv <= 0) {
+		if ($lower_p <= 0) {
 			$def->ivcpr = -1;
 		} else {
-			$def->ivcpr = ($def->iv - $def->cp) / $def->cp;
+			$def->ivcpr = ($lower_p - $def->cp) / $def->cp;
 		}
 		
 		//cpfptmr ratio on the other hand is a non greedy ratio to sell at a lower price

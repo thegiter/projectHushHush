@@ -273,7 +273,7 @@
 		</td>',
 		'<td data-acro="ivcpr">
 			<h2 class="se-sortable">
-				Intrinsic Value vs Current Price
+				Intrinsic Value / Cieling vs Current Price
 			</h2>
 		</td>',
 		'<td data-acro="cpfptmr">
