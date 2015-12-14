@@ -65,6 +65,10 @@
 	}
 	
 	function estimatedValue($ni, $vir, $pigr, $dr) {
+		if ($ni < 0) {
+			$pigr = abs($pigr);
+		}
+		
 		return $ni * $vir * $pigr / (1 + $dr);
 	}
 	
