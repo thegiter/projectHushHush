@@ -247,9 +247,9 @@
 			</h4>
 		</td>',
 		'<td data-acro="fptm">
-			<h4>
+			<h2>
 				Potential Future Price Cieling in Today\'s Money
-			</h4>
+			</h2>
 		</td>',
 		'<td data-acro="dwmoe">
 			<h4>
@@ -257,9 +257,9 @@
 			</h4>
 		</td>',
 		'<td data-acro="afptm">
-			<h4>
+			<h2>
 				Adjusted Potential Future Price Cieling
-			</h4>
+			</h2>
 		</td>',
 		'<td data-acro="iv">
 			<h2>

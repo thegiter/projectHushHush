@@ -68,7 +68,8 @@
 		'dwmoe' => 'DECIMAL(31, 30)',
 		'afptm' => 'DECIMAL(33, 30)',
 		'cp' => 'DECIMAL(7, 3)',
-		'afptmcpr' => 'DECIMAL(32, 30)',
+		'iv' => 'DECIMAL(33, 30)',
+		'ivcpr' => 'DECIMAL(32, 30)',
 		'cpfptmr' => 'DECIMAL(32, 30)',
 		'pow' => 'DECIMAL(32, 30)',
 		'advice' => 'VARCHAR(32)'
