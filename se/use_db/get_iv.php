@@ -14,13 +14,13 @@
 		echo 'User / DB Connection Error';//or die(mysql_error());
 	} else {//then excute sql query
 		//get all defs from the se table
-		$result = $mysqli->query('SELECT afptm FROM shse_defs WHERE tkr='.$tkr);
+		$result = $mysqli->query('SELECT fptm, afptm, iv FROM shse_defs WHERE tkr='.$tkr);
 		
 		if (!$result) {
 			die('get data from shse defs error');
 		} else {
 			if ($result->num_rows <= 0) {
-				$result = $mysqli->query('SELECT afptm FROM szse_defs WHERE tkr='.$tkr);
+				$result = $mysqli->query('SELECT fptm, afptm, iv FROM szse_defs WHERE tkr='.$tkr);
 				
 				if (!$result) {
 					die('get data from szse defs error');
@@ -31,7 +31,12 @@
 				}
 			}
 			
-			echo $result->fetch_assoc()['afptm'];
+			$tbl_arr = $result->fetch_assoc();
+			
+			$iv = ($tbl_arr['afptm'] < $tbl_arr['iv']) ? $tbl_arr['afptm'] : $tbl_arr['iv'];
+			
+			echo $iv.'
+			'.$tbl_arr['fptm'];
 		}
 	}
 ?>
