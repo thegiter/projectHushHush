@@ -74,6 +74,7 @@
 	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
+		$def->dr = $dr;
 		//$mos = -.45;//margin of safety
 		$vir = 10;//value to income ratio		
 		$mp = 200;//abitrary number of the max possible price
@@ -498,7 +499,7 @@
 		
 		$def->advice = 'hold';
 		
-		if ($def->afptmcpr > $dr) {
+		if ($def->ivcpr > $dr) {
 			$def->advice = 'buy';
 		}
 		
