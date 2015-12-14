@@ -88,7 +88,7 @@
 					});
 				} else {
 					//pick a random subdomain
-					var rand = getRandomInt(1, 5);
+					var rand = getRandomInt(1, 4);
 					
 					//if there is no www., we simply add the sesrand and remove nothing
 					var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');

@@ -378,7 +378,7 @@
 		//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 		//if there is anios, this would result in future price significantly lower than cp
 		//this is fine, because we are gonna ignore this stock due to lack of data
-		if ($def->so == 0) {
+		if ($def->so === 0) {
 			$def->so = 1;
 		}
 		
