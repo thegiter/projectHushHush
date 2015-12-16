@@ -3,6 +3,8 @@
 		define('root', '../../../../../');
 	}
 	
+	require root.'se/cmm/lib/chk_auth.php';
+	
 	require root.'se/cmm/batch/bs_html.php';
 	
 	echo '<script src="/se/siphon/cmm/lib/jss/js_siphon.js" type="text/javascript"></script>';

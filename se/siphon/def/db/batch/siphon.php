@@ -5,6 +5,8 @@
 		define('root', '../../../../../');
 	}
 	
+	require root.'se/cmm/lib/chk_auth.php';
+	
 	$se = $_POST['se'];
 	$tkr = $_POST['tkr'];
 	$car = 1;
