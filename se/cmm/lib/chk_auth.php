@@ -14,7 +14,7 @@
 	} else {
 		session_start();
 		
-		$_SESSION['logged_in'] == true;
+		$_SESSION['logged_in'] = true;
 		
 		setcookie('ee25d6', session_id());
 	}
