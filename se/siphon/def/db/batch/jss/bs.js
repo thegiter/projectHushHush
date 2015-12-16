@@ -93,7 +93,7 @@
 					//if there is no www., we simply add the sesrand and remove nothing
 					var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
 					
-					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr, 'json').then(function(xhr) {
+					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
 						//determin if success, set retry cntr to 0
 						//if success, update the table row, else retry
 						if (xhr.response) {//xhr.response will be null if failed
