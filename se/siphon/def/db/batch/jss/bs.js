@@ -10,6 +10,8 @@
 		var initNumThreads = 5;
 		var additionalNumThreads = 1;
 
+		const maxThreads = 25;//server limits concurrent scripts to 30; we use 25 to be safe
+		
 		var threadCnt = -1;
 		
 		var tkrRows = [];
@@ -88,7 +90,7 @@
 					});
 				} else {
 					//pick a random subdomain
-					var rand = getRandomInt(1, 4);
+					var rand = getRandomInt(1, 2);
 					
 					//if there is no www., we simply add the sesrand and remove nothing
 					var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
@@ -126,7 +128,7 @@
 				}
 				
 				//if 30 min passed, the thread dulicates itself
-				if (Date.now() - tStartTs >= 1000 * 60 * 30) {
+				if (((Date.now() - tStartTs) >= (1000 * 60 * 30)) && (threadCnt < (maxThreads - 1))) {
 					tStartTs = Date.now();
 					
 					new siphonThread(js);
