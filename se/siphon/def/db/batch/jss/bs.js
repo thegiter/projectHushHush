@@ -8,7 +8,7 @@
 
 		var numJsThreads = 0;//due to same domain policy, js thread wont work
 		var initNumThreads = 5;
-		var additionalNumThreads = 5;
+		var additionalNumThreads = 1;
 
 		var threadCnt = -1;
 		
@@ -179,24 +179,24 @@
 				tkrRows.push(row);
 			});
 			
-			//start one thread, then set time out for additional threads over 20 min
+			//start one thread, then set time out for additional threads over 40 min
 			new siphonThread();
 			
 			//for each of the rest threads, wait random time and start
 			//to avoid suspision
 			for (var i = 1; i < initNumThreads; i++) {
 				//choose a random delay
-				var delay = getRandomInt(minInt * i, 20 * 60);
+				var delay = getRandomInt(minInt * i, 40 * 60);
 				
 				createDelayedThread(i, delay);
 			}
 			
-			//then wait for 30 min and start additional threads
+			//then wait for 50 min and start additional threads
 			setTimeout(function() {
 				for (var c = 1; c <= additionalNumThreads; c++) {
 					new siphonThread();
 				}
-			}, 30 * 60 * 1000);
+			}, 50 * 60 * 1000);
 			
 			//after a short random delay, start first js thread, then gradually increase threads over 1 hour
 			//choose a random delay

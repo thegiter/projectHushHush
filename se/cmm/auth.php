@@ -4,7 +4,7 @@
 	}
 	
 	//auth pass
-	if (isset($_POST['pw']) && $_POST['pw'] == 'sayuneijibei') {
+	if (isset($_POST['pw']) && $_POST['pw'] == 'shpssepw1') {
 		setcookie('fakljkd', 'oxkecl23', time() + (365 * 24 * 60 * 60), '/se/');//expire in 1 year
 		
 		die;
