@@ -12,6 +12,116 @@
 		return curl_exec($ch);
 	}
 	
+	function curl_multiRequest($data, $options = []) {
+		// array of curl handles
+		$chs_arr = [];
+		// data to be returned
+		$result = [];
+	 
+		// multi handle
+		$cmh = curl_multi_init();
+		 
+		// loop through $data and create curl handles
+		// then add them to the multi-handle
+		foreach ($data as $id => $d) {
+			$chs_arr[$id] = curl_init();
+		 
+			$url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
+			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
+			curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
+			curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
+		 
+			// post?
+			if (is_array($d) && !empty($d['post'])) {
+				curl_setopt($chs_arr[$id], CURLOPT_POST,       1);
+				curl_setopt($chs_arr[$id], CURLOPT_POSTFIELDS, $d['post']);
+			}
+		 
+			// extra options?
+			if (!empty($options)) {
+				curl_setopt_array($chs_arr[$id], $options);
+			}
+		 
+			curl_multi_add_handle($cmh, $chs_arr[$id]);
+		}
+		 
+		// execute the handles
+		$running = null;
+		do {
+			curl_multi_exec($cmh, $running);
+		} while ($running > 0);
+		
+		// get content and remove handles
+		foreach ($chs_arr as $id => $ch) {
+			$result[$id] = curl_multi_getcontent($ch);
+			curl_multi_remove_handle($cmh, $ch);
+			curl_close($ch);//may be bugged
+			unset($ch);
+		}
+		 
+		// all done
+		curl_multi_close($cmh);
+		 
+		return $result;
+	}
+	
+	function rolling_curl($urls, $callback, $custom_options = null) {
+		// make sure the rolling window isn't greater than the # of urls
+		$rolling_window = 5;
+		$rolling_window = (sizeof($urls) &lt; $rolling_window) ? sizeof($urls) : $rolling_window;
+
+		$master = curl_multi_init();
+		$curl_arr = array();
+
+		// add additional curl options here
+		$std_options = array(CURLOPT_RETURNTRANSFER =&gt; true,
+		CURLOPT_FOLLOWLOCATION =&gt; true,
+		CURLOPT_MAXREDIRS =&gt; 5);
+		$options = ($custom_options) ? ($std_options + $custom_options) : $std_options;
+
+		// start the first batch of requests
+		for ($i = 0; $i &lt; $rolling_window; $i++) {
+			$ch = curl_init();
+			$options[CURLOPT_URL] = $urls[$i];
+			curl_setopt_array($ch,$options);
+			curl_multi_add_handle($master, $ch);
+		}
+
+		do {
+			while (($execrun = curl_multi_exec($master, $running)) == CURLM_CALL_MULTI_PERFORM);
+			
+			if ($execrun != CURLM_OK) {
+				break;
+			}
+			
+			// a request was just completed -- find out which one
+			while ($done = curl_multi_info_read($master)) {
+				$info = curl_getinfo($done['handle']);
+				
+				if ($info['http_code'] == 200)  {
+					$output = curl_multi_getcontent($done['handle']);
+
+					// request successful.  process output using the callback function.
+					$callback($output);
+
+					// start a new request (it's important to do this before removing the old one)
+					$ch = curl_init();
+					$options[CURLOPT_URL] = $urls[$i++];  // increment i
+					curl_setopt_array($ch,$options);
+					curl_multi_add_handle($master, $ch);
+
+					// remove the curl handle that just completed
+					curl_multi_remove_handle($master, $done['handle']);
+				} else {
+					// request failed.  add error handling.
+				}
+			}
+		} while ($running);
+	   
+		curl_multi_close($master);
+		return true;
+	}
+	
 	function projectedIncome($oinir, $opcr, $tlomr, $cap, $debt, $wacodr, $tlroer) {
 		$result = new stdClass;
 
@@ -74,10 +184,47 @@
 		$vir = 10;//value to income ratio		
 		$mp = 200;//abitrary number of the max possible price
 		
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		//guru focus's price update is too slow, we use reutors
+		//parse ticker into reuters format
+		preg_match('/([A-Z]{4})\:(\d{6})/', $ticker, $tkr_matches);
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/');
+		switch ($tkr_matches[1]) {
+			case 'SHSE':
+				$r_se = 'SS';
+				
+				break;
+			case 'SZSE':
+				$r_se = 'SZ';
+				
+				break;
+			default:
+				echo 'invalid SE, rueters conversion failed.';
+		}
+		
+		$tkr = $tkr_matches[2];
+		
+		$rqss = [
+			'mc' => 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/',
+			'bps' => 'http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/',
+			'so' => 'http://www.gurufocus.com/term/BS_share/'.$ticker.'/Shares%2BOutstanding%2B%2528EOP%2529/',
+			'der' => 'http://www.gurufocus.com/term/deb2equity/'.$ticker.'/Debt%2Bto%2BEquity/',
+			'ni' => 'http://www.gurufocus.com/term/'.urlencode('Net Income').'/'.$ticker.'/Net%2BIncome/',
+			'ie' => 'http://www.gurufocus.com/term/InterestExpense/'.$ticker.'/Interest%2BExpense/',
+			'roc' => 'http://www.gurufocus.com/term/ROC/'.$ticker.'/Return%2Bon%2BCapital/',
+			'te' => 'http://www.gurufocus.com/term/'.urlencode('Total Equity').'/'.$ticker.'/Total%2BEquity/',
+			'oi' => 'http://www.gurufocus.com/term/'.urlencode('Operating Income').'/'.$ticker.'/Operating%2BIncome/',
+			'om' => 'http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/',
+			'wacc' => 'http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/',
+			'roe' => 'http://www.gurufocus.com/term/ROE/'.$ticker.'/Return%2Bon%2BEquity/',
+			'pe' => 'http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/',
+			'pb' => 'http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/',
+			'nios' => 'http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/',
+			'cp' => 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.'.'.$r_se
+		];
+		
+		$result = curl_multiRequest($rqss);
+		
+		$ctt = $result['mc'];
 
 		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
 		
@@ -85,13 +232,13 @@
 
 		$def->mc = str_replace(',', '', $matches[2]);
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/');
+		$ctt =  $result['bps'];
 						
 		preg_match('/data_value"\>(CN¥|$)(.+) \(As of/', $ctt, $matches);
 		
 		$def->bps = str_replace(',', '', $matches[2]);
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/BS_share/'.$ticker.'/Shares%2BOutstanding%2B%2528EOP%2529/');
+		$ctt = $result['so'];
 						
 		preg_match('/data_value"\>(.+) Mil/', $ctt, $matches);
 		
@@ -99,7 +246,7 @@
 
 		$def->ce = $def->bps * $def->so;
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/deb2equity/'.$ticker.'/Debt%2Bto%2BEquity/');
+		$ctt = $result['der'];
 						
 		preg_match('/data_value"\>(.+) \(As of/', $ctt, $matches);
 		
@@ -112,7 +259,7 @@
 		
 		$def->slyder = str_replace(',', '', $matches[2]);
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/'.urlencode('Net Income').'/'.$ticker.'/Net%2BIncome/');
+		$ctt = $result['ni'];
 						
 		preg_match('/Annual Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -122,7 +269,7 @@
 		
 		$def->t12mni = str_replace(',', '', $matches[2]);
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/InterestExpense/'.$ticker.'/Interest%2BExpense/');
+		$ctt = $result['ie'];
 						
 		preg_match('/Annual Data[\s\S]+Interest Expense[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -136,7 +283,7 @@
 		
 		$def->t12mpii = $def->t12mni - $def->t12mie;
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/ROC/'.$ticker.'/Return%2Bon%2BCapital/');
+		$ctt = $result['roc'];
 						
 		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: Dec\.[\s\S]+A\: Dec\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
 		
@@ -149,7 +296,7 @@
 		
 		$def->lycap = $def->lye + $def->lyd;
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/'.urlencode('Total Equity').'/'.$ticker.'/Total%2BEquity/');
+		$ctt = $result['te'];
 						
 		preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -173,7 +320,7 @@
 		
 		$ver = $vcr / (1 + $def->der);*/
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/'.urlencode('Operating Income').'/'.$ticker.'/Operating%2BIncome/');
+		$ctt = $result['oi'];
 		
 		preg_match('/Annual Data[\s\S]+Operating Income[\s\S]+\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -192,7 +339,7 @@
 		$coinir = ($coinir > 1) ? 1 : $coinir;
 		$coinir = ($coinir < -1) ? -1 : $coinir;
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/');
+		$ctt = $result['om'];
 		
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -228,7 +375,7 @@
 			$def->tlomr = $lower_aom / $def->lyom;
 		}
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/');
+		$ctt = $result['wacc'];
 						
 		preg_match('/Cost of Debt \=.* ([^\=]+)\%\./', $ctt, $matches);
 		
@@ -249,7 +396,7 @@
 			$def->wacodr = str_replace(',', '', $matches[1]) / 100;
 		}
 
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/ROE/'.$ticker.'/Return%2Bon%2BEquity/');
+		$ctt = $result['roe'];
 						
 		preg_match('/Annual Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -303,7 +450,7 @@
 
 		$def->apfi = $def->pfi * $def->pa * $oinir;
 	
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/');
+		$ctt = $result['pe'];
 						
 		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
 		
@@ -325,7 +472,7 @@
 		
 		$def->aper = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/');
+		$ctt = $result['pb'];
 						
 		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
 		
@@ -367,7 +514,7 @@
 		
 		$def->pc = $def->lpgc * $cc;
 		
-		$ctt = curl_get_contents($ch, 'http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/');
+		$ctt = $result['nios'];
 						
 		preg_match('/Annual Data[\s\S]+Net Issuance of Stock[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
@@ -442,29 +589,7 @@
 		//but in this case, we are just using growth rate
 		$def->afptm = estimatedValue($def->t12mni, $vir, $afpigr, $dr) / $pso / (1 + $ir);
 		
-		//guru focus's price update is too slow, we use reutors
-		//parse ticker into reuters format
-		preg_match('/([A-Z]{4})\:(\d{6})/', $ticker, $tkr_matches);
-		
-		switch ($tkr_matches[1]) {
-			case 'SHSE':
-				$r_se = 'SS';
-				
-				break;
-			case 'SZSE':
-				$r_se = 'SZ';
-				
-				break;
-			default:
-				echo 'invalid SE, rueters conversion failed.';
-		}
-		
-		$tkr = $tkr_matches[2];
-		
-		$ctt = curl_get_contents($ch, 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.'.'.$r_se);
-		
-		//curl_close($ch);//may be bugged
-		unset($ch);
+		$ctt = $result['cp'];
 		
 		preg_match('/'.$tkr.'\.'.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.]+)\<\/span\>\<span\>CNY\<\/span\>/', $ctt, $matches);
 

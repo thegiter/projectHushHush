@@ -58,14 +58,14 @@
 					}
 					
 					//siphon next
-					//to avoid suspision, we will wait for 5 secs
+					//to avoid suspision, we will wait for 15 to 25 secs
 					scb.tMsgCnrs[threadNum].textContent = 'waiting...';
 					
 					setTimeout(function() {
 						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
 						
 						siphonNext();
-					}, getRandomInt(5000, 10000));
+					}, getRandomInt(15000, 25000));
 				});
 			}
 			
@@ -90,7 +90,7 @@
 					});
 				} else {
 					//pick a random subdomain
-					var rand = getRandomInt(1, 2);
+					var rand = getRandomInt(1, 3);
 					
 					//if there is no www., we simply add the sesrand and remove nothing
 					var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
