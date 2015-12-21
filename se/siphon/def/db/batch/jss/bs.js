@@ -10,7 +10,7 @@
 		var initNumThreads = 5;
 		var additionalNumThreads = 1;
 
-		const maxThreads = 25;//server limits concurrent scripts to 30; we use 25 to be safe
+		const maxThreads = 15;//server limits concurrent scripts to 30; we need to halve it cause it's using too much cpu
 		
 		var threadCnt = -1;
 		
