@@ -47,7 +47,9 @@
 		 
 		// execute the handles
 		$running = null;
+		
 		do {
+			curl_multi_select($cmh, 5);  // Wait max 5 seconds 'till at least one of the curls shows activity
 			curl_multi_exec($cmh, $running);
 		} while ($running > 0);
 		
@@ -56,7 +58,6 @@
 			$result[$id] = curl_multi_getcontent($ch);
 			curl_multi_remove_handle($cmh, $ch);
 			curl_close($ch);//may be bugged
-			unset($ch);
 		}
 		 
 		// all done
@@ -182,7 +183,7 @@
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$def->dr = $dr;
-		//$mos = -.45;//margin of safety
+		$mos = .7;//margin of safety
 		$vir = 10;//value to income ratio		
 		$mp = 200;//abitrary number of the max possible price
 		
@@ -590,6 +591,12 @@
 		//more precisely depending on the standard deviation of the stock
 		//but in this case, we are just using growth rate
 		$def->afptm = estimatedValue($def->t12mni, $vir, $afpigr, $dr) / $pso / (1 + $ir);
+		
+		$def->ep = ($def->fptm + $def->afptm) / 2;
+		
+		$mosa = $mos * ($def->ep - $def->afptm);
+		
+		$mosap = $def->ep - $mosa;
 		
 		$ctt = $result['cp'];
 		

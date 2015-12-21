@@ -10,7 +10,7 @@
 		var initNumThreads = 5;
 		var additionalNumThreads = 1;
 
-		const maxThreads = 15;//server limits concurrent scripts to 30; we need to halve it cause it's using too much cpu
+		const maxThreads = 25;//server limits concurrent scripts to 30;
 		
 		var threadCnt = -1;
 		
@@ -58,14 +58,14 @@
 					}
 					
 					//siphon next
-					//to avoid suspision, we will wait for 20 to 60 secs (time needed to complete one request)
+					//to avoid suspision, we will wait for 4 to 60 secs (time needed to complete one request)
 					scb.tMsgCnrs[threadNum].textContent = 'waiting...';
 					
 					setTimeout(function() {
 						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
 						
 						siphonNext();
-					}, getRandomInt(20000, 60000));
+					}, getRandomInt(4000, 60000));
 				});
 			}
 			
