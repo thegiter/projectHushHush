@@ -49,9 +49,14 @@
 		$running = null;
 		
 		do {
-			curl_multi_select($cmh, 5);  // Wait max 5 seconds 'till at least one of the curls shows activity
-			curl_multi_exec($cmh, $running);
-		} while ($running > 0);
+			if ($running > 0) {
+				curl_multi_select($cmh, 5);  // Wait max 5 seconds 'till at least one of the curls shows activity
+			}
+			
+			do {
+				$mrc = curl_multi_exec($cmh, $running);
+			} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+		} while (($running > 0) && ($mrc == CURLM_OK));
 		
 		// get content and remove handles
 		foreach ($chs_arr as $id => $ch) {
