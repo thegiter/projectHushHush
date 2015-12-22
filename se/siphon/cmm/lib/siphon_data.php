@@ -605,9 +605,9 @@
 		
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		
-		$mosa = $mos * ($def->ep - $def->afptm);
+		$mosa = $mos * ($def->ep - $def->lffptm);
 		
-		$mosap = $def->ep - $mosa;
+		$def->bp = $def->ep - $mosa;//the betting price, the price we are betting on
 		
 		$ctt = $result['cp'];
 		
@@ -622,7 +622,7 @@
 		
 		$def->iv = $def->prcv0g;
 		
-		$lower_p = ($def->iv < $def->afptm) ? $def->iv : $def->afptm;
+		$lower_p = $def->lffptm;
 		
 		//ivcpr ratio is a non greedy ratio to buy in to get the dr
 		//unless iv is 0

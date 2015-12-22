@@ -267,9 +267,9 @@
 			</h2>
 		</td>',
 		'<td data-acro="ep">
-			<h2>
+			<h4>
 				Equilibrium Price
-			</h2>
+			</h4>
 		</td>',
 		'<td data-acro="iv">
 			<h4>
@@ -283,7 +283,7 @@
 		</td>',
 		'<td data-acro="ivcpr">
 			<h2 class="se-sortable">
-				Intrinsic Value / Cieling vs Current Price
+				Price Floor vs Current Price
 			</h2>
 		</td>',
 		'<td data-acro="cpfptmr">
