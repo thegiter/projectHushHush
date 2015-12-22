@@ -33,9 +33,7 @@
 			
 			$tbl_arr = $result->fetch_assoc();
 			
-			$iv = ($tbl_arr['afptm'] < $tbl_arr['iv']) ? $tbl_arr['afptm'] : $tbl_arr['iv'];
-			
-			echo $iv.'
+			echo $tbl_arr['lffptm'].'
 			'.$tbl_arr['fptm'];
 		}
 	}

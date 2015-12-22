@@ -28,8 +28,10 @@ var seData = {};
 				
 				break;
 			case 'dwmoe':
+			case 'abdr':
+			case 'bpcpr':
 				defValue = defValue * 100+'%';
-				
+			
 				break;
 			case 'ivcpr':
 				elm.className = 'cpivr-cnr';
