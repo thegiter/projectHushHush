@@ -597,7 +597,13 @@
 		//but in this case, we are just using growth rate
 		$def->afptm = estimatedValue($def->t12mni, $vir, $afpigr, $dr) / $pso / (1 + $ir);
 		
-		$def->ep = ($def->fptm + $def->afptm) / 2;
+		if ($afpigr > 1.2) {
+			$def->lffptm = estimatedValue($def->t12mni, $vir, 1.2, $dr) / $pso / (1 + $ir);
+		} else {
+			$def->lffptm = $def->afptm;
+		}
+		
+		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		
 		$mosa = $mos * ($def->ep - $def->afptm);
 		

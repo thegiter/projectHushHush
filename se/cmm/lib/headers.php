@@ -261,15 +261,20 @@
 				Adjusted Potential Future Price Cieling
 			</h2>
 		</td>',
+		'<td data-acro="lffptm">
+			<h2>
+				Potential Future Price Floor
+			</h2>
+		</td>',
 		'<td data-acro="ep">
 			<h2>
 				Equilibrium Price
 			</h2>
 		</td>',
 		'<td data-acro="iv">
-			<h2>
+			<h4>
 				Intrinsic Value
-			</h2>
+			</h4>
 		</td>',
 		'<td data-acro="cp">
 			<h3>
