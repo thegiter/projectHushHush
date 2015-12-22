@@ -271,6 +271,16 @@
 				Equilibrium Price
 			</h4>
 		</td>',
+		'<td data-acro="bp">
+			<h2>
+				Betting Price
+			</h2>
+		</td>',
+		'<td data-acro="abdr">
+			<h4>
+				Adjusted Betting Discount Rate
+			</h4>
+		</td>',
 		'<td data-acro="iv">
 			<h4>
 				Intrinsic Value
@@ -280,6 +290,11 @@
 			<h3>
 				Current Price
 			</h3>
+		</td>',
+		'<td data-acro="bpcpr">
+			<h2 class="se-sortable">
+				Betting Price vs Current Price
+			</h2>
 		</td>',
 		'<td data-acro="ivcpr">
 			<h2 class="se-sortable">
@@ -304,6 +319,7 @@
 			<select id="advice-filter" name="advice">
 				<option>not set</option>
 				<option>hold</option>
+				<option>betting buy</option>
 				<option>buy</option>
 				<option>sell</option>
 				<option>be ready to sell</option>

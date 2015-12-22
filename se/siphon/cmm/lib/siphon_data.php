@@ -187,6 +187,7 @@
 	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
+		$bdr = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
 		$def->dr = $dr;
 		$mos = .7;//margin of safety
 		$vir = 10;//value to income ratio		
@@ -605,9 +606,17 @@
 		
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		
-		$mosa = $mos * ($def->ep - $def->lffptm);
+		$epea = $def->ep - $def->lffptm;
 		
-		$def->bp = $def->ep - $mosa;//the betting price, the price we are betting on
+		$mosaa = (1 - $mos) * $epea;
+		
+		$def->bp = $def->lffptm + $mosaa;//the betting price, the price we are betting on
+		
+		if ($epea <= 0) {
+			$def->abdr = $bdr;
+		} else {
+			$def->abdr = $bdr / $mos;
+		}
 		
 		$ctt = $result['cp'];
 		
@@ -618,6 +627,12 @@
 		
 		if (($def->cp !== 0) && !$def->cp) {
 			echo 'get current price failed';
+		}
+		
+		if ($def->bp <= 0) {
+			$def->bpcpr = -1;
+		} else {
+			$def->bpcpr = ($def->bp - $def->cp) / $def->cp;
 		}
 		
 		$def->iv = $def->prcv0g;
@@ -644,6 +659,10 @@
 		$def->pow = (22.5 - $def->gtap / 2) / 22.5;
 		
 		$def->advice = 'hold';
+		
+		if ($def->bpcpr > $def->abdr) {
+			$def->advice = 'betting buy';
+		}
 		
 		if ($def->ivcpr > $dr) {
 			$def->advice = 'buy';
