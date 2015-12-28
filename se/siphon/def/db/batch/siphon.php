@@ -11,7 +11,6 @@
 	$tkr = $_POST['tkr'];
 	$car = 1;
 	$cc = 1;
-	$ir = .012;
 	$tbl_name = strtolower($se).'_defs';
 	$old_advice;
 	
@@ -48,7 +47,7 @@
 	
 	require_once root.'se/siphon/cmm/lib/siphon_data.php';
 	
-	$def = siphon_stock_def_CNY($se.':'.$tkr, $car, $cc, $ir);
+	$def = siphon_stock_def_CNY($se.':'.$tkr, $car, $cc);
 	
 	//upon receiving of the siphoned data, check if siphon successful with json_decode,
 	//if failed, we will respond with failure msg instead of retrying.

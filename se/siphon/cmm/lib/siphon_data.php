@@ -185,7 +185,9 @@
 		return $ni * $vir * $pigr / (1 + $dr);
 	}
 	
-	function siphon_stock_def_CNY($ticker, $car, $cc, $ir) {
+	function siphon_stock_def_CNY($ticker, $car, $cc) {
+		$def = new stdClass;
+		
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$bdr = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
 		$def->dr = $dr;
@@ -195,15 +197,25 @@
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
-		preg_match('/([A-Z]{4})\:(\d{6})/', $ticker, $tkr_matches);
+		preg_match('/([A-Z]{3,4})\:([a-zA-Z0-9]{3,6})/', $ticker, $tkr_matches);
+		
+		define('CNYIR', '0.012');
+		define('ZARIR', '0.061');
 		
 		switch ($tkr_matches[1]) {
 			case 'SHSE':
-				$r_se = 'SS';
+				$r_se = '.SS';
+				$ir = CNYIR;
 				
 				break;
 			case 'SZSE':
-				$r_se = 'SZ';
+				$r_se = '.SZ';
+				$ir = CNYIR;
+				
+				break;
+			case 'JSE':
+				$r_se = 'J.J';
+				$ir = ZARIR;
 				
 				break;
 			default:
@@ -228,27 +240,25 @@
 			'pe' => 'http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/',
 			'pb' => 'http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/',
 			'nios' => 'http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/',
-			'cp' => 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.'.'.$r_se
+			'cp' => 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.$r_se
 		];
 		
 		$result = curl_multiRequest($rqss);
 		
 		$ctt = $result['mc'];
 
-		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
-		
-		$def = new stdClass;
+		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 		$def->mc = str_replace(',', '', $matches[2]);
-		
+
 		$ctt =  $result['bps'];
-						
-		preg_match('/data_value"\>(CN¥|$)(.+) \(As of/', $ctt, $matches);
+
+		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
 		
 		$def->bps = str_replace(',', '', $matches[2]);
 		
 		$ctt = $result['so'];
-						
+
 		preg_match('/data_value"\>(.+) Mil/', $ctt, $matches);
 		
 		$def->so = str_replace(',', '', $matches[1]);
@@ -274,7 +284,7 @@
 		
 		$def->lyni = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 		
 		$def->t12mni = str_replace(',', '', $matches[2]);
 		
@@ -284,7 +294,7 @@
 		
 		$def->lyie = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 		
 		$def->t12mie = str_replace(',', '', $matches[2]);
 		
@@ -294,28 +304,16 @@
 		
 		$ctt = $result['roc'];
 						
-		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: Dec\.[\s\S]+A\: Dec\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Dec|Mar|Jun)\.[\s\S]+A\: (Dec|Mar|Jun)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
 		
-		$def->lyltd = str_replace(',', '', $matches[1]);
-		$def->lystd = str_replace(',', '', $matches[3]);
+		$def->lyltd = str_replace(',', '', $matches[3]);
+		$def->lystd = str_replace(',', '', $matches[5]);
 		
 		$def->lyd = $def->lyltd + $def->lystd;
 		
-		$def->lye = str_replace(',', '', $matches[5]);
+		$def->lye = str_replace(',', '', $matches[7]);
 		
 		$def->lycap = $def->lye + $def->lyd;
-		
-		$ctt = $result['te'];
-						
-		preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
-		
-		$def->slye = str_replace(',', '', $matches[2]);
-		
-		$def->slycap = (1 + $def->slyder) * $def->slye;
-		
-		$def->lypcr = $def->lypii / $def->slycap;
-		
-		$def->t12mpcr = $def->t12mpii / $def->lycap;
 		
 		preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
 		
@@ -329,13 +327,25 @@
 		
 		$ver = $vcr / (1 + $def->der);*/
 		
+		$ctt = $result['te'];
+						
+		preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		$def->slye = str_replace(',', '', $matches[2]);
+		
+		$def->slycap = (1 + $def->slyder) * $def->slye;
+		
+		$def->lypcr = $def->lypii / $def->slycap;
+		
+		$def->t12mpcr = $def->t12mpii / $def->lycap;
+		
 		$ctt = $result['oi'];
 		
 		preg_match('/Annual Data[\s\S]+Operating Income[\s\S]+\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 		
 		$def->lyoi = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|$)(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 		
 		$def->t12moi = str_replace(',', '', $matches[2]);
 		
@@ -620,13 +630,15 @@
 		
 		$ctt = $result['cp'];
 		
-		preg_match('/'.$tkr.'\.'.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.]+)\<\/span\>\<span\>CNY\<\/span\>/', $ctt, $matches);
+		preg_match('/'.$tkr.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|ZAc)\<\/span\>/', $ctt, $matches);
 
 		//$def->cp = $matches[0];
 		$def->cp = str_replace(',', '', $matches[1]);
 		
 		if (($def->cp !== 0) && !$def->cp) {
 			echo 'get current price failed';
+		} else if ($r_se == 'J.J') {
+			$def->cp = $def->cp / 100;
 		}
 		
 		if ($def->bp <= 0) {
