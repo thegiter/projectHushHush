@@ -70,7 +70,19 @@
 			}
 			
 			function siphon(tkr) {
-				var se = (tkr.charAt(0) == '6') ? 'SHSE' : 'SZSE';
+				var se;
+				
+				match = /^\d/.exec(tkr);
+				
+				if (match) {
+					if (tkr.charAt(0) == '6') {
+						se = 'SHSE';
+					} else {
+						se = 'SZSE';
+					}
+				} else {
+					se = 'JSE';
+				}
 				
 				if (js) {
 					var oldAdvice;
