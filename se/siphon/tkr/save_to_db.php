@@ -26,6 +26,9 @@
 		if (!@mysql_select_db(DB_NAME)) {
 			echo 'Database Connection Error';//mysql_error();
 		} else {//then excute sql query
+			//clear table
+			@mysql_query('TRUNCATE TABLE '.$se.'_tkrs');
+			
 			// for each tkr, insert into table
 			foreach ($tkrs as $tkr) {
 				if (!@mysql_query('INSERT INTO '.$se.'_tkrs(tkr, name) VALUES("'.$tkr->ticker.'", "'.$tkr->name.'") ON DUPLICATE KEY UPDATE name=VALUES(name)')) {
