@@ -308,7 +308,7 @@
 		
 		$ctt = $result['roc'];
 						
-		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Dec|Mar|Jun)\.[\s\S]+A\: (Dec|Mar|Jun)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Dec|Mar|Jun|Sep)\.[\s\S]+A\: (Dec|Mar|Jun|Sep)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
 		
 		$def->lyltd = str_replace(',', '', $matches[3]);
 		$def->lystd = str_replace(',', '', $matches[5]);
