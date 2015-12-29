@@ -355,12 +355,9 @@
 		
 		//measures the impact of operating income on net income
 		$oinir = $def->lyoi / $def->lyni;//1
-		$coinir = $def->t12moi / $def->t12mni;
 		
 		$oinir = ($oinir > 1) ? 1 : $oinir;
 		$oinir = ($oinir < -1) ? -1 : $oinir;
-		$coinir = ($coinir > 1) ? 1 : $coinir;
-		$coinir = ($coinir < -1) ? -1 : $coinir;
 		
 		$ctt = $result['om'];
 		
