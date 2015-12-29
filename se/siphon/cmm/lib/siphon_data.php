@@ -630,7 +630,7 @@
 		
 		$ctt = $result['cp'];
 		
-		preg_match('/'.$tkr.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|ZAc)\<\/span\>/', $ctt, $matches);
+		preg_match('/'.$tkr.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
 
 		//$def->cp = $matches[0];
 		$def->cp = str_replace(',', '', $matches[1]);
