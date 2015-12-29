@@ -550,10 +550,13 @@
 			$def->so = 1;
 		}
 		
-		$coinir = $def->t12moi / $def->t12mni;
-		
-		$coinir = ($coinir > 1) ? 1 : $coinir;
-		$coinir = ($oinir < -1) ? -1 : $coinir;
+		if ($def->t12moi > $def->t12mni) {
+			$coinir = 1;
+		} else if ($def->t12mni < 0) {
+			$coinir = 0;
+		} else {
+			$coinir = $def->t12moi / $def->t12mni;
+		}
 		
 		if ($def->lyni == 0) {
 			$def->cigr = 1;
@@ -563,6 +566,8 @@
 		
 		//value is current income worth + expectation of future income growth (positive or negative)
 		//lyv is lyni + the current igr (assuming one was to predict the igr accurately last year)
+		$cigr = ($def->lyni < 0) ? abs($def->cigr) : $def->cigr;
+		
 		$lyv = $def->lyni * $vir * $def->cigr / (1 + $dr);
 		
 		$def->prlyv = $lyv / $def->so;
@@ -581,6 +586,8 @@
 		
 		$def->prcv = $cv / $def->so;
 
+		if ()
+		
 		$def->prcv0g = $def->t12mni * $vir * $coinir / (1 + $dr) / $def->so;
 		
 		$pso = $def->so + $def->anios;
