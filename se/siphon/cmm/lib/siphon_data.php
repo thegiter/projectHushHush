@@ -568,7 +568,7 @@
 		//lyv is lyni + the current igr (assuming one was to predict the igr accurately last year)
 		$cigr = ($def->lyni < 0) ? abs($def->cigr) : $def->cigr;
 		
-		$lyv = $def->lyni * $vir * $def->cigr / (1 + $dr);
+		$lyv = $def->lyni * $vir * $cigr / (1 + $dr);
 		
 		$def->prlyv = $lyv / $def->so;
 		
@@ -585,8 +585,6 @@
 		$cv = estimatedValue($def->t12mni, $vir, $def->cpigr, $dr);
 		
 		$def->prcv = $cv / $def->so;
-
-		if ()
 		
 		$def->prcv0g = $def->t12mni * $vir * $coinir / (1 + $dr) / $def->so;
 		
