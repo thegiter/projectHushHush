@@ -193,7 +193,6 @@
 		$def->dr = $dr;
 		$mos = .7;//margin of safety
 		$vir = 10;//value to income ratio		
-		$mp = 200;//abitrary number of the max possible price
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
@@ -201,21 +200,26 @@
 		
 		define('CNYIR', '0.012');
 		define('ZARIR', '0.061');
+		define('CNYMP', '200');
+		define('ZARMP', '1000');
 		
 		switch ($tkr_matches[1]) {
 			case 'SHSE':
 				$r_se = '.SS';
 				$ir = CNYIR;
+				$mp = CNYMP;//abitrary number of the max possible price
 				
 				break;
 			case 'SZSE':
 				$r_se = '.SZ';
 				$ir = CNYIR;
+				$mp = CNYMP;
 				
 				break;
 			case 'JSE':
 				$r_se = 'J.J';
 				$ir = ZARIR;
+				$mp = ZARMP;
 				
 				break;
 			default:

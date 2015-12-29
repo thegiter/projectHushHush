@@ -136,7 +136,7 @@
 					//if name is not like ZAdigits
 					var sName = tr.children[0].children[0].textContent;
 					
-					if (!(/((ZA\d+)|\bPref\b|\bprf\b|\bprefs\b|\bNPL\b|REDEEMABLEPREF|\%)/i.exec(sName))) {
+					if (!(/((ZA\d+)|\bPref\b|\bprf\b|\bprefs\b|\bNPL\b|REDEEMABLEPREF|\%|\bETF\b)/i.exec(sName))) {
 						//create ticker
 						var tkr = /\S+/.exec(tr.children[1].children[0].textContent)[0];
 
