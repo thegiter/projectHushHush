@@ -680,11 +680,11 @@
 		
 		$def->advice = 'hold';
 		
-		if ($def->bpcpr > $def->abdr) {
+		if (($def->bpcpr > $def->abdr) && !($def->niosi >= .1)) {
 			$def->advice = 'betting buy';
 		}
 		
-		if ($def->ivcpr > $dr) {
+		if (($def->ivcpr > $dr) && !($def->niosi >= .1)) {
 			$def->advice = 'buy';
 		}
 		
