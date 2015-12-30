@@ -71,6 +71,7 @@
 		'ep' => 'DECIMAL(33, 30)',
 		'bp' => 'DECIMAL(33, 30)',
 		'abdr' => 'DECIMAL(31, 30)',
+		'niosi' => 'DECIMAL(34, 30)',
 		'cp' => 'DECIMAL(7, 3)',
 		'bpcpr' => 'DECIMAL(32, 30)',
 		'iv' => 'DECIMAL(33, 30)',

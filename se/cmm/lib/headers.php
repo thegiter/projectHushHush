@@ -281,6 +281,11 @@
 				Adjusted Betting Discount Rate
 			</h4>
 		</td>',
+		'<td data-acro="niosi">
+			<h2 class="se-sortable">
+				Net Issuance of Stock Influence on Projection
+			</h2>
+		</td>',
 		'<td data-acro="iv">
 			<h4>
 				Intrinsic Value

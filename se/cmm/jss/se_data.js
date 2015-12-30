@@ -30,6 +30,7 @@ var seData = {};
 			case 'dwmoe':
 			case 'abdr':
 			case 'bpcpr':
+			case 'niosi':
 				defValue = defValue * 100+'%';
 			
 				break;

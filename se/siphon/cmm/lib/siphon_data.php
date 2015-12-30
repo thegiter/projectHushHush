@@ -587,6 +587,8 @@
 		
 		$pso = $def->so + $def->anios;
 		
+		$def->niosi = ($def->so - $pso) / $def->so;
+		
 		if ($def->cpigr == 0) {
 			$def->fpigr = 0;
 		} else {
