@@ -200,8 +200,11 @@
 		
 		define('CNYIR', '0.012');
 		define('ZARIR', '0.061');
+		define('USIR', '0.061');
 		define('CNYMP', '200');
 		define('ZARMP', '1000');
+		define('USMP', '1000');
+		
 		
 		switch ($tkr_matches[1]) {
 			case 'SHSE':
@@ -223,7 +226,9 @@
 				
 				break;
 			default:
-				echo 'invalid SE, rueters conversion failed.';
+				$r_se = '';
+				$ir = USIR;
+				$mp = USMP;
 		}
 		
 		$tkr = $tkr_matches[2];

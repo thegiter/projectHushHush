@@ -292,7 +292,7 @@
 			</h4>
 		</td>',
 		'<td data-acro="cp">
-			<h3>
+			<h3 class="se-sortable">
 				Current Price
 			</h3>
 		</td>',
