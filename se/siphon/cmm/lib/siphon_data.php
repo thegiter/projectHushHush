@@ -200,11 +200,10 @@
 		
 		define('CNYIR', '0.012');
 		define('ZARIR', '0.061');
-		define('USIR', '0.061');
+		define('USDIR', '0.061');
 		define('CNYMP', '200');
 		define('ZARMP', '1000');
-		define('USMP', '1000');
-		
+		define('USDMP', '1000');
 		
 		switch ($tkr_matches[1]) {
 			case 'SHSE':
@@ -227,8 +226,8 @@
 				break;
 			default:
 				$r_se = '';
-				$ir = USIR;
-				$mp = USMP;
+				$ir = USDIR;
+				$mp = USDMP;
 		}
 		
 		$tkr = $tkr_matches[2];
@@ -258,6 +257,10 @@
 
 		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 
+		if (!$matches) {
+			return 'Load webpage failed.';
+		}
+		
 		$def->mc = str_replace(',', '', $matches[2]);
 
 		$ctt =  $result['bps'];
@@ -610,7 +613,13 @@
 		
 		$def->dwmoe = ($def->dwmoe < 0) ? 0 : $def->dwmoe;
 		
-		$afpigr = $def->fpigr * (1 - $def->dwmoe);
+		$adj = 1 - $def->dwmoe;
+		
+		if ($def->fpigr < 0) {
+			$adj = abs($adj);
+		}
+		
+		$afpigr = $def->fpigr * $adj;
 		
 		//fptm adjusted for margin of error
 		//upward moe is same as dr, because we want to tolerate as little moe as possible
