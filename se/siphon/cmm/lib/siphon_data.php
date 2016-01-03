@@ -258,7 +258,7 @@
 		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 		if (!$matches) {
-			return 'Load webpage failed.';
+			return false;
 		}
 		
 		$def->mc = str_replace(',', '', $matches[2]);
