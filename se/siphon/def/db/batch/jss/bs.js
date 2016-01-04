@@ -10,7 +10,7 @@
 		var initNumThreads = 5;
 		var additionalNumThreads = 1;
 
-		const maxThreads = 25;//server limits concurrent scripts to 30;
+		const maxThreads = 16;//server limits concurrent scripts to 30;
 		
 		var threadCnt = -1;
 		
@@ -105,7 +105,8 @@
 					var rand = getRandomInt(1, 3);
 					
 					//if there is no www., we simply add the sesrand and remove nothing
-					var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
+					//var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
+					var seurl = '/se/siphon/def/db/batch/siphon.php';
 					
 					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
 						//determin if success, set retry cntr to 0

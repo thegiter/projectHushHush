@@ -12,7 +12,8 @@
 		return curl_exec($ch);
 	}
 	
-	//define('MAXRETRY', '5');
+	define('MAXRETRY', '5');
+	define('MAXTIME', '30');
 	
 	function curl_multiRequest($data, $options = []) {
 		// array of curl handles
@@ -21,23 +22,27 @@
 		$result = [];
 	 
 		// multi handle
-		//$cmh = curl_multi_init();
+		$cmh = curl_multi_init();
 		 
 		// loop through $data and create curl handles
 		// then add them to the multi-handle
-		$ch = curl_init();
+/*		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_HEADER,         0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30); //timeout in seconds
+*/		
 		foreach ($data as $id => $d) {
-			//$chs_arr[$id] = curl_init();
+			$chs_arr[$id] = curl_init();
 			
 			$url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
-/*			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
+			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 			curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 			curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
-*/
-			curl_setopt($ch, CURLOPT_URL,            $url);
+			curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, 10); 
+			curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, 30); //timeout in seconds
+			
+			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 			
 			// post?
 			if (is_array($d) && !empty($d['post'])) {
@@ -50,13 +55,14 @@
 				curl_setopt_array($chs_arr[$id], $options);
 			}
 			
-			$result[$id] = curl_exec($ch);
-			//curl_multi_add_handle($cmh, $chs_arr[$id]);
+			//$result[$id] = curl_exec($ch);
+			curl_multi_add_handle($cmh, $chs_arr[$id]);
 		}
-/*		 
+		 
 		// execute the handles
 		$running = null;
-		
+		$starttime = microtime(true);
+
 		do {
 			if ($running > 0) {
 				curl_multi_select($cmh, 5);// Wait max 5 seconds 'till at least one of the curls shows activity
@@ -70,7 +76,9 @@
 				
 				$c++;
 			} while (($mrc == CURLM_CALL_MULTI_PERFORM) && ($c < MAXRETRY));
-		} while (($running > 0) && ($mrc == CURLM_OK));
+		} while (($running > 0) && ($mrc == CURLM_OK) && ((microtime(true) - $starttime) < MAXTIME));//if maxretry reached, mrc is still MULTI_PERFORM, so the entire loop is skipped
+		//if nothing went wrong, but running is always true, (one / more webpage could not be fetched)
+		//then we also skipped the entire loop on timeout
 		
 		// get content and remove handles
 		foreach ($chs_arr as $id => $ch) {
@@ -81,7 +89,10 @@
 		 
 		// all done
 		curl_multi_close($cmh);
-*/
+
+//		curl_close($ch);//may be bugged
+//		unset($ch);
+		
 		return $result;
 	}
 	
@@ -201,6 +212,9 @@
 	
 	function siphon_stock_def_CNY($ticker, $car, $cc) {
 		$def = new stdClass;
+		
+		$def->car = $car;
+		$def->cc = $cc;
 		
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$bdr = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
@@ -376,7 +390,15 @@
 		$def->t12moi = str_replace(',', '', $matches[2]);
 		
 		//measures the impact of operating income on net income
-		$oinir = $def->lyoi / $def->lyni;//1
+		if ($def->lyni == 0) {
+			$oinir = 1;
+			
+			if ($def->lyoi < 0) {
+				$oinir = -1;
+			}
+		} else {
+			$oinir = $def->lyoi / $def->lyni;//1
+		}
 		
 		$oinir = ($oinir > 1) ? 1 : $oinir;
 		$oinir = ($oinir < -1) ? -1 : $oinir;
@@ -623,7 +645,13 @@
 	
 		$def->fptm = $def->fp / (1 + $ir);
 		
-		$def->dwmoe = 1 - 20 / $def->cigr / $def->fpigr;
+		if ($def->fpigr == 0) {
+			$def->dwmoe = 0;
+		} else if ($def->cigr == 0) {
+			$def->dwmoe = 1 - 20 / $def->fpigr;
+		} else {
+			$def->dwmoe = 1 - 20 / $def->cigr / $def->fpigr;
+		}
 		
 		$def->dwmoe = ($def->dwmoe < 0) ? 0 : $def->dwmoe;
 		

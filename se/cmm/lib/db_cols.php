@@ -42,7 +42,6 @@
 		'tlroer' => 'DECIMAL(33, 30)',
 		'pci' => 'DECIMAL(40, 30)',
 		'pa' => 'DECIMAL(32, 30)',
-		'fe' => 'DECIMAL(40, 30)',
 		'pfi' => 'DECIMAL(40, 30)',
 		'apfi' => 'DECIMAL(40, 30)',
 		'car' => 'DECIMAL(4, 2)',
