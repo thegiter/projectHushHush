@@ -10,7 +10,9 @@
 		var initNumThreads = 5;
 		var additionalNumThreads = 1;
 
-		const maxThreads = 16;//server limits concurrent scripts to 30;
+		const maxThreads = 10;
+		//max concurrent siphoning network can handle seems to be limited to 15
+		//could be a website limitation or just server network
 		
 		var threadCnt = -1;
 		
