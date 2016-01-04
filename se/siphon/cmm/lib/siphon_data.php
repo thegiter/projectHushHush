@@ -12,6 +12,8 @@
 		return curl_exec($ch);
 	}
 	
+	//define('MAXRETRY', '5');
+	
 	function curl_multiRequest($data, $options = []) {
 		// array of curl handles
 		$chs_arr = [];
@@ -19,18 +21,24 @@
 		$result = [];
 	 
 		// multi handle
-		$cmh = curl_multi_init();
+		//$cmh = curl_multi_init();
 		 
 		// loop through $data and create curl handles
 		// then add them to the multi-handle
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HEADER,         0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		
 		foreach ($data as $id => $d) {
-			$chs_arr[$id] = curl_init();
-		 
+			//$chs_arr[$id] = curl_init();
+			
 			$url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
-			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
+/*			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 			curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 			curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
-		 
+*/
+			curl_setopt($ch, CURLOPT_URL,            $url);
+			
 			// post?
 			if (is_array($d) && !empty($d['post'])) {
 				curl_setopt($chs_arr[$id], CURLOPT_POST,       1);
@@ -41,21 +49,27 @@
 			if (!empty($options)) {
 				curl_setopt_array($chs_arr[$id], $options);
 			}
-		 
-			curl_multi_add_handle($cmh, $chs_arr[$id]);
+			
+			$result[$id] = curl_exec($ch);
+			//curl_multi_add_handle($cmh, $chs_arr[$id]);
 		}
-		 
+/*		 
 		// execute the handles
 		$running = null;
 		
 		do {
 			if ($running > 0) {
-				curl_multi_select($cmh, 5);  // Wait max 5 seconds 'till at least one of the curls shows activity
+				curl_multi_select($cmh, 5);// Wait max 5 seconds 'till at least one of the curls shows activity
 			}
 			
+			$c = 0;
+			
+			//do multi exec, if something went wrong, do again, until max reached
 			do {
 				$mrc = curl_multi_exec($cmh, $running);
-			} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+				
+				$c++;
+			} while (($mrc == CURLM_CALL_MULTI_PERFORM) && ($c < MAXRETRY));
 		} while (($running > 0) && ($mrc == CURLM_OK));
 		
 		// get content and remove handles
@@ -67,7 +81,7 @@
 		 
 		// all done
 		curl_multi_close($cmh);
-		 
+*/
 		return $result;
 	}
 	
