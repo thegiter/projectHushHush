@@ -39,7 +39,7 @@
 			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 			curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 			curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, 10); 
+			curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, 30); 
 			curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, 30); //timeout in seconds
 			
 			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
@@ -65,7 +65,7 @@
 
 		do {
 			if ($running > 0) {
-				curl_multi_select($cmh, 5);// Wait max 5 seconds 'till at least one of the curls shows activity
+				curl_multi_select($cmh);// Wait max 5 seconds 'till at least one of the curls shows activity
 			}
 			
 			$c = 0;

@@ -10,9 +10,9 @@
 		var initNumThreads = 5;
 		var additionalNumThreads = 1;
 
-		const maxThreads = 10;
+		const maxThreads = 13;
 		//max concurrent siphoning network can handle seems to be limited to 15
-		//could be a website limitation or just server network
+		//could be a website limitation or just server network limitation
 		
 		var threadCnt = -1;
 		
