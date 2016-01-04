@@ -72,7 +72,7 @@
 			function siphon(tkr) {
 				var se;
 				
-				match = /^\d/.exec(tkr);
+				match = /^\d{6}/.exec(tkr);
 				
 				if (match) {
 					if (tkr.charAt(0) == '6') {
