@@ -182,7 +182,11 @@
 	function projectedIgr($cigr, $ar, $ni, $vir, $so, $mp) {
 		$aigr = $cigr + $ar - 1;
 		
-		$p0g = $ni * $vir / $so;
+		if ($so == 0) {
+			$p0g = 0;
+		} else {
+			$p0g = $ni * $vir / $so;
+		}
 		
 		//price growth potential, conteracts the omg or roeg
 		$pgpr = ($mp - $p0g) / $mp;
@@ -344,7 +348,7 @@
 		
 		$ctt = $result['roc'];
 						
-		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Dec|Mar|Jun|Sep|Feb)\.[\s\S]+A\: (Dec|Mar|Jun|Sep|Feb)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Dec|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+A\: (Dec|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
 		
 		$def->lyltd = str_replace(',', '', $matches[3]);
 		$def->lystd = str_replace(',', '', $matches[5]);
@@ -611,7 +615,11 @@
 		
 		$lyv = $def->lyni * $vir * $cigr / (1 + $dr);
 		
-		$def->prlyv = $lyv / $def->so;
+		if ($def->so == 0) {
+			$def->prlyv = 0;
+		} else {
+			$def->prlyv = $lyv / $def->so;
+		}
 		
 		//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
 		//thus, we use the current igr, but adjust it with a few factors
@@ -625,13 +633,21 @@
 		
 		$cv = estimatedValue($def->t12mni, $vir, $def->cpigr, $dr);
 		
-		$def->prcv = $cv / $def->so;
-		
-		$def->prcv0g = $def->t12mni * $vir * $coinir / (1 + $dr) / $def->so;
+		if ($def->so == 0) {
+			$def->prcv = 0;
+			$def->prcv0g = 0;
+		} else {
+			$def->prcv = $cv / $def->so;
+			$def->prcv0g = $def->t12mni * $vir * $coinir / (1 + $dr) / $def->so;
+		}
 		
 		$pso = $def->so + $def->anios;
 		
-		$def->niosi = ($def->so - $pso) / $def->so;
+		if ($def->so == 0) {
+			$def->niosi = -1;
+		} else {
+			$def->niosi = ($def->so - $pso) / $def->so;
+		}
 		
 		if ($def->cpigr == 0) {
 			$def->fpigr = 0;
@@ -694,7 +710,7 @@
 		
 		$ctt = $result['cp'];
 		
-		preg_match('/'.$tkr.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
+		preg_match('/'.$tkr.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
 
 		$def->cp = str_replace(',', '', $matches[1]);
 		
@@ -704,7 +720,7 @@
 			$def->cp = $def->cp / 100;
 		}
 		
-		if ($def->bp <= 0) {
+		if (($def->bp <= 0) || ($def->cp <= 0)) {
 			$def->bpcpr = -1;
 		} else {
 			$def->bpcpr = ($def->bp - $def->cp) / $def->cp;
@@ -716,7 +732,7 @@
 		
 		//ivcpr ratio is a non greedy ratio to buy in to get the dr
 		//unless iv is 0
-		if ($lower_p <= 0) {
+		if (($lower_p <= 0) || ($def->cp <= 0)) {
 			$def->ivcpr = -1;
 		} else {
 			$def->ivcpr = ($lower_p - $def->cp) / $def->cp;
