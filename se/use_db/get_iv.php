@@ -34,7 +34,8 @@
 			$tbl_arr = $result->fetch_assoc();
 			
 			echo $tbl_arr['lffptm'].'
-			'.$tbl_arr['fptm'];
+			'.$tbl_arr['fptm'].'
+			'.$tbl_arr['bp'];
 		}
 	}
 ?>
