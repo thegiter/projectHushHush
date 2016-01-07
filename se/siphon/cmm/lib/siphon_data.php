@@ -299,11 +299,19 @@
 
 		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
 		
+		if (!$matches) {
+			return false;
+		}
+		
 		$def->bps = str_replace(',', '', $matches[2]);
 		
 		$ctt = $result['so'];
 
 		preg_match('/data_value"\>(.+) Mil/', $ctt, $matches);
+		
+		if (!$matches) {
+			return false;
+		}
 		
 		$def->so = str_replace(',', '', $matches[1]);
 
