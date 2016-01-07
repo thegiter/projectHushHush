@@ -180,7 +180,7 @@
 	}
 	
 	function projectedIgr($cigr, $ar, $ni, $vir, $so, $mp) {
-		$aigr = $cigr + $ar - 1;
+		$aigr = $cigr + $ar - 1;//-2
 		
 		if ($so == 0) {
 			$p0g = 0;
@@ -652,7 +652,7 @@
 		$pso = $def->so + $def->anios;
 		
 		if ($def->so == 0) {
-			$def->niosi = -1;
+			$def->niosi = 1;
 		} else {
 			$def->niosi = ($def->so - $pso) / $def->so;
 		}
