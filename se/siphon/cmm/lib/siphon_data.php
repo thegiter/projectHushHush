@@ -214,16 +214,24 @@
 		return $ni * $vir * $pigr / (1 + $dr);
 	}
 	
-	function getAllocation($bp, $ep, $fp, $dr) {
-		$mos = ($ep - $bp) / ($ep - $fp);
+	function getAllocation($bp, $ep, $pf, $pc, $dr) {
+		$mos = ($ep - $bp) / ($ep - $pf);
 		
 		$wa = $dr / $mos;
 		
 		$cost = $bp / (1 + $wa);
 		
-		$la = ($cost - $fp) / $cost;
+		$la = ($cost - $pf) / $cost;
 		
-		$p = 1 - ($bp - $fp) / ($ep - $fp) * .5;
+		$p_up = 1 - ($cost - $pf) / ($ep - $pf) * .5;
+		
+		if ($p_up > 1) {
+			$p_up = 1;
+		} else if ($p_up < 0) {
+			$p_up = 0;
+		}
+		
+		$p = ($bp - $cost) / ($pc - $cost) * $p_up;
 		
 		$result = [
 			'allo' => ($p - (1 - $p) / ($wa / $la)) / 2,
@@ -723,16 +731,15 @@
 		}
 		
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
+		$def->bp = $def->lffptm;
+		$def->abdr = $bdr;
 		
-		if ($def->ep == $def->lffptm) {
-			$def->bp = $def->lffptm;
-			$def->abdr = $bdr;
-		} else if ($def->ep > $def->lffptm) {
-			$last_i = def->lffptm;
+		if ($def->ep > $def->lffptm) {
+			$last_i = $def->lffptm;
 			
 			for ($i = $def->lffptm; $i < $def->ep; $i += .001) {
-				$allo_result = getAllocation($i, $def->ep, $def->lffptm, $bdr);
-				
+				$allo_result = getAllocation($i, $def->ep, $def->lffptm, $def->fptm, $bdr);
+
 				if ($allo_result['allo'] < $ballo) {
 					$def->bp = $last_i;
 					$def->abdr = $allo_result['abdr'];
