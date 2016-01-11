@@ -214,6 +214,25 @@
 		return $ni * $vir * $pigr / (1 + $dr);
 	}
 	
+	function getAllocation($bp, $ep, $fp, $dr) {
+		$mos = ($ep - $bp) / ($ep - $fp);
+		
+		$wa = $dr / $mos;
+		
+		$cost = $bp / (1 + $wa);
+		
+		$la = ($cost - $fp) / $cost;
+		
+		$p = 1 - ($bp - $fp) / ($ep - $fp) * .5;
+		
+		$result = [
+			'allo' => ($p - (1 - $p) / ($wa / $la)) / 2,
+			'abdr' => $wa
+		];
+		
+		return $result;
+	}
+	
 	function siphon_stock_def_CNY($ticker, $car, $cc) {
 		$def = new stdClass;
 		
@@ -222,6 +241,7 @@
 		
 		$dr = .2;//discount rate is the minimum profit rate to justify the investment
 		$bdr = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
+		$ballo = .25;//the target allocation for betting
 		$def->dr = $dr;
 		$mos = .7;//margin of safety
 		$vir = 10;//value to income ratio		
@@ -704,16 +724,24 @@
 		
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		
-		$epea = $def->ep - $def->lffptm;
-		
-		$mosaa = (1 - $mos) * $epea;
-		
-		$def->bp = $def->lffptm + $mosaa;//the betting price, the price we are betting on
-		
-		if ($epea <= 0) {
+		if ($def->ep == $def->lffptm) {
+			$def->bp = $def->lffptm;
 			$def->abdr = $bdr;
-		} else {
-			$def->abdr = $bdr / $mos;
+		} else if ($def->ep > $def->lffptm) {
+			$last_i = def->lffptm;
+			
+			for ($i = $def->lffptm; $i < $def->ep; $i += .001) {
+				$allo_result = getAllocation($i, $def->ep, $def->lffptm, $bdr);
+				
+				if ($allo_result['allo'] < $ballo) {
+					$def->bp = $last_i;
+					$def->abdr = $allo_result['abdr'];
+					
+					break;
+				}
+				
+				$last_i = $i;
+			}
 		}
 		
 		$ctt = $result['cp'];
