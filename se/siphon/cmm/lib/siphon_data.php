@@ -231,7 +231,7 @@
 			$p_up = 0;
 		}
 		
-		$p = ($bp - $cost) / ($pc - $cost) * $p_up;
+		$p = (1 - ($bp - $cost) / ($pc - $cost)) * $p_up;
 		
 		$result = [
 			'allo' => ($p - (1 - $p) / ($wa / $la)) / 2,

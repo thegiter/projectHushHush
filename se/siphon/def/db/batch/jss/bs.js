@@ -60,14 +60,14 @@
 					}
 					
 					//siphon next
-					//to avoid suspision, we will wait for 4 to 60 secs (time needed to complete one request)
+					//to avoid suspision, we will wait for 4 to 100 secs (time needed to complete one request)
 					scb.tMsgCnrs[threadNum].textContent = 'waiting...';
 					
 					setTimeout(function() {
 						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
 						
 						siphonNext();
-					}, getRandomInt(4000, 60000));
+					}, getRandomInt(4000, 100000));
 				});
 			}
 			
