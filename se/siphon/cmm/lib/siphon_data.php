@@ -259,7 +259,7 @@
 		preg_match('/([A-Z]{3,4})\:([a-zA-Z0-9]{3,6})/', $ticker, $tkr_matches);
 		
 		define('CNYIR', '0.020');
-		define('ZARIR', '0.061');
+		define('ZARIR', '0.066');
 		define('USDIR', '0.016');
 		define('CNYMP', '200');
 		define('ZARMP', '1000');

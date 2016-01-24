@@ -36,6 +36,7 @@
 				$sells = [];
 				$buys = [];
 				$readies = [];
+				$bettings = [];
 				
 				while ($tkr_advice = mysql_fetch_array($advice_tbl)) {
 					switch ($tkr_advice['new_advice']) {
@@ -49,6 +50,10 @@
 							break;
 						case 'be ready to sell':
 							array_push($readies, $tkr_advice);
+							
+							break;
+						case 'betting buy':
+							array_push($bettings, $tkr_advice);
 							
 							break;
 						default:
@@ -121,6 +126,20 @@
 						
 						<ul>
 							'.construct_tkrs_msg($readies).'
+						</ul>
+					</p>';
+				}
+				
+				if (count($bettings) > 0 ) {
+					$msg .= '<h3>
+						New Betting Buys
+					</h3>
+					
+					<p>
+						Our raw rough unrefined advice suggests to betting buy these stocks:
+						
+						<ul>
+							'.construct_tkrs_msg($bettings).'
 						</ul>
 					</p>';
 				}
