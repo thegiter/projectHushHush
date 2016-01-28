@@ -318,7 +318,7 @@
 		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 		if (!$matches) {
-			return false;
+			return 'no mc';
 		}
 		
 		$def->mc = str_replace(',', '', $matches[2]);
@@ -328,7 +328,7 @@
 		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
 		
 		if (!$matches) {
-			return false;
+			return 'no bps';
 		}
 		
 		$def->bps = str_replace(',', '', $matches[2]);
@@ -338,7 +338,7 @@
 		preg_match('/data_value"\>(.+) Mil/', $ctt, $matches);
 		
 		if (!$matches) {
-			return false;
+			return 'no so';
 		}
 		
 		$def->so = str_replace(',', '', $matches[1]);
@@ -348,6 +348,10 @@
 		$ctt = $result['der'];
 						
 		preg_match('/data_value"\>(.+) \(As of/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no der';
+		}
 		
 		$def->der = str_replace(',', '', $matches[1]);
 
@@ -359,8 +363,12 @@
 		$def->slyder = str_replace(',', '', $matches[2]);
 		
 		$ctt = $result['ni'];
-						
+
 		preg_match('/Annual Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no ni';
+		}
 		
 		$def->lyni = str_replace(',', '', $matches[2]);
 		
@@ -369,8 +377,12 @@
 		$def->t12mni = str_replace(',', '', $matches[2]);
 		
 		$ctt = $result['ie'];
-						
+
 		preg_match('/Annual Data[\s\S]+Interest Expense[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no ie';
+		}
 		
 		$def->lyie = str_replace(',', '', $matches[2]);
 		
@@ -383,8 +395,12 @@
 		$def->t12mpii = $def->t12mni - $def->t12mie;
 		
 		$ctt = $result['roc'];
-						
+
 		preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Dec|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+A\: (Dec|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no roc ltd std';
+		}
 		
 		$def->lyltd = str_replace(',', '', $matches[3]);
 		$def->lystd = str_replace(',', '', $matches[5]);
@@ -408,8 +424,12 @@
 		$ver = $vcr / (1 + $def->der);*/
 		
 		$ctt = $result['te'];
-						
+
 		preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no te';
+		}
 		
 		$def->slye = str_replace(',', '', $matches[2]);
 		
@@ -422,6 +442,10 @@
 		$ctt = $result['oi'];
 		
 		preg_match('/Annual Data[\s\S]+Operating Income[\s\S]+\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no oi';
+		}
 		
 		$def->lyoi = str_replace(',', '', $matches[2]);
 		
@@ -446,6 +470,10 @@
 		$ctt = $result['om'];
 		
 		preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no om';
+		}
 		
 		$def->lyom = str_replace(',', '', $matches[8]);
 		$def->slyom = str_replace(',', '', $matches[5]);
@@ -480,7 +508,7 @@
 		}
 		
 		$ctt = $result['wacc'];
-						
+
 		preg_match('/Cost of Debt \=.* ([^\=]+)\%\./', $ctt, $matches);
 		
 		//cost of debt can be invalid sometimes, due to company paying interest when there was no debt
@@ -501,8 +529,12 @@
 		}
 
 		$ctt = $result['roe'];
-						
+
 		preg_match('/Annual Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no roe';
+		}
 		
 		$def->lyroe = str_replace(',', '', $matches[8]);
 		$def->slyroe = str_replace(',', '', $matches[5]);
@@ -555,7 +587,7 @@
 		$def->apfi = $def->pfi * $def->pa * $oinir;
 	
 		$ctt = $result['pe'];
-						
+
 		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
 		
 		if (!$matches) {
@@ -577,7 +609,7 @@
 		$def->aper = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
 		
 		$ctt = $result['pb'];
-						
+
 		preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
 		
 		if (!$matches) {
@@ -619,8 +651,12 @@
 		$def->pc = $def->lpgc * $cc;
 		
 		$ctt = $result['nios'];
-						
+
 		preg_match('/Annual Data[\s\S]+Net Issuance of Stock[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+		
+		if (!$matches) {
+			return 'no nios';
+		}
 		
 		$def->anios = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
 		
