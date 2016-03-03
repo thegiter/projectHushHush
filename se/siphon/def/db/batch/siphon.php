@@ -9,6 +9,7 @@
 	
 	$se = $_POST['se'];
 	$tkr = $_POST['tkr'];
+	$refresh = ($_POST['refresh'] == 'refresh') ? true : false;
 	$car = 1;
 	$cc = 1;
 	$tbl_name = strtolower($se).'_defs';
@@ -47,19 +48,17 @@
 	
 	require_once root.'se/siphon/cmm/lib/siphon_data.php';
 	
-	$def = siphon_stock_def_CNY($se.':'.$tkr, $car, $cc);
+	$def = siphon_stock_def_CNY($se.':'.$tkr, $car, $cc, $refresh);
 	
-	//upon receiving of the siphoned data, check if siphon successful with json_decode,
+	//upon receiving of the siphoned data, check if siphon successful,
 	//if failed, we will respond with failure msg instead of retrying.
 	//because retrying could result in php running longer than allowed seconds
 	//this has the byproduct of informing the client side of failures, client side can then initiate a retry
-	$def_j = json_encode($def);
-	
-	if (!json_decode($def_j)) {
-		die('siphon failed');
+	if (is_string($def)) {
+		die($def);
 	}
 	
-	//if succes, we will store in db, but not the user input values, the user input values must be changed in use_db
+	//if succes, we will update db, but not the user input values, the user input values must be changed in use_db
 	//if store db failed, the script dies automatically
 	//if store db succeeded, we will respond with the json encoded def
 	require_once root.'se/cmm/lib/update_tbl_row.php';
@@ -76,5 +75,5 @@
 		}
 	}
 	
-	echo $def_j;
+	echo json_encode($def);
 ?>

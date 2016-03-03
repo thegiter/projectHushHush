@@ -7,6 +7,38 @@
 	
 	require root.'se/cmm/batch/bs_html.php';
 	
+	//decide whether refreshing is needed, refresh every 7 days
+	//check last refresh date from file
+	define('F_NAME', 'last_refresh.txt');
+	
+	$file = fopen(F_NAME, 'r');
+	
+	if ($file == false) {
+		//skip, something went wrong, so we dont make anychanges
+		//we would however, want to leave a note to indicate this, but nothing should go wrong though
+		//because we are just opening a file
+	} else {
+		//read file
+		$f_size = filesize(F_NAME);
+		$date = fread($file, $f_size);
+		$fclose($file);
+		
+		//convert to date, when last refreshed, the time() value is saved to file
+		//we simply convert that back to date, and compare with the current time() value
+		$last_time = strtotime($date);
+		$now_time = time(); // or your date as well
+        
+		//check difference, in days
+		$time_diff = $now_time - $last_time;
+		$date_diff = floor($time_diff/(60*60*24));
+		
+		//if date difference is greater than 7 days
+		if ($date_diff > 7) {
+			//include the refresher js
+			echo '<script src="/se/siphon/def/db/batch/jss/refresh.js" type="text/javascript"></script>';
+		}
+	}
+	
 	echo '<script src="/se/siphon/cmm/lib/jss/js_siphon.js" type="text/javascript"></script>';
 	echo '<script src="/se/siphon/def/db/batch/jss/bs.js" async="async" type="text/javascript"></script>';
 	

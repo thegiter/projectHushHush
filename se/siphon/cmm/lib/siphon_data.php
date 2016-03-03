@@ -6,10 +6,20 @@
 	}
 	
 	//often file_get_contents is disabled, using this is as a workaround
-	function curl_get_contents($ch, $url) {
-		curl_setopt($ch, CURLOPT_URL, $url);
+	function curl_get_contents($url) {
+		$ch = curl_init();
 		
-		return curl_exec($ch);
+		curl_setopt($ch, CURLOPT_URL,            $url);
+		curl_setopt($ch, CURLOPT_HEADER,         0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30); 
+		curl_setopt($ch, CURLOPT_TIMEOUT,		 30); //timeout in seconds
+		
+		$data = curl_exec($ch);
+		
+		curl_close($ch);
+		
+		return $data;
 	}
 	
 	define('MAXRETRY', '5');
@@ -36,13 +46,12 @@
 			$chs_arr[$id] = curl_init();
 			
 			$url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
+			
 			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 			curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 			curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, 30); 
 			curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, 30); //timeout in seconds
-			
-			curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 			
 			// post?
 			if (is_array($d) && !empty($d['post'])) {
@@ -241,57 +250,23 @@
 		return $result;
 	}
 	
-	function siphon_stock_def_CNY($ticker, $car, $cc) {
-		$def = new stdClass;
+	function get_cp($cp_html) {
+		$ctt = $cp_html;
 		
-		$def->car = $car;
-		$def->cc = $cc;
+		preg_match('/ on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
+
+		$cp = str_replace(',', '', $matches[1]);
 		
-		$dr = .2;//discount rate is the minimum profit rate to justify the investment
-		$bdr = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
-		$ballo = .25;//the target allocation for betting
-		$def->dr = $dr;
-		$mos = .7;//margin of safety
-		$vir = 10;//value to income ratio		
-		
-		//guru focus's price update is too slow, we use reutors
-		//parse ticker into reuters format
-		preg_match('/([A-Z]{3,4})\:([a-zA-Z0-9]{3,6})/', $ticker, $tkr_matches);
-		
-		define('CNYIR', '0.020');
-		define('ZARIR', '0.066');
-		define('USDIR', '0.016');
-		define('CNYMP', '200');
-		define('ZARMP', '1000');
-		define('USDMP', '1000');
-		
-		switch ($tkr_matches[1]) {
-			case 'SHSE':
-				$r_se = '.SS';
-				$ir = CNYIR;
-				$mp = CNYMP;//abitrary number of the max possible price
-				
-				break;
-			case 'SZSE':
-				$r_se = '.SZ';
-				$ir = CNYIR;
-				$mp = CNYMP;
-				
-				break;
-			case 'JSE':
-				$r_se = 'J.J';
-				$ir = ZARIR;
-				$mp = ZARMP;
-				
-				break;
-			default:
-				$r_se = '';
-				$ir = USDIR;
-				$mp = USDMP;
+		if (($cp !== 0) && !$cp) {
+			return 'get current price failed';
+		} else if ($r_se == 'J.J') {
+			$cp = $def->cp / 100;
 		}
 		
-		$tkr = $tkr_matches[2];
-		
+		return $cp;
+	}
+	
+	function get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $def) {
 		$rqss = [
 			'mc' => 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/',
 			'bps' => 'http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/',
@@ -308,7 +283,7 @@
 			'pe' => 'http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/',
 			'pb' => 'http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/',
 			'nios' => 'http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/',
-			'cp' => 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.$r_se
+			'cp' => $cp_url;
 		];
 		
 		$result = curl_multiRequest($rqss);
@@ -787,16 +762,118 @@
 			}
 		}
 		
-		$ctt = $result['cp'];
+		$def->cp = get_cp($result['cp']);
 		
-		preg_match('/'.$tkr.$r_se.' on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
-
-		$def->cp = str_replace(',', '', $matches[1]);
+		if (is_string($def->cp)) {
+			return $def->cp;
+		}
+	}
+	
+	function get_def_db($tkr, $se, $def) {
+		//establish connection
+		require_once root.'se/cmm/lib/db.php';
 		
-		if (($def->cp !== 0) && !$def->cp) {
-			echo 'get current price failed';
-		} else if ($r_se == 'J.J') {
-			$def->cp = $def->cp / 100;
+		$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+		
+		if (!$mysqli) {
+			return 'User / DB Connection Error';//or die(mysql_error());
+		} else {//then excute sql query
+			//get all defs from the se table
+			$result = $mysqli->query('SELECT * FROM '.strtolower($se).'_defs WHERE tkr='.$tkr);
+			
+			if (!$result) {
+				return 'get data from shse defs error';
+			} else {
+				if ($result->num_rows <= 0) {
+					return 'tkr not found';
+				}
+				
+				$tbl_arr = $result->fetch_assoc();
+				
+				foreach ($tbl_arr as $def_name => $value) {
+					$def->{$def_name} = $value;
+				}
+			}
+		}
+	}
+	
+	function siphon_stock_def_CNY($ticker, $car, $cc, $refresh) {
+		$def = new stdClass;
+		
+		$def->car = $car;
+		$def->cc = $cc;
+		
+		$dr = .2;//discount rate is the minimum profit rate to justify the investment
+		$bdr = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
+		$ballo = .25;//the target allocation for betting
+		$def->dr = $dr;
+		$mos = .7;//margin of safety
+		$vir = 10;//value to income ratio		
+		
+		//guru focus's price update is too slow, we use reutors
+		//parse ticker into reuters format
+		preg_match('/([A-Z]{3,4})\:([a-zA-Z0-9]{3,6})/', $ticker, $tkr_matches);
+		
+		define('CNYIR', '0.020');
+		define('ZARIR', '0.066');
+		define('USDIR', '0.016');
+		define('CNYMP', '200');
+		define('ZARMP', '1000');
+		define('USDMP', '1000');
+		
+		switch ($tkr_matches[1]) {
+			case 'SHSE':
+				$r_se = '.SS';
+				$ir = CNYIR;
+				$mp = CNYMP;//abitrary number of the max possible price
+				
+				break;
+			case 'SZSE':
+				$r_se = '.SZ';
+				$ir = CNYIR;
+				$mp = CNYMP;
+				
+				break;
+			case 'JSE':
+				$r_se = 'J.J';
+				$ir = ZARIR;
+				$mp = ZARMP;
+				
+				break;
+			default:
+				$r_se = '';
+				$ir = USDIR;
+				$mp = USDMP;
+		}
+		
+		$tkr = $tkr_matches[2];
+		
+		$cp_url = 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.$r_se;
+		
+		//cal data either from siphon or from db, depend on refresh
+		if ($refresh) {
+			//get from siphon, include cp
+			$err = get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $def);
+			
+			if ($err != undefined) {
+				return $err;
+			}
+		} else {
+			//get from db, then get cp
+			$err = get_def_db($tkr, $tkr_matches[1], $def);
+			
+			if ($err != undefined) {
+				return $err;
+			}
+			
+			//get cp
+			$cp_html = curl_get_contents($cp_url);
+			
+			$def->cp = get_cp($cp_html);
+		
+			if (is_string($def->cp)) {
+				return $def->cp;
+			}
 		}
 		
 		if (($def->bp <= 0) || ($def->cp <= 0)) {

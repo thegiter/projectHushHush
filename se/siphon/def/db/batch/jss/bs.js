@@ -1,22 +1,49 @@
 (function() {
 	var dataScriptP = shpsCmm.lnkExtFile.lnked('script', '/se/cmm/jss/se_data.js');
 	
+	//check for refresh, and set appropriate settings
+	var refreshParam = '';
+		
+	var minIntSecs = .5 * 60;//min interval between threads in seconds
+	var initThreadsMins = 1;//time for initial threads in minutes
+	var additionalThreadsMins = 2;//delay for additional threads in mins
+	var siphonTimeSecs = 10000;//time for process one siphon
+	
+	if (se_refresh) {
+		refreshParam = '&refresh=refresh';
+		minIntSecs = 3 * 60;
+		initThreadsMins = 40;
+		additionalThreadsMins = 50;
+		siphonTimeSecs = 100000;
+	}
+	//end settings
+	
+	function switchOffRefresh() {
+		se_refresh = false;
+		
+		refreshParam = '';
+		siphonTimeSecs = 10000;
+	}
+	
 	shpsCmm.domReady().then(function() {
 		var scb = seCmmBatch;
 	
-		var maxRetrys = 5;
+		const MAX_RETRYS = 5;
 
-		var numJsThreads = 0;//due to same domain policy, js thread wont work
-		var initNumThreads = 5;
-		var additionalNumThreads = 1;
+		const NUM_JS_THREADS = 0;//due to same domain policy, js thread wont work
+		const INIT_NUM_THREADS = 5;
+		const ADDITIONAL_NUM_THREADS = 1;
 
-		const maxThreads = 10;
+		const MAX_THREADS = 10;
 		//max concurrent siphoning network can handle seems to be limited to 15
 		//could be a website limitation or just server network limitation
 		
 		var threadCnt = -1;
 		
 		var tkrRows = [];
+		
+		const MAX_FAILS = 5;
+		var fail_cntr = 0;
 		
 		function siphonThread(js) {
 			threadCnt++;
@@ -67,7 +94,7 @@
 						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
 						
 						siphonNext();
-					}, getRandomInt(4000, 100000));
+					}, getRandomInt(4000, siphonTimeSecs));
 				});
 			}
 			
@@ -86,6 +113,8 @@
 					se = 'JSE';
 				}
 				
+				//if enable js siphone, it needs to be updated
+				//it is not updated due to it is never used
 				if (js) {
 					var oldAdvice;
 					
@@ -110,15 +139,16 @@
 					//var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
 					var seurl = '/se/siphon/def/db/batch/siphon.php';
 					
-					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
+					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+refreshParam+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
 						//determin if success, set retry cntr to 0
 						//if success, update the table row, else retry
 						if (xhr.response) {//xhr.response will be null if failed
 							retrys = 0;
+							fail_cntr = 0;
 							
 							siphonEnd(xhr.response);
 						} else {
-							if (retrys < maxRetrys) {
+							if (retrys < MAX_RETRYS) {
 								scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retrying...';
 								
 								retrys++;
@@ -128,6 +158,12 @@
 								siphonNext();
 								
 								scb.tMsgCnrs[threadNum].textContent = 'max retrys reached. Ticker skipped.';
+								
+								fail_cntr++;
+								
+								if (fail_cntr >= MAX_FAILS) {
+									switchOffRefresh();
+								}
 							}
 						}
 					});
@@ -143,7 +179,7 @@
 				}
 				
 				//if 30 min passed, the thread dulicates itself
-				if (((Date.now() - tStartTs) >= (1000 * 60 * 30)) && (threadCnt < (maxThreads - 1))) {
+				if (((Date.now() - tStartTs) >= (1000 * 60 * 30)) && (threadCnt < (MAX_THREADS - 1))) {
 					tStartTs = Date.now();
 					
 					new siphonThread(js);
@@ -168,10 +204,7 @@
 			
 			siphonNext();
 		}
-		
-		//min interval between threads is 3 min
-		var minInt = 3 * 60;
-		
+
 		function createDelayedThread(threadIdx, delay, js) {
 			var msgObj = scb.tMsgCnrs[threadIdx];
 			
@@ -201,35 +234,35 @@
 			
 			//for each of the rest threads, wait random time and start
 			//to avoid suspision
-			for (var i = 1; i < initNumThreads; i++) {
+			for (var i = 1; i < INIT_NUM_THREADS; i++) {
 				//choose a random delay
-				var delay = getRandomInt(minInt * i, 40 * 60);
+				var delay = getRandomInt(minIntSecs * i, initThreadsMins * 60);
 				
 				createDelayedThread(i, delay);
 			}
 			
 			//then wait for 50 min and start additional threads
 			setTimeout(function() {
-				for (var c = 1; c <= additionalNumThreads; c++) {
+				for (var c = 1; c <= ADDITIONAL_NUM_THREADS; c++) {
 					new siphonThread();
 				}
-			}, 50 * 60 * 1000);
+			}, additionalThreadsMins * 60 * 1000);
 			
 			//after a short random delay, start first js thread, then gradually increase threads over 1 hour
 			//choose a random delay
-			var firstDelay = getRandomInt(minInt, 600);
+			var firstDelay = getRandomInt(minIntSecs, 600);
 			
-			for (var i = 0; i < numJsThreads; i++) {
+			for (var i = 0; i < NUM_JS_THREADS; i++) {
 				if (i == 0) {
-					createDelayedThread(initNumThreads, firstDelay, true);
+					createDelayedThread(INIT_NUM_THREADS, firstDelay, true);
 					
 					continue;
 				}
 				
 				//choose a random delay
-				var delay = getRandomInt(firstDelay + minInt * i, 3600);
+				var delay = getRandomInt(firstDelay + minIntSecs * i, 3600);
 				
-				createDelayedThread(i + initNumThreads, delay, true);
+				createDelayedThread(i + INIT_NUM_THREADS, delay, true);
 			}
 		});
 	});
