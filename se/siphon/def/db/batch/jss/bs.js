@@ -9,7 +9,7 @@
 	var additionalThreadsMins = 2;//delay for additional threads in mins
 	var siphonTimeSecs = 10000;//time for process one siphon
 	
-	if (se_refresh) {
+	if (typeof se_refresh != 'undefined') {
 		refreshParam = '&refresh=refresh';
 		minIntSecs = 3 * 60;
 		initThreadsMins = 40;

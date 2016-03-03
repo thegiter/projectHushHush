@@ -20,8 +20,15 @@
 	} else {
 		//read file
 		$f_size = filesize(F_NAME);
-		$date = fread($file, $f_size);
-		$fclose($file);
+		
+		//if size is 0, file has not initailized
+		if ($f_size <= 0) {
+			$date = 0;
+		} else {
+			$date = fread($file, $f_size);
+		}
+		
+		fclose($file);
 		
 		//convert to date, when last refreshed, the time() value is saved to file
 		//we simply convert that back to date, and compare with the current time() value
