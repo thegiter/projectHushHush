@@ -3,10 +3,9 @@
 	
 	//check for refresh, and set appropriate settings
 	var refreshParam = '';
-		
 	var minIntSecs = .5 * 60;//min interval between threads in seconds
-	var initThreadsMins = 1;//time for initial threads in minutes
-	var additionalThreadsMins = 2;//delay for additional threads in mins
+	var initThreadsMins = 5;//time for initial threads in minutes
+	var additionalThreadsMins = 5;//delay for additional threads in mins
 	var siphonTimeSecs = 10000;//time for process one siphon
 	
 	if (typeof se_refresh != 'undefined') {

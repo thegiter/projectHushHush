@@ -9,7 +9,7 @@
 	
 	$se = $_POST['se'];
 	$tkr = $_POST['tkr'];
-	$refresh = ($_POST['refresh'] == 'refresh') ? true : false;
+	$refresh = (isset($_POST['refresh']) && ($_POST['refresh'] == 'refresh')) ? true : false;
 	$car = 1;
 	$cc = 1;
 	$tbl_name = strtolower($se).'_defs';

@@ -250,7 +250,7 @@
 		return $result;
 	}
 	
-	function get_cp($cp_html) {
+	function get_cp($cp_html, $r_se) {
 		$ctt = $cp_html;
 		
 		preg_match('/ on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
@@ -266,7 +266,7 @@
 		return $cp;
 	}
 	
-	function get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $def) {
+	function get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $r_se, $def) {
 		$rqss = [
 			'mc' => 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/',
 			'bps' => 'http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/',
@@ -283,7 +283,7 @@
 			'pe' => 'http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/',
 			'pb' => 'http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/',
 			'nios' => 'http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/',
-			'cp' => $cp_url;
+			'cp' => $cp_url
 		];
 		
 		$result = curl_multiRequest($rqss);
@@ -762,11 +762,7 @@
 			}
 		}
 		
-		$def->cp = get_cp($result['cp']);
-		
-		if (is_string($def->cp)) {
-			return $def->cp;
-		}
+		$def->cp = get_cp($result['cp'], $r_se);
 	}
 	
 	function get_def_db($tkr, $se, $def) {
@@ -853,27 +849,23 @@
 		//cal data either from siphon or from db, depend on refresh
 		if ($refresh) {
 			//get from siphon, include cp
-			$err = get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $def);
+			$err = get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $r_se, $def);
 			
-			if ($err != undefined) {
+			if ($err != null) {
 				return $err;
 			}
 		} else {
 			//get from db, then get cp
 			$err = get_def_db($tkr, $tkr_matches[1], $def);
 			
-			if ($err != undefined) {
+			if ($err != null) {
 				return $err;
 			}
 			
 			//get cp
 			$cp_html = curl_get_contents($cp_url);
 			
-			$def->cp = get_cp($cp_html);
-		
-			if (is_string($def->cp)) {
-				return $def->cp;
-			}
+			$def->cp = get_cp($cp_html, $r_se);
 		}
 		
 		if (($def->bp <= 0) || ($def->cp <= 0)) {
