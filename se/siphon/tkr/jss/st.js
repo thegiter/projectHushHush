@@ -99,7 +99,7 @@
 				if (rest) {
 					setTimeout(function() {
 						upload(rest, se, true);
-					}, 1000);
+					}, 5000);
 				}
 			} else {
 				msgCnr.textContent = 'Failed. Response: '+xhr.responseText;
