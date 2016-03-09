@@ -5,11 +5,14 @@
 	
 	$tkrs = json_decode($_POST['tkrs_json']);
 	$se = $_POST['se'];
-
+	$append = (isset($_POST['append']) && $_POST['append'] == 'append') ? true : false;
+	
 	switch ($se) {
 		case 'SHSE':
 		case 'SZSE':
 		case 'JSE':
+		case 'NYSE':
+		case 'Nasdaq':
 			$se = strtolower($se);
 			
 			break;
@@ -27,12 +30,14 @@
 			echo 'Database Connection Error';//mysql_error();
 		} else {//then excute sql query
 			//clear table
-			@mysql_query('TRUNCATE TABLE '.$se.'_tkrs');
+			if (!$append) {
+				@mysql_query('TRUNCATE TABLE '.$se.'_tkrs');
+			}
 			
 			// for each tkr, insert into table
 			foreach ($tkrs as $tkr) {
 				if (!@mysql_query('INSERT INTO '.$se.'_tkrs(tkr, name) VALUES("'.$tkr->ticker.'", "'.$tkr->name.'") ON DUPLICATE KEY UPDATE name=VALUES(name)')) {
-					echo 'insert error';
+					echo 'insert error '.$tkr->ticker.' '.$tkr->name;
 				}
 			}
 

@@ -7,6 +7,8 @@
 		case 'shse':
 		case 'szse':
 		case 'jse':
+		case 'nyse':
+		case 'nasdaq':
 			break;
 		default:
 			die('invalid stock exchange for table');

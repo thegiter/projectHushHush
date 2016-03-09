@@ -1,4 +1,6 @@
 ﻿shpsCmm.domReady().then(function() {
+	const MAX_NUM_TKRS = 1000;
+
 	var form = document.getElementById('se-form');
 	var iframe = document.getElementById('se-iframe');
 	
@@ -24,6 +26,14 @@
 				break;
 			case 'JSE':
 				ifWdw.location.href = 'tl/jse.html';
+				
+				break;
+			case 'NYSE':
+				ifWdw.location.href = 'tl/nyse.html';
+				
+				break;
+			case 'Nasdaq':
+				ifWdw.location.href = 'tl/nasdaq.html';
 				
 				break;
 			default:
@@ -64,15 +74,31 @@
 		}
 	}
 	
-	function upload(tickers, se) {
+	function upload(tickers, se, append) {
 		msgCnr.textContent = 'Uploading...';
-				
+		
+		if (tickers.length > MAX_NUM_TKRS) {
+			var first = tickers.splice(0, MAX_NUM_TKRS);
+			var rest = tickers;
+			tickers = first;
+		}
+		
+		var appendParam = '';
+		
+		if (append) {
+			appendParam = '&append=append';
+		}
+		
 		//tickers now contain all the ticker data for the page
 		//we upload the data to server
-		shpsCmm.createAjax('post', 'save_to_db.php', 'tkrs_json='+encodeURIComponent(JSON.stringify(tickers))+'&se='+se).then(function(xhr) {
+		shpsCmm.createAjax('post', 'save_to_db.php', 'tkrs_json='+encodeURIComponent(JSON.stringify(tickers))+'&se='+se+appendParam).then(function(xhr) {
 			//check when server respond if successful
 			if (xhr.responseText == 'success') {
 				msgCnr.textContent = 'Done!';
+				
+				if (rest) {
+					upload(rest, se, true);
+				}
 			} else {
 				msgCnr.textContent = 'Failed. Response: '+xhr.responseText;
 			}
@@ -143,6 +169,45 @@
 							ticker: tkr,
 							name: sName
 						});				
+					}
+				}
+
+				upload(tickers, se);
+				
+				break;
+			case 'NYSE':
+			case 'Nasdaq':
+				var trs = ifDoc.getElementsByTagName('table')[0].getElementsByTagName('tbody')[0].children;
+
+				//loop through each row
+				//first row is heading, start from 2nd row
+				for (var i = 1; i < trs.length; i++) {
+					var tr = trs[i];
+					//combine first cell and second cell html in each row, seperated by comma
+					//symbol before the first comma is the ticker
+					//before the second comma is the name inside double quotes
+					//possible span in second comma, for the apostrophy symbol
+					//create ticker
+
+					var txt = tr.children[0].textContent;
+					
+					if (tr.children[1]) {
+						txt += tr.children[1].textContent;
+					}
+
+					matches = /^([A-Z\.]+),"([\s\S]+?)(?=",)/.exec(txt);
+					
+					if (matches) {
+						var sName = matches[2];
+						
+						if (sName.indexOf('Fund') == -1) {
+							var tkr = matches[1];
+
+							tickers.push({
+								ticker: tkr,
+								name: sName
+							});
+						}						
 					}
 				}
 

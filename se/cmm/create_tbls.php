@@ -3,6 +3,8 @@
 		define('root', '../../');
 	}
 
+	
+	
 	$ses = ['shse', 'szse', 'jse'];
 	
 	require_once root.'se/cmm/lib/db.php';
