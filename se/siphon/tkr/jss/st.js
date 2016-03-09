@@ -76,13 +76,13 @@
 	
 	function upload(tickers, se, append) {
 		msgCnr.textContent = 'Uploading...';
-		
+		/*
 		if (tickers.length > MAX_NUM_TKRS) {
 			var first = tickers.splice(0, MAX_NUM_TKRS);
 			var rest = tickers;
 			tickers = first;
 		}
-		
+		*/
 		var appendParam = '';
 		
 		if (append) {
@@ -97,9 +97,7 @@
 				msgCnr.textContent = 'Done!';
 				
 				if (rest) {
-					setTimeout(function() {
-						upload(rest, se, true);
-					}, 5000);
+					upload(rest, se, true);
 				}
 			} else {
 				msgCnr.textContent = 'Failed. Response: '+xhr.responseText;
