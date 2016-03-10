@@ -76,13 +76,13 @@
 	
 	function upload(tickers, se, append) {
 		msgCnr.textContent = 'Uploading...';
-		/*
+
 		if (tickers.length > MAX_NUM_TKRS) {
 			var first = tickers.splice(0, MAX_NUM_TKRS);
 			var rest = tickers;
 			tickers = first;
 		}
-		*/
+
 		var appendParam = '';
 		
 		if (append) {
@@ -201,7 +201,7 @@
 					
 					if (matches) {
 						var sName = matches[2];
-						
+console.log(sName);
 						if (sName.indexOf('Fund') == -1) {
 							var tkr = matches[1];
 
