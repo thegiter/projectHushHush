@@ -197,7 +197,7 @@
 
 					txt = txt.replace(/(?:\r\n|\r|\n)/g, ' ');
 
-					matches = /^([A-Z\.]+),"([\s\S]+?)(?=",)/.exec(txt);
+					matches = /^([A-Z\.]+),"([^"]+)"/.exec(txt);
 					
 					if (matches) {
 						var sName = matches[2];
