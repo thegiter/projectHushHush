@@ -206,7 +206,7 @@
 							var tkr = matches[1];
 
 							//select is a reserved word, therefore must be escaped
-							sName = sName.replace(/\bselect\b/gi, 'ESCSelect');
+							sName = sName.replace(/\bselect/gi, 'ESCSelect');
 							
 							tickers.push({
 								ticker: tkr,
