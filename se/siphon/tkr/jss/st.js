@@ -1,5 +1,5 @@
 ﻿shpsCmm.domReady().then(function() {
-	const MAX_NUM_TKRS = 500;
+	const MAX_NUM_TKRS = 100;
 
 	var form = document.getElementById('se-form');
 	var iframe = document.getElementById('se-iframe');
@@ -212,7 +212,7 @@ console.log(sName);
 						}						
 					}
 				}
-
+tickers.splice(1000, tickers.length - 1000);
 				upload(tickers, se);
 				
 				break;
