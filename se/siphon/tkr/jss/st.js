@@ -215,7 +215,7 @@
 						}						
 					}
 				}
-tickers.splice(0, 1940);
+tickers.splice(0, 1945);
 				upload(tickers, se);
 				
 				break;
