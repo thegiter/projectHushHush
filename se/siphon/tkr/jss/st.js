@@ -195,6 +195,8 @@
 						txt += tr.children[1].textContent;
 					}
 
+					txt = txt.replace(/(?:\r\n|\r|\n)/g, ' ');
+
 					matches = /^([A-Z\.]+),"([\s\S]+?)(?=",)/.exec(txt);
 					
 					if (matches) {
