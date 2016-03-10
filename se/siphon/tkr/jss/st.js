@@ -207,6 +207,7 @@
 
 							//select is a reserved word, therefore must be escaped
 							sName = sName.replace(/\bselect/gi, 'ESCSelect');
+							sName = sName.replace(/\bunion/gi, 'ESCUnion');
 							
 							tickers.push({
 								ticker: tkr,
