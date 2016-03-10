@@ -1,5 +1,5 @@
 ﻿shpsCmm.domReady().then(function() {
-	const MAX_NUM_TKRS = 1;
+	const MAX_NUM_TKRS = 1000;
 
 	var form = document.getElementById('se-form');
 	var iframe = document.getElementById('se-iframe');
@@ -205,6 +205,8 @@
 						if (sName.indexOf('Fund') == -1) {
 							var tkr = matches[1];
 
+							sName = sName.replace(/\bselect\b/g, '\select');
+							
 							tickers.push({
 								ticker: tkr,
 								name: sName
@@ -212,7 +214,7 @@
 						}						
 					}
 				}
-tickers.splice(0, 1940);
+
 				upload(tickers, se);
 				
 				break;
