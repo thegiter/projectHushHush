@@ -205,7 +205,8 @@
 						if (sName.indexOf('Fund') == -1) {
 							var tkr = matches[1];
 
-							sName = sName.replace(/\bselect\b/g, '\select');
+							//select is a reserved word, therefore must be escaped
+							sName = sName.replace(/\bselect\b/g, 'ESCselect');
 							
 							tickers.push({
 								ticker: tkr,
