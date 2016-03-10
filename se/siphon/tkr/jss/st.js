@@ -212,7 +212,7 @@ console.log(sName);
 						}						
 					}
 				}
-tickers.splice(1000, tickers.length - 1000);
+tickers.splice(0, 1000);
 				upload(tickers, se);
 				
 				break;
