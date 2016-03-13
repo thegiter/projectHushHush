@@ -293,7 +293,7 @@
 		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 		if (!$matches) {
-			return 'no mc';
+			return 'no mc: '.$ctt;
 		}
 		
 		$def->mc = str_replace(',', '', $matches[2]);
