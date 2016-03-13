@@ -260,7 +260,7 @@
 		if (($cp !== 0) && !$cp) {
 			return 'get current price failed';
 		} else if ($r_se == 'J.J') {
-			$cp = $def->cp / 100;
+			$cp = $cp / 100;
 		}
 		
 		return $cp;
@@ -762,7 +762,13 @@
 			}
 		}
 		
-		$def->cp = get_cp($result['cp'], $r_se);
+		$cp = get_cp($result['cp'], $r_se);
+		
+		if (!is_numeric($cp)) {
+			return $cp;
+		}
+		
+		$def->cp = $cp;
 	}
 	
 	function get_def_db($tkr, $se, $def) {
@@ -847,8 +853,6 @@
 				$mp = USDMP;
 		}
 		
-		
-		
 		$cp_url = 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.$r_se;
 		
 		//cal data either from siphon or from db, depend on refresh
@@ -871,6 +875,10 @@
 			$cp_html = curl_get_contents($cp_url);
 			
 			$def->cp = get_cp($cp_html, $r_se);
+			
+			if (!is_numeric($def->cp)) {
+				return $def->cp;
+			}
 		}
 		
 		if (($def->bp <= 0) || ($def->cp <= 0)) {
