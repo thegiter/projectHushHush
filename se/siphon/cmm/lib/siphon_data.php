@@ -290,8 +290,7 @@
 		
 		$ctt = $result['mc'];
 
-		//preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
-		preg_match('/data_value"\>$/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 		if (!$matches) {
 			return 'no mc: '.$ctt;
@@ -301,7 +300,7 @@
 
 		$ctt =  $result['bps'];
 
-		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
 		
 		if (!$matches) {
 			return 'no bps';
@@ -348,7 +347,7 @@
 		
 		$def->lyni = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 		
 		$def->t12mni = str_replace(',', '', $matches[2]);
 		
@@ -362,7 +361,7 @@
 		
 		$def->lyie = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 		
 		$def->t12mie = str_replace(',', '', $matches[2]);
 		
@@ -425,7 +424,7 @@
 		
 		$def->lyoi = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
 		
 		$def->t12moi = str_replace(',', '', $matches[2]);
 		
