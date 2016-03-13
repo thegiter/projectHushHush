@@ -9,40 +9,44 @@
 	
 	//decide whether refreshing is needed, refresh every 7 days
 	//check last refresh date from file
-	define('F_NAME', 'last_refresh.txt');
-	
-	$file = fopen(F_NAME, 'r');
-	
-	if ($file == false) {
-		//skip, something went wrong, so we dont make anychanges
-		//we would however, want to leave a note to indicate this, but nothing should go wrong though
-		//because we are just opening a file
+	if (isset($_GET['force_refresh']) && ($_GET['force_refresh'] == 'force_refresh')) {
+		echo '<script src="/se/siphon/def/db/batch/jss/force_refresh.js" type="text/javascript"></script>';
 	} else {
-		//read file
-		$f_size = filesize(F_NAME);
+		define('F_NAME', 'last_refresh.txt');
+	
+		$file = fopen(F_NAME, 'r');
 		
-		//if size is 0, file has not initailized
-		if ($f_size <= 0) {
-			$date = 0;
+		if ($file == false) {
+			//skip, something went wrong, so we dont make anychanges
+			//we would however, want to leave a note to indicate this, but nothing should go wrong though
+			//because we are just opening a file
 		} else {
-			$date = fread($file, $f_size);
-		}
-		
-		fclose($file);
-		
-		//convert to date, when last refreshed, the time() value is saved to file
-		//we simply convert that back to date, and compare with the current time() value
-		$last_time = strtotime($date);
-		$now_time = time(); // or your date as well
-        
-		//check difference, in days
-		$time_diff = $now_time - $last_time;
-		$date_diff = floor($time_diff/(60*60*24));
-		
-		//if date difference is greater than 7 days
-		if ($date_diff > 7) {
-			//include the refresher js
-			echo '<script src="/se/siphon/def/db/batch/jss/refresh.js" type="text/javascript"></script>';
+			//read file
+			$f_size = filesize(F_NAME);
+			
+			//if size is 0, file has not initailized
+			if ($f_size <= 0) {
+				$date = 0;
+			} else {
+				$date = fread($file, $f_size);
+			}
+			
+			fclose($file);
+			
+			//convert to date, when last refreshed, the time() value is saved to file
+			//we simply convert that back to date, and compare with the current time() value
+			$last_time = strtotime($date);
+			$now_time = time(); // or your date as well
+			
+			//check difference, in days
+			$time_diff = $now_time - $last_time;
+			$date_diff = floor($time_diff/(60*60*24));
+			
+			//if date difference is greater than 7 days
+			if ($date_diff > 7) {
+				//include the refresher js
+				echo '<script src="/se/siphon/def/db/batch/jss/refresh.js" type="text/javascript"></script>';
+			}
 		}
 	}
 	

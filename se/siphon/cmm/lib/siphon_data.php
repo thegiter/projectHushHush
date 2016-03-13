@@ -253,7 +253,7 @@
 	function get_cp($cp_html, $r_se) {
 		$ctt = $cp_html;
 		
-		preg_match('/ on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX)\<\/span\>/', $ctt, $matches);
+		preg_match('/ on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>/', $ctt, $matches);
 
 		$cp = str_replace(',', '', $matches[1]);
 		
@@ -817,6 +817,8 @@
 		define('ZARMP', '1000');
 		define('USDMP', '1000');
 		
+		$tkr = $tkr_matches[2];
+		
 		switch ($tkr_matches[1]) {
 			case 'SHSE':
 				$r_se = '.SS';
@@ -836,13 +838,16 @@
 				$mp = ZARMP;
 				
 				break;
+			case 'NYSE':
+			case 'Nasdaq':
 			default:
+				$ticker = $tkr;
 				$r_se = '';
 				$ir = USDIR;
 				$mp = USDMP;
 		}
 		
-		$tkr = $tkr_matches[2];
+		
 		
 		$cp_url = 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.$r_se;
 		

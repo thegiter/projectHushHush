@@ -2,10 +2,12 @@
 	if (!defined('root')) {
 		define('root', '../../');
 	}
-
 	
-	
-	$ses = ['shse', 'szse', 'jse'];
+	if (isset($_GET['se'])) {
+		$ses = [$_GET['se']];
+	} else {
+		$ses = ['shse', 'szse', 'jse', 'nyse', 'nasdaq'];
+	}
 	
 	require_once root.'se/cmm/lib/db.php';
 	

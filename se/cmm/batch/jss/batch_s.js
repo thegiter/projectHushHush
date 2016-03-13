@@ -48,9 +48,11 @@ shpsCmm.domReady().then(function() {
 		evt.preventDefault();
 		
 		var fd = new FormData(slForm);
-		scb.se = fd.get('se');
-		
-		scb.ldTkrs(scb.se);
+		scb.ses = fd.getAll('se');
+
+		scb.ses.forEach(function(se) {
+			scb.ldTkrs(se);
+		});
 	});
 	
 	scb.getData = function(evt) {

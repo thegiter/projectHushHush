@@ -97,21 +97,7 @@
 				});
 			}
 			
-			function siphon(tkr) {
-				var se;
-				
-				match = /^\d{6}/.exec(tkr);
-				
-				if (match) {
-					if (tkr.charAt(0) == '6') {
-						se = 'SHSE';
-					} else {
-						se = 'SZSE';
-					}
-				} else {
-					se = 'JSE';
-				}
-				
+			function siphon(tkr, se) {
 				//if enable js siphone, it needs to be updated
 				//it is not updated due to it is never used
 				if (js) {
@@ -195,7 +181,7 @@
 				if (!/[\S]+/.exec(tkrRow.children[1].textContent)) {
 					siphonNext();
 				} else {
-					siphon(getTicker());
+					siphon(getTicker(), tkrRow.children[0].dataset.se);
 				}
 			}
 			

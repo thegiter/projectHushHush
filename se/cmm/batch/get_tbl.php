@@ -7,6 +7,8 @@
 		case 'SHSE':
 		case 'SZSE':
 		case 'JSE':
+		case 'NYSE':
+		case 'Nasdaq':
 			break;
 		default:
 			die('invalid stock exchange');
@@ -30,7 +32,7 @@
 				
 				while ($tkr = mysql_fetch_array($tkrs)) {
 					$rsp->html .= '<tr>
-						<td>
+						<td data-se="'.$_POST['se'].'">
 							'.$tkr['tkr'].'
 						</td><td>
 							'.htmlspecialchars($tkr['name']).'
