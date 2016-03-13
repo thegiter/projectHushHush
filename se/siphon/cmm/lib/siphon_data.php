@@ -258,7 +258,7 @@
 		$cp = str_replace(',', '', $matches[1]);
 		
 		if (($cp !== 0) && !$cp) {
-			return 'get current price failed';
+			return 'get current price failed: '.$ctt;
 		} else if ($r_se == 'J.J') {
 			$cp = $cp / 100;
 		}
