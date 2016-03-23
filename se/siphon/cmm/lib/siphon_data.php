@@ -251,14 +251,12 @@
 	}
 	
 	function get_cp($cp_html, $r_se) {
-		$ctt = $cp_html;
-		
-		preg_match('/ on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>/', $ctt, $matches);
+		preg_match('/ on .+ Stock Exchange[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>/', $cp_html, $matches);
 
 		$cp = str_replace(',', '', $matches[1]);
 		
 		if (($cp !== 0) && !$cp) {
-			return 'get current price failed: '.$ctt;
+			return 'get current price failed: '.$cp_html;
 		} else if ($r_se == 'J.J') {
 			$cp = $cp / 100;
 		}
@@ -799,7 +797,7 @@
 		}
 	}
 	
-	function get_r_tkr($tkr) {
+	function get_r_us_tkr($tkr) {
 		preg_match('/([A-Z]+)\.([A-Z]+)/', $tkr, $subTkr_matches);
 				
 		if ($subTkr_matches) {
@@ -824,7 +822,7 @@
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
-		preg_match('/([A-Z]{3,4})\:([a-zA-Z0-9]{3,6})/', $ticker, $tkr_matches);
+		preg_match('/([A-Za-z]+)\:([a-zA-Z0-9]+)/', $ticker, $tkr_matches);
 		
 		define('CNYIR', '0.020');
 		define('ZARIR', '0.066');
@@ -857,7 +855,7 @@
 			case 'NYSE':
 				$ticker = $tkr;
 				
-				$r_tkr = get_r_tkr($tkr);
+				$r_tkr = get_r_us_tkr($tkr);
 				
 				$r_se = '.N';
 				$ir = USDIR;
@@ -868,7 +866,7 @@
 			case 'Nasdaq':
 				$ticker = $tkr;
 				
-				$r_tkr = get_r_tkr($tkr);
+				$r_tkr = get_r_us_tkr($tkr);
 				
 				$r_se = '.O';
 				$ir = USDIR;
@@ -887,7 +885,7 @@
 			$err = get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $r_se, $def);
 			
 			if ($err != null) {
-				return $err;
+				return $err.' cp_url: '.$cp_url;
 			}
 		} else {
 			//get from db, then get cp
