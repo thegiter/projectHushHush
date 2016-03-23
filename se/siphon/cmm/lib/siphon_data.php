@@ -268,21 +268,21 @@
 	
 	function get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $r_se, $def) {
 		$rqss = [
-			'mc' => 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market%2BCap/',
-			'bps' => 'http://www.gurufocus.com/term/'.urlencode('Book Value Per Share').'/'.$ticker.'/Book%2BValue%2Bper%2BShare/',
-			'so' => 'http://www.gurufocus.com/term/BS_share/'.$ticker.'/Shares%2BOutstanding%2B%2528EOP%2529/',
-			'der' => 'http://www.gurufocus.com/term/deb2equity/'.$ticker.'/Debt%2Bto%2BEquity/',
-			'ni' => 'http://www.gurufocus.com/term/'.urlencode('Net Income').'/'.$ticker.'/Net%2BIncome/',
-			'ie' => 'http://www.gurufocus.com/term/InterestExpense/'.$ticker.'/Interest%2BExpense/',
-			'roc' => 'http://www.gurufocus.com/term/ROC/'.$ticker.'/Return%2Bon%2BCapital/',
-			'te' => 'http://www.gurufocus.com/term/'.urlencode('Total Equity').'/'.$ticker.'/Total%2BEquity/',
-			'oi' => 'http://www.gurufocus.com/term/'.urlencode('Operating Income').'/'.$ticker.'/Operating%2BIncome/',
-			'om' => 'http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating%2BMargin/',
-			'wacc' => 'http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted%2BAverage%2BCost%2BOf%2BCapital%2B%2528WACC%2529/',
-			'roe' => 'http://www.gurufocus.com/term/ROE/'.$ticker.'/Return%2Bon%2BEquity/',
-			'pe' => 'http://www.gurufocus.com/term/pe/'.$ticker.'/P%252FE%2BRatio/',
-			'pb' => 'http://www.gurufocus.com/term/pb/'.$ticker.'/P%252FB%2BRatio/',
-			'nios' => 'http://www.gurufocus.com/term/'.urlencode('Net Issuance of Stock').'/'.$ticker.'/Net%2BIssuance%2Bof%2BStock/',
+			'mc' => 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market-Cap/',
+			'bps' => 'http://www.gurufocus.com/term/Book+Value+Per+Share/'.$ticker.'/Book-Value-per-Share/',
+			'so' => 'http://www.gurufocus.com/term/BS_share/'.$ticker.'/Shares-Outstanding-EOP/',
+			'der' => 'http://www.gurufocus.com/term/deb2equity/'.$ticker.'/Debt-to-Equity/',
+			'ni' => 'http://www.gurufocus.com/term/Net+Income/'.$ticker.'/Net-Income/',
+			'ie' => 'http://www.gurufocus.com/term/InterestExpense/'.$ticker.'/Interest-Expense/',
+			'roc' => 'http://www.gurufocus.com/term/ROC/'.$ticker.'/Return-on-Capital/',
+			'te' => 'http://www.gurufocus.com/term/Total+Equity/'.$ticker.'/Total-Equity/',
+			'oi' => 'http://www.gurufocus.com/term/Operating+Income/'.$ticker.'/Operating-Income/',
+			'om' => 'http://www.gurufocus.com/term/operatingmargin/'.$ticker.'/Operating-Margin/',
+			'wacc' => 'http://www.gurufocus.com/term/wacc/'.$ticker.'/Weighted-Average-Cost-Of-Capital-WACC/',
+			'roe' => 'http://www.gurufocus.com/term/ROE/'.$ticker.'/Return-on-Equity/',
+			'pe' => 'http://www.gurufocus.com/term/pe/'.$ticker.'/PE-Ratio/',
+			'pb' => 'http://www.gurufocus.com/term/pb/'.$ticker.'/PB-Ratio/',
+			'nios' => 'http://www.gurufocus.com/term/Net+Issuance+of+Stock/'.$ticker.'/Net-Issuance-of-Stock/',
 			'cp' => $cp_url
 		];
 		
@@ -799,6 +799,16 @@
 		}
 	}
 	
+	function get_r_tkr($tkr) {
+		preg_match('/([A-Z]+)\.([A-Z]+)/', $tkr, $subTkr_matches);
+				
+		if ($subTkr_matches) {
+			$tkr = $subTkr_matches[1].strtolower($subTkr_matches[2]);
+		}
+		
+		return $tkr;
+	}
+	
 	function siphon_stock_def_CNY($ticker, $car, $cc, $refresh) {
 		$def = new stdClass;
 		
@@ -845,15 +855,31 @@
 				
 				break;
 			case 'NYSE':
-			case 'Nasdaq':
-			default:
 				$ticker = $tkr;
-				$r_se = '';
+				
+				$r_tkr = get_r_tkr($tkr);
+				
+				$r_se = '.N';
 				$ir = USDIR;
 				$mp = USDMP;
+				
+				
+				break;
+			case 'Nasdaq':
+				$ticker = $tkr;
+				
+				$r_tkr = get_r_tkr($tkr);
+				
+				$r_se = '.O';
+				$ir = USDIR;
+				$mp = USDMP;
+				
+				
+				break;
+			default:
 		}
 		
-		$cp_url = 'http://www.reuters.com/finance/stocks/overview?symbol='.$tkr.$r_se;
+		$cp_url = 'http://www.reuters.com/finance/stocks/overview?symbol='.$r_tkr.$r_se;
 		
 		//cal data either from siphon or from db, depend on refresh
 		if ($refresh) {
