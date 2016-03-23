@@ -825,8 +825,8 @@
 		preg_match('/([A-Za-z]+)\:([a-zA-Z0-9]+)/', $ticker, $tkr_matches);
 		
 		define('CNYIR', '0.020');
-		define('ZARIR', '0.066');
-		define('USDIR', '0.016');
+		define('ZARIR', '0.050');
+		define('USDIR', '0.010');
 		define('CNYMP', '200');
 		define('ZARMP', '1000');
 		define('USDMP', '1000');
