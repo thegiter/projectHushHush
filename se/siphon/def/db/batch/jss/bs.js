@@ -55,6 +55,7 @@
 			scb.tMsgCnrs = scb.msgCnr.children;
 			
 			var retrys = 0;
+			var noMcFails = 0;
 			var tkrRow;
 			
 			function getTicker() {
@@ -129,6 +130,7 @@
 						//if success, update the table row, else retry
 						if (xhr.response) {//xhr.response will be null if failed
 							retrys = 0;
+							noMcFails = 0;
 							fail_cntr = 0;
 							
 							siphonEnd(xhr.response);
@@ -138,17 +140,26 @@
 								
 								retrys++;
 								
+								if (/^no mc\:.*/.test(xhr.responseText)) {
+									noMcFails++;
+								}
+								
 								siphon(tkr, se);
 							} else {
+								if (noMcFails == retrys) {
+									//remove tkr
+									
+								} else {
+									fail_cntr++;
+								
+									if (fail_cntr >= MAX_FAILS) {
+										switchOffRefresh();
+									}
+								}
+
 								siphonNext();
 								
 								scb.tMsgCnrs[threadNum].textContent = 'max retrys reached. Ticker skipped.';
-								
-								fail_cntr++;
-								
-								if (fail_cntr >= MAX_FAILS) {
-									switchOffRefresh();
-								}
 							}
 						}
 					});

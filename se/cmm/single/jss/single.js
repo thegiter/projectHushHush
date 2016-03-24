@@ -5,15 +5,12 @@ var seSingle = {};
 	
 	var ss = seSingle;
 	
-	//to initialize, the inflation rate and ajax url must be provided
-	ss.init = function(ir, url) {
-		ss.ir = ir;
+	//to initialize, the ajax url must be provided
+	ss.init = function(url) {
 		ss.url = url;
 		
 		shpsCmm.domReady().then(function() {
 			var irCnr = document.getElementById('ir-cnr');
-
-			irCnr.textContent = ss.ir * 100+'%';
 			
 			//get data structure
 			ss.defIdxs = [];
@@ -39,8 +36,6 @@ var seSingle = {};
 				});
 
 				var fd = new FormData(form);
-				
-				fd.append('ir', ss.ir);
 				
 				shpsCmm.createAjax('POST', ss.url, fd, 'json', undefined, undefined, true).then(function(xhr) {
 					//xhr.response is the object containing the defs

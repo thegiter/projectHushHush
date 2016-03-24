@@ -13,7 +13,7 @@
 			<label class="ipt-lbl" for="ticker-ipt">Enter Gurufocus Ticker:</label><input id="ticker-ipt" type="text" name="ticker" required="required"/><br/>
 			<label class="ipt-lbl" for="car-ipt">Enter Competitive Advantage Rating (1 means neutral):</label><input id="car-ipt" type="number" step="any" name="car" value="1" required="required"/><br/>
 			<label class="ipt-lbl">Company Condition Still Positive?</label><input id="cc-ipt-true" name="cc" type="radio" value="1" checked="checked"/><label for="cc-ipt-true">True</label><input name="cc" id="cc-ipt-false" type="radio" value="0"/><label for="cc-ipt-false">False</label><br/>
-			<button id="run-btn" type="submit">Submit</button> CNY Inflation Rate: <span id="ir-cnr"></span>
+			<button id="run-btn" type="submit">Submit</button>
 		</form>
 		
 		<div id="msg-cnr">

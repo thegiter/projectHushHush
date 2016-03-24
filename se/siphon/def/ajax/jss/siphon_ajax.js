@@ -1,1 +1,1 @@
-seSingle.init(.012, '/se/siphon/def/ajax/def.php');
+seSingle.init('/se/siphon/def/ajax/def.php');
