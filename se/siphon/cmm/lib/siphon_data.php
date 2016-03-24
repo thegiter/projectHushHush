@@ -265,7 +265,6 @@
 	}
 	
 	function get_def_siphon($ticker, $car, $cc, $dr, $bdr, $ballo, $mos, $vir, $cp_url, $ir, $mp, $r_se, $def) {
-die 'use siphon';
 		$rqss = [
 			'mc' => 'http://www.gurufocus.com/term/mktcap/'.$ticker.'/Market-Cap/',
 			'bps' => 'http://www.gurufocus.com/term/Book+Value+Per+Share/'.$ticker.'/Book-Value-per-Share/',
@@ -286,7 +285,7 @@ die 'use siphon';
 		];
 
 		$result = curl_multiRequest($rqss);
-die 'siphon complete';
+return 'siphon complete';
 		$ctt = $result['mc'];
 
 		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
@@ -296,7 +295,7 @@ die 'siphon complete';
 		}
 		
 		$def->mc = str_replace(',', '', $matches[2]);
-echo 'mc is '.$def->mc;
+return 'mc is '.$def->mc;
 		$ctt =  $result['bps'];
 
 		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
