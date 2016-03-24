@@ -295,7 +295,7 @@
 		}
 		
 		$def->mc = str_replace(',', '', $matches[2]);
-return 'mc is '.$def->mc;
+
 		$ctt =  $result['bps'];
 
 		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
@@ -742,8 +742,8 @@ return 'mc is '.$def->mc;
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		$def->bp = $def->lffptm;
 		$def->abdr = $bdr;
-		
-		if ($def->ep > $def->lffptm) {
+return 'ep is '.$def->ep;
+		if ($def->ep > $def->lffptm) {//lower floor fptm
 			$last_i = $def->lffptm;
 			
 			for ($i = $def->lffptm; $i < $def->ep; $i += .001) {
@@ -759,7 +759,7 @@ return 'mc is '.$def->mc;
 				$last_i = $i;
 			}
 		}
-		
+
 		$cp = get_cp($result['cp'], $r_se);
 		
 		if (!is_numeric($cp)) {
