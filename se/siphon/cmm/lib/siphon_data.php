@@ -782,7 +782,7 @@
 			$result = $mysqli->query('SELECT * FROM '.strtolower($se).'_defs WHERE tkr='.$tkr);
 			
 			if (!$result) {
-				return 'get data from shse defs error';
+				return 'get data from '.$se.' defs error: '.$mysqli->error;
 			} else {
 				if ($result->num_rows <= 0) {
 					return 'tkr not found';
