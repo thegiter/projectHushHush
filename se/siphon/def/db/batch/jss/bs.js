@@ -13,7 +13,7 @@
 		minIntSecs = 3 * 60;
 		initThreadsMins = 40;
 		additionalThreadsMins = 50;
-		siphonTimeSecs = 100000;
+		siphonTimeSecs = 200000;
 	}
 	//end settings
 	
