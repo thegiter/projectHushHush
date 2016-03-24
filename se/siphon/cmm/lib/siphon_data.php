@@ -251,7 +251,7 @@
 	}
 	
 	function get_cp($cp_html, $r_se) {
-		preg_match('/ on (Nasdaq|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>/', $cp_html, $matches);
+		preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>/', $cp_html, $matches);
 
 		$cp = str_replace(',', '', $matches[1]);
 		
