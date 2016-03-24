@@ -742,7 +742,7 @@
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		$def->bp = $def->lffptm;
 		$def->abdr = $bdr;
-return 'ep is '.$def->ep;
+return 'ep is '.$def->ep.'; lower floor is: '.def->lffptm;
 		if ($def->ep > $def->lffptm) {//lower floor fptm
 			$last_i = $def->lffptm;
 			
