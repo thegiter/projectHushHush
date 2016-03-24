@@ -285,7 +285,7 @@
 		];
 
 		$result = curl_multiRequest($rqss);
-return 'siphon complete';
+
 		$ctt = $result['mc'];
 
 		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
