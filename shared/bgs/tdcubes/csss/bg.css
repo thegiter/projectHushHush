@@ -1,0 +1,43 @@
+@charset "utf-8";
+.bg-tlight{
+	position:	absolute;
+	top:		0;
+	left:		0;
+	right:		0;
+	bottom:		0;
+	background-color:		#47433a;
+	background-position:	top center;
+	background-repeat:		repeat;
+	background-image:		url(../imgs/bg_ptn.png);
+}
+.bg-tlight > div{
+	position:				absolute;
+	max-width:	40vmin;
+	width:		40%;
+	mix-blend-mode: overlay;
+}
+.bg-tlight > div:first-child{
+	top:	0;
+	left:	0;
+	background-image:	radial-gradient(circle farthest-side at 35% 27%, hsla(43, 10%, 100%, 1) 0%, hsla(43, 10%, 100%, .1) 80%, transparent 100%);
+}
+.bg-tlight > div:first-child > div{
+	padding-bottom:	89%;
+}
+.bg-tlight > div:nth-child(2){
+	top:	0;
+	right:	0;
+	background-image:	radial-gradient(circle farthest-side at 80% 28%, hsla(43, 10%, 100%, .6) 0%, transparent 100%);
+}
+.bg-tlight > div:nth-child(2) > div{
+	padding-bottom:	110%;
+}
+.bg-tlight > div:last-child{
+	bottom:		0;
+	left:		50%;
+	transform:	translatex(-37%);
+	background-image:	radial-gradient(circle farthest-side at 50% 67%, hsla(43, 10%, 100%, .8) 0%, transparent 100%);
+}
+.bg-tlight > div:last-child > div{
+	padding-bottom:	74%;
+}
