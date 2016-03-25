@@ -220,7 +220,11 @@
 			$pigr = abs($pigr);
 		}
 		
-		return $ni * $vir * $pigr / (1 + $dr);
+		$ev = $ni * $vir * $pigr / (1 + $dr);
+		
+		//a company's value can be negative if it loses money each year
+		//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
+		return max(0, $ev);
 	}
 	
 	function getAllocation($bp, $ep, $pf, $pc, $dr) {
@@ -345,10 +349,24 @@
 		
 		$def->lyni = str_replace(',', '', $matches[2]);
 		
-		preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+		//gurufocus does not update net income to the current year,
+		//we add up the quaterly data to get tailing net income
+		preg_match('/Quarterly Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
 		
-		$def->t12mni = str_replace(',', '', $matches[2]);
+		if ($matches) {
+			//add up 4 quarters
+			$def->t12mni = str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2]);
+		} else {
+			//check for semi-annual data
+			preg_match('/Semi-Annual Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
 		
+			if ($matches) {
+				$def->t12mni = str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2]);
+			} else {
+				return 'no trailing ni';
+			}
+		}
+
 		$ctt = $result['ie'];
 
 		preg_match('/Annual Data[\s\S]+Interest Expense[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
@@ -571,7 +589,7 @@
 				$def->lper = 999.9999;
 			} else {
 				//error;
-				die('pe ratio error');
+				return 'pe ratio error';
 			}
 		} else {
 			$def->lper = str_replace(',', '', $matches[1]);
@@ -593,7 +611,7 @@
 				$def->lpbr = 999.9999;
 			} else {
 				//error;
-				die('pb ratio error');
+				return 'pb ratio error';
 			}
 		} else {
 			$def->lpbr = str_replace(',', '', $matches[1]);
@@ -606,8 +624,8 @@
 		$alper = $def->lper;
 		$def->alpbr = $def->lpbr;
 		
-		$alper = ($alper < 0) ? 999.9999 : $alper;
-		$def->alpbr = ($def->alpbr < 0) ? 999.9999 : $def->alpbr;
+		$alper = ($alper <= 0) ? 999.9999 : $alper;
+		$def->alpbr = ($def->alpbr <= 0) ? 999.9999 : $def->alpbr;
 		
 		$def->gtlp = $alper * $def->alpbr / $car;
 		$def->lpgc = ($def->gtlp > 22.5) ? 0 : 1;
@@ -615,8 +633,8 @@
 		$aaper = $def->aper;
 		$def->aapbr = $def->apbr;
 
-		$aaper = ($aaper < 0) ? 999.9999 : $aaper;
-		$def->aapbr = ($def->aapbr < 0) ? 999.9999 : $def->aapbr;
+		$aaper = ($aaper <= 0) ? 999.9999 : $aaper;
+		$def->aapbr = ($def->aapbr <= 0) ? 999.9999 : $def->aapbr;
 		
 		$def->gtap = $aaper * $def->aapbr / $car;
 		$def->apgc = ($def->gtap > 22.5) ? 0 : 1;
@@ -829,7 +847,7 @@
 		define('USDIR', '0.010');
 		define('CNYMP', '200');
 		define('ZARMP', '1000');
-		define('USDMP', '1000');
+		define('USDMP', '1400');
 		
 		$tkr = $tkr_matches[2];
 		

@@ -46,10 +46,8 @@ body > :not(.thead){
 .tbody > tr{
 	display:	block;
 	white-space: nowrap;
-}
-.tkr-col > tr,
-.tbody > tr{
 	height:	4em;
+	overflow: hidden;
 }
 .se-sortable{
 	cursor:	pointer;
