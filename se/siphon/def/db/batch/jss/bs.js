@@ -128,7 +128,7 @@
 					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+refreshParam+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
 						//determin if success, set retry cntr to 0
 						//if success, update the table row, else retry
-						if (xhr.response) {//xhr.response will be null if failed
+						if (xhr.response && !xhr.response.err) {//xhr.response will be null if failed
 							retrys = 0;
 							noMcFails = 0;
 							fail_cntr = 0;
@@ -140,7 +140,7 @@
 								
 								retrys++;
 								
-								if (/^no mc\:.*/.test(xhr.responseText)) {
+								if (xhr.response && (/^no mc\:.*/.test(xhr.response.err_msg))) {
 									noMcFails++;
 								}
 								

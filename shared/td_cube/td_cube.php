@@ -4,7 +4,7 @@
 	}
 	
 	class tdCubeModule {
-		public $depth;
+		public $depth = '100%';
 		public $front = false;
 		public $back = false;
 		public $top = false;

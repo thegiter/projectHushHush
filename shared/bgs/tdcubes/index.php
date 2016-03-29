@@ -56,14 +56,14 @@
 	$r[2][0] = new stdClass;
 	$r[2][0]->type = 'html';
 	ob_start();//output buffering
-	require root.'shared/bgs/tlight/html.php';
+	require root.'shared/bgs/tdcubes/html.php';
 	$r[2][0]->html = ob_get_clean();
 //grp3
 	$r[3] = [];
 	
 	$r[3][0] = new stdClass;
 	$r[3][0]->type = 'script';
-	$r[3][0]->url = '/shared/bgs/tlight/jss/bg.js';
+	$r[3][0]->url = '/shared/bgs/tdcubes/jss/bg.js';
 	//define $r[][]->async = false; to turn off async loading for the script
 
 	echo json_encode($manifest);

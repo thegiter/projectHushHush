@@ -55,7 +55,12 @@
 	//because retrying could result in php running longer than allowed seconds
 	//this has the byproduct of informing the client side of failures, client side can then initiate a retry
 	if (is_string($def)) {
-		die($def);
+		$err = new stdClass;
+		
+		$err->err = true;
+		$err->err_msg = $def;
+		
+		die json_encode($err);
 	}
 	
 	//if succes, we will update db, but not the user input values, the user input values must be changed in use_db
