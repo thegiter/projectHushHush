@@ -60,7 +60,7 @@
 		$err->err = true;
 		$err->err_msg = $def;
 		
-		die json_encode($err);
+		die(json_encode($err));
 	}
 	
 	//if succes, we will update db, but not the user input values, the user input values must be changed in use_db
