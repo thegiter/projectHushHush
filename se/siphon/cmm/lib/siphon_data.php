@@ -751,12 +751,44 @@
 		//but in this case, we are just using growth rate
 		$def->afptm = estimatedValue($def->t12mni, $vir, $afpigr, $dr) / $pso / (1 + $ir);
 		
-		if ($afpigr > 1.2) {
-			$def->lffptm = estimatedValue($def->t12mni, $vir, 1.2, $dr) / $pso / (1 + $ir);
+		//price floor calculation assumes the worst case senario
+		if ($def->cigr > 1) {
+			$lfcpigr = projectedIgr(1, $ar, $def->t12mni, $vir, $def->so, $mp);	
 		} else {
-			$def->lffptm = $def->afptm;
+			$lfcpigr = $def->cpigr;
 		}
-
+		
+		if ($lfcpigr == 0) {
+			$lffpigr = 0;
+		} else if ($lfcpigr > 1) {
+			$lffpigr = projectedIgr(1, $ar, $def->t12mni, $vir, $pso, $mp);
+		} else {
+			$lffpigr = projectedIgr($lfcpigr, $ar, $def->t12mni, $vir, $pso, $mp);
+		}
+		
+		if ($lffpigr > 1) {
+			$lffpigr = 1;
+		}
+		
+		if (($lffpigr == 0) || ($def->cigr == 0)) {
+			$lfdwmoe = 0;
+		} else {
+			$lfdwmoe = 1 - 20 / $def->cigr / $lffpigr;
+		}
+		
+		$lfdwmoe = ($lfdwmoe < 0) ? 0 : $lfdwmoe;
+		
+		$lfadj = 1 - $lfdwmoe;
+		
+		if ($lffpigr < 0) {
+			$lfadj = abs($lfadj);
+		}
+		
+		$lfafpigr = $lffpigr * $lfadj;
+		
+		$def->lffptm = estimatedValue($def->t12mni, $vir, $lfafpigr, $dr) / $pso / (1 + $ir);
+		//end price floor calculation
+		
 		$def->ep = ($def->fptm + $def->lffptm) / 2;
 		$def->bp = $def->lffptm;
 		$def->abdr = $bdr;
