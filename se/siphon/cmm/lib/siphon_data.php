@@ -189,7 +189,7 @@
 	}
 	
 	function projectedIgr($cigr, $ar, $ni, $vir, $so, $mp) {
-		$aigr = $cigr + $ar - 1;//-2
+		$aigr = $cigr + $ar - 1;//.85
 		
 		if ($so == 0) {
 			$p0g = 0;
@@ -872,7 +872,7 @@
 		
 		//guru focus's price update is too slow, we use reutors
 		//parse ticker into reuters format
-		preg_match('/([A-Za-z]+)\:([a-zA-Z0-9]+)/', $ticker, $tkr_matches);
+		preg_match('/([A-Za-z]+)\:([a-zA-Z0-9\.]+)/', $ticker, $tkr_matches);
 		
 		define('CNYIR', '0.020');
 		define('ZARIR', '0.050');

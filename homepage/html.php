@@ -131,7 +131,7 @@
 	<nav id="hp-bar" class="hp-bar-in-init dsp-non">
 		<div id="hp-menu-resp" class="hp-menu-resp-trans"><!-- this tag is needed to contain omc and lnks -->
 			<?php
-				require_once root.'shared/onenote_menu_cnr/omc.php';
+				require_once root.'shared/modules/onenote_menu/om.php';
 					
 				$omc = new omcModule;
 				
@@ -139,10 +139,12 @@
 			
 				echo $omc;
 				
-				require_once root.'shared/footer/info_lnks/info_lnks.php';
+				require_once root.'shared/modules/ftr/info_lnks/ils.php';
 				
-				$ftr_lnks = ftrInfoLnksModule::getHtml();
-					
+				$ftr_lnks = new ftrInfoLnksModule;
+				
+				$ftr_lnks->clss = 'vsb-hid opa-0 fade-in-norm';
+				
 				echo '
 					
 				'.$ftr_lnks;
@@ -150,10 +152,10 @@
 
 		</div>
 		<?php
-			require_once root.'shared/menu/btn/btn.php';
-					
+			require_once root.'shared/modules/menu/btn/btn.php';
+
 			$mb = new menuBtnModule;
-					
+
 			$mb->id = 'hp-menu-btn';
 			$mb->clss = 'no-style clickable';
 				
@@ -163,11 +165,14 @@
 		
 		<ul id="hp-menu" class="no-style">
 			<?php
-				require_once root.'shared/mis/mis.php';
-				
-				$menu_html = '';								//clear variable $menu_html in case another menu was produced and $menu_html is not empty
+				require_once root.'shared/modules/menu_items/mis.php';
+
+				$menu_html = '';//clear variable $menu_html in case another menu was produced and $menu_html is not empty
 					
-				require_once root.'shared/tooltip/tooltip.php';
+				require_once root.'shared/modules/tooltips/simple/tt.php';
+				//if tooltip's css is not loaded, then the tooltips simply would not show
+				//so we don't need  to hide it, they are hidden by default
+				//so we just need to load them when ready and not need to hide/intro them
 					
 				$omc = new omcModule;
 					
@@ -198,7 +203,7 @@
 		<div id="hp-inf-cnr-wpr">
 			<div id="hp-inf-cnr">
 				<span id="hp-cr"><?php
-					require root.'shared/footer/cr/cr.php';
+					require root.'shared/modules/ftr/cr/cr.php';
 				?></span>
 					
 				<?php

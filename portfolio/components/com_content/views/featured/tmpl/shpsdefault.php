@@ -36,6 +36,10 @@
 	$r2[0]->cpns[0]->name = 'bg_basic';
 	$r2[0]->cpns[0]->required = true;
 	
+	$r2[0]->cpns[1] = new stdClass;
+	$r2[0]->cpns[1]->name = 'bg_tdcubes';
+	$r2[0]->cpns[1]->close = true;
+	
 	$r2[1] = new stdClass;
 	$r2[1]->type = 'link';
 	$r2[1]->url = '/portfolio/components/com_content/views/featured/tmpl/csss/default.css';

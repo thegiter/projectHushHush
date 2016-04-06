@@ -7,8 +7,8 @@
 	
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Wed, 15 Aug 2015 22:13:40 GMT');
-	
+	cacheCtrlModule::validate('Tue, 5 Apr 2016 22:13:40 GMT');
+
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
 	require_once root.'shared/ajax_chk/ajax_chk.php';
@@ -26,6 +26,10 @@
 	
 	$manifest->settings->psdMenuNoExp = true;
 	
+	//the manifest only lists resources needed for immediate intro of the page
+	//ie. the cnr
+	//the rest will be loaded by the scripts
+	
 	$r =& $manifest->rscs;
 	$r = [];
 	
@@ -38,35 +42,12 @@
 	//images must be defined in a group before css, so that we will replace the url to the cache url
 	$r[0][0] = new stdClass;
 	$r[0][0]->type = 'img';
-	$r[0][0]->url = '/homepage/imgs/nn.png';
+	$r[0][0]->url = '/homepage/imgs/bg_img.jpg';
 	
+	//load module before hp css, because hp css has stylings for these modules
 	$r[0][1] = new stdClass;
-	$r[0][1]->type = 'img';
-	$r[0][1]->url = '/homepage/imgs/bg_img.jpg';
-	
-	$r[0][2] = new stdClass;
-	$r[0][2]->type = 'img';
-	$r[0][2]->url = '/homepage/imgs/base_ptn.jpg';
-	
-	$r[0][3] = new stdClass;
-	$r[0][3]->type = 'img';
-	$r[0][3]->url = '/homepage/imgs/main_pic.jpg';
-	
-	$r[0][4] = new stdClass;
-	$r[0][4]->type = 'img';
-	$r[0][4]->url = '/homepage/imgs/abstract.png';
-	
-	$r[0][5] = new stdClass;
-	$r[0][5]->type = 'link';
-	$r[0][5]->url = '/shared/onenote_menu_cnr/csss/omc.css';
-	
-	$r[0][6] = new stdClass;
-	$r[0][6]->type = 'link';
-	$r[0][6]->url = '/shared/menu/btn/csss/btn.css';
-	
-	$r[0][7] = new stdClass;
-	$r[0][7]->type = 'link';
-	$r[0][7]->url = '/shared/scroll_indicator/csss/si.css';
+	$r[0][1]->type = 'module';
+	$r[0][1]->url = '/shared/modules/ftr/cr/';
 //grp1
 	$r[1] = [];
 	
@@ -94,6 +75,8 @@
 //grp3
 	$r[3] = [];
 
+	//even though onenote menu module and menu items are required module for page to work
+	//we don't define them in the manifest because we will load them at a later stage in the js
 	$r[3][0] = new stdClass;
 	$r[3][0]->type = 'script';
 	$r[3][0]->url = '/homepage/jss/hp.js';

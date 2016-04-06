@@ -6,6 +6,10 @@
 (function() {
 	include('script', '/portfolio/templates/shps_ptfl/jss/shpsptfl_tmpl.js');
 	
+	const BG_ID = 'basic-bg';
+	
+	var bg;
+	
 	shpsAjax.hooks['portfolio'] = function(url) {
 		shpsAjax.pgMgr.cache[url].obj = {};
 		
@@ -16,6 +20,15 @@
 		//the intro function assumes that resources are loaded. which is checked with onload function
 		//if you do not check to see resources are loaded first, intro function will cause error if the required resources are not present
 		pg.intro = function(argObj) {
+			//intro bg_tdcubes
+			//the operator is used to open and not directly using cpnList, because operator needs to keep track of opened cpns
+			shpsAjax.cpnMgr.operator.open('bg_tdcubes', {
+				//onload is called when rsc for this page is loaded,
+				//it has no way of knowing if the required cpns are loaded
+				//but when intro is run, the required cpns must be loaded
+				//so the get the bg cnr in the intro, not in the onload method
+				cnr: document.getElementById(BG_ID)
+			});
 		};
 		pg.exit = function(argObj) {
 			//destroy auto triggered functions
