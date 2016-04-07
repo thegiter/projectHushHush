@@ -50,7 +50,3 @@
 				</span></a>
 			</h1>
 		</div>
-
-		<?php
-			require root.'shared/phps/beta.php';
-		?>

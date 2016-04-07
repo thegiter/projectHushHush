@@ -36,6 +36,6 @@
 		<title>の弑す魂の PS</title>
 	</head>
 	
-	<body class="fulbd">
+	<body id="the-shps-ajax-bd" class="fulbd">
 	</body>
 </html>
