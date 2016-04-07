@@ -29,6 +29,11 @@
 	$manifest[0][0] = new stdClass;
 	$manifest[0][0]->type = 'link';
 	$manifest[0][0]->url = '/csss/shps.css';
+	
+	$manifest[0][1] = new stdClass;
+	$manifest[0][1]->type = 'script';
+	$manifest[0][1]->url = '/shared/jss/common.js';
+	$manifest[0][1]->async = false;
 //grp1
 	$manifest[1] = [];
 	
@@ -37,11 +42,6 @@
 	ob_start();//output buffering
 	require root.'html.php';
 	$manifest[1][0]->html = ob_get_clean();
-	
-	$manifest[1][1] = new stdClass;
-	$manifest[1][1]->type = 'script';
-	$manifest[1][1]->url = '/shared/jss/common.js';
-	$manifest[1][1]->async = false;
 //grp2
 	$manifest[2] = [];
 	
