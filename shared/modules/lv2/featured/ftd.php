@@ -15,32 +15,24 @@
 						<div class="dsp-tr">
 						</div>
 					</div>
-					
-					<div class="ftd-ttl-bg-hd-cnr">
-						<div class="ftd-ttl-bg-hd">
+
+					<div class="ftd-ttl-bg-bd">
+						<div class="ftd-ttl-bg-ass">
 						</div>
-					</div>
-					<div class="ftd-ttl-bg-bd-cnr">
-						<div class="ftd-ttl-bg-bd-pstnr"> <!-- pstnr stands for positioner -->
-							<div class="ftd-ttl-bg-bd">
-								<h3 class="ftd-ttl">
-									'.$this->ttl.'
-								</h3>
-							</div><div class="ftd-ttl-bg-ass">
-							</div>
-						</div>
+						
+						<h3 class="ftd-ttl">
+							'.$this->ttl.'
+						</h3>
 					</div>';
 
 			if ($this->caption) {
-				$caption_html = 'Halle Berry is hot (Place holder caption)';
+				$caption_html = 'These mordern art blocks are dynamically generated. It is different every time you initiate the page. Refresh the page to see what I mean.';
 						
-				$html .= '<div class="ftd-caption-bg-cnr">
-					<div class="ftd-caption-bg-bd">
-						<div class="ftd-caption-bg-hd">
-						</div>
-						
-						'.$caption_html.'
+				$html .= '<div class="ftd-caption-bg-bd">
+					<div class="ftd-caption-bg-hd">
 					</div>
+					
+					'.$caption_html.'
 				</div>';
 			}
 

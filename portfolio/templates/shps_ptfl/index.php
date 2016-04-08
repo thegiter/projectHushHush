@@ -155,8 +155,6 @@ else
 	<?php
 		$ftr_bfr = 'portfolio/templates/shps_ptfl/tplt/ftr/ftr.php';
 		$ftr_aftr = '';
-	
-		require root.'shared/footer/footer.php';
 	?>
 </div>
 

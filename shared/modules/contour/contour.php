@@ -1,7 +1,5 @@
 <?php
-	if (!defined('root') && $_POST['refuri'] != $_SERVER['SERVER_NAME']) {
-		die;
-	}
+	defined('root') or die;
 ?>
 <div class="contour-tl">
 </div>

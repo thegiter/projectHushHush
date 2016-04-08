@@ -1,5 +1,6 @@
 @charset "utf-8";
 .contour-tl{
+	pointer-events:	none;
 	width:				5px;
 	height:				5px;
 	background-repeat:	no-repeat;
@@ -9,6 +10,7 @@
 	left:				0px;
 }
 .contour-top{
+	pointer-events:	none;
 	height:				5px;
 	background-repeat:	repeat-x;
 	background-image:	url(../imgs/top.png);
@@ -18,6 +20,7 @@
 	right:				6px;
 }
 .contour-tr{
+	pointer-events:	none;
 	width:				6px;
 	height:				5px;
 	background-repeat:	no-repeat;
@@ -27,6 +30,7 @@
 	right:				0px;
 }
 .contour-lft{
+	pointer-events:	none;
 	width:				5px;
 	background-repeat:	repeat-y;
 	background-image:	url(../imgs/lft.png);
@@ -36,6 +40,7 @@
 	bottom:				6px;
 }
 .contour-rgt{
+	pointer-events:	none;
 	width:				6px;
 	background-repeat:	repeat-y;
 	background-image:	url(../imgs/rgt.png);
@@ -45,6 +50,7 @@
 	bottom:				6px;
 }
 .contour-bl{
+	pointer-events:	none;
 	width:				5px;
 	height:				6px;
 	background-repeat:	no-repeat;
@@ -54,6 +60,7 @@
 	bottom:				0px;
 }
 .contour-btm{
+	pointer-events:	none;
 	height:				6px;
 	background-repeat:	repeat-x;
 	background-image:	url(../imgs/btm.png);
@@ -63,6 +70,7 @@
 	right:				6px;
 }
 .contour-br{
+	pointer-events:	none;
 	width:				6px;
 	height:				6px;
 	background-repeat:	no-repeat;
