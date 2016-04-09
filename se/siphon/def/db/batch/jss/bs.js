@@ -147,8 +147,18 @@
 								siphon(tkr, se);
 							} else {
 								if (noMcFails == retrys) {
-									//remove tkr
+									noMcFails = 0;
 									
+									//remove tkr
+									shpsCmm.createAjax('post', '/se/use_db/rmv_tkr.php', 'se='+se+'&tkr='+tkr).then(function(xhr) {
+										var msg = 'tkr removal failed!';
+										
+										if (xhr.responseText == 'success') {
+											msg = 'tkr removed.';
+										}
+										
+										scb.tMsgCnrs[threadNum].textContent = msg;
+									});
 								} else {
 									fail_cntr++;
 								
