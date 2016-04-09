@@ -7,7 +7,7 @@
 	
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Wed, 15 Aug 2015 22:13:40 GMT');
+	cacheCtrlModule::validate('Sat, 9 Apr 2016 22:13:40 GMT');
 	
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -41,12 +41,8 @@
 	$r[0][0]->url = '/about/imgs/bg_pic.png';
 	
 	$r[0][1] = new stdClass;
-	$r[0][1]->type = 'link';
-	$r[0][1]->url = '/shared/fonts/bad_grunge.css';
-
-	$r[0][2] = new stdClass;
-	$r[0][2]->type = 'link';
-	$r[0][2]->url = '/shared/fonts/plank.css';
+	$r[0][1]->type = 'module';
+	$r[0][1]->url = '/shared/modules/lv2/common/';
 //grp1
 	$r[1] = [];
 	

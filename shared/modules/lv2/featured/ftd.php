@@ -9,9 +9,8 @@
 		public $caption = false;
 		
 		public function __toString() {
-			$html = '<div class="ftd-wpr">
-				<div id="'.$this->cnr_id.'" class="ftd-cnr fade-in-norm opa-0"> <!-- ftd stands for featured -->
-					<div class="ftd-ctt-cnr">
+			$html = '<div id="'.$this->cnr_id.'" class="ftd-cnr dsp-non"> <!-- ftd stands for featured -->
+					<div class="ftd-ctt-cnr fade-in-norm opa-0">
 						<div class="dsp-tr">
 						</div>
 					</div>
@@ -37,11 +36,10 @@
 			}
 
 			$html .= '<div class="ftd-bg-side-ptn-top">
-			</div>
-			<div class="ftd-bg-side-ptn-btm">
-			</div>
-		</div><!-- #featured container -->
-	</div>';
+				</div>
+				<div class="ftd-bg-side-ptn-btm">
+				</div>
+			</div><!-- #featured container -->';
 	
 			return $html;
 		}

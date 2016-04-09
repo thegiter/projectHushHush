@@ -117,7 +117,7 @@ else
 		$this->setTitle($this->getTitle().' | '.$sitename);
 	}
 ?>
-<div class="bd-wpr">
+<div id="ptfl-bd" class="bd-wpr fade-in-norm opa-0 dsp-non">
 	<!-- Begin Content -->
 	<jdoc:include type="modules" name="position-3" style="xhtml" />
 	<jdoc:include type="message" />

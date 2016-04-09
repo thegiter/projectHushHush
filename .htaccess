@@ -372,7 +372,7 @@ ServerSignature Off
 	
 	#normal resources
 	#presentational files that collaborate, 1 day
-	<FilesMatch "\.(jpg|jpeg|png|gif|bmp|swf|svg|js|css)$">
+	<FilesMatch "\.(jpg|jpeg|png|gif|bmp|swf|svg|js|css|svg)$">
 		Header set Cache-Control "max-age=86400"
 	</FilesMatch>
 	
@@ -503,7 +503,7 @@ RewriteRule ^(.+/)?index.php$ - [L]
 #request_uri begins with a prepended slash, unlike the pattern uri portion of rewriterule. Additionally, if an external redirect is enforced, ie. uisng the [R] flag, substitution uri portion of rewriterule must be relative to the root and has a slash prepended
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/(debug|se)/
-RewriteCond %{REQUEST_FILENAME} !.(css|jpg|png|gif|js|xhtml|html|ico|woff2|woff)$
+RewriteCond %{REQUEST_FILENAME} !.(css|jpg|png|gif|js|xhtml|html|ico|woff2|woff|svg)$
 RewriteCond %{REQUEST_URI} !^/robots\.txt$
 RewriteRule . udr_cst/?ir=true [L]
 #mod_rewrite always takes precedence over directory index, so there is no point putting directory index on top

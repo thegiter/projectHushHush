@@ -18,8 +18,8 @@
 	$r1 =& $r[$rGrpCnt];
 	
 	$r1[0] = new stdClass;
-	$r1[0]->type = 'img';
-	$r1[0]->url = '/portfolio/components/com_content/views/featured/tmpl/imgs/ptfl_ttl.png';
+	$r1[0]->type = 'module';
+	$r1[0]->url = '/shared/modules/lv2/common/';
 //sec grp
 	$r[$rGrpCnt + 1] = [];
 	$r2 =& $r[$rGrpCnt + 1];
@@ -30,11 +30,11 @@
 	
 	$r2[0]->cpns[0] = new stdClass;
 	$r2[0]->cpns[0]->name = 'bg_basic';
-	$r2[0]->cpns[0]->required = true;
+//	$r2[0]->cpns[0]->required = true;
 	
-	$r2[0]->cpns[1] = new stdClass;
-	$r2[0]->cpns[1]->name = 'bg_tdcubes';
-	$r2[0]->cpns[1]->close = true;
+//	$r2[0]->cpns[1] = new stdClass;
+//	$r2[0]->cpns[1]->name = 'bg_inttile';
+//	$r2[0]->cpns[1]->close = true;
 	
 	$r2[1] = new stdClass;
 	$r2[1]->type = 'link';
@@ -48,6 +48,10 @@
 	$r3[0]->url = '/portfolio/components/com_content/views/featured/tmpl/jss/shpsptflhp.js';
 	//define $r[][]->async = false; to turn off async loading for the script
 
+	require_once root.'shared/modules/lv2/common/cmm.php';
+	
+	echo lv2CmmModule::getTtlHtml('Portfolio');
+	
 	require_once root.'shared/modules/lv2/featured/ftd.php';
 	
 	$ftd = new lv2FtdModule;

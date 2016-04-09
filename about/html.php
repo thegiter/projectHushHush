@@ -8,11 +8,12 @@
 	}
 ?>
 <div id="abt-bd" class="bd-wpr abt-bd fade-in-intro-fast opa-0">
-	<h2>
-		<span>
-			About
-		</span>	
-	</h2>
+	<?php
+		require_once root.'shared/modules/lv2/common/cmm.php';
+		
+		echo lv2CmmModule::getTtlHtml('About');
+	?>
+	
 	
 	<!--tab cnr here with tab indicator styled as top of the ctt cnr piece-->
 	<div class="ctt-cnr"><!--ctt cnr will have no top piece-->
