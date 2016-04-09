@@ -19,6 +19,8 @@
 		
 		if (!$result) {
 			die('error deleting ticker: '.$mysqli->error);
+		} else {
+			echo 'success';
 		}
 	}
 ?>
