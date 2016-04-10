@@ -4,7 +4,7 @@
 	}
 	
 	$tkr = $_POST['tkr'];
-	$se = $_POST['se'];
+	$se = strtolower($_POST['se']);
 	
 	require_once root.'se/cmm/lib/db.php';
 	
