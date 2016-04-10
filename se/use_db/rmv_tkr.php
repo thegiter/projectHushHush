@@ -15,7 +15,7 @@
 		echo 'User / DB Connection Error';//or die(mysql_error());
 	} else {//then excute sql query
 		//get all defs from the se table
-		$result = $mysqli->query('DELETE FROM '.$se.'_tkrs WHERE tkr='.$tkr);
+		$result = $mysqli->query('DELETE FROM '.$se.'_tkrs WHERE tkr="'.$tkr.'"');
 		
 		if (!$result) {
 			die('error deleting ticker: '.$mysqli->error);
