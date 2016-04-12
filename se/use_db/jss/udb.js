@@ -73,8 +73,8 @@
 				ldFromDb('nasdaq')
 			]);
 		}).then(function(defsObjsArr) {
-			var shseObj = defsObjsArr[0];
-			var szseObj = defsObjsArr[1];
+			var nyseObj = defsObjsArr[0];
+			var nasObj = defsObjsArr[1];
 			
 			var tkrRows = scb.getTkrRows();
 			
@@ -84,17 +84,17 @@
 				var defRow = document.createElement('tr');
 				
 				//get tkr
-				var tkr = /\s*(\d+)\s*/.exec(row.children[0].textContent)[1];
+				var tkr = /\s*([A-Za-z\.]+)\s*/.exec(row.children[0].textContent)[1];
 
-				if (shseObj[tkr] || szseObj[tkr]) {
+				if (nyseObj[tkr] || nasObj[tkr]) {
 					var se;
 					
-					if (shseObj[tkr]) {
-						def = shseObj[tkr];
-						se = 'SHSE';
+					if (nyseObj[tkr]) {
+						def = nyseObj[tkr];
+						se = 'NYSE';
 					} else {
-						def = szseObj[tkr];
-						se = 'SZSE';
+						def = nasObj[tkr];
+						se = 'Nasdaq';
 					}
 					
 					updateRow(defRow, se, tkr, def);
