@@ -6,6 +6,8 @@
 	switch ($_POST['se']) {
 		case 'shse':
 		case 'szse':
+		case 'nyse':
+		case 'nasdaq':
 			break;
 		default:
 			die('invalid stock exchange for table');

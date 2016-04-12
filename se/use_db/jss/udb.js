@@ -62,15 +62,15 @@
 		}
 		
 		Promise.all([
-			scb.ldTkrs('SHSE'),
-			scb.ldTkrs('SZSE')
+			scb.ldTkrs('NYSE'),
+			scb.ldTkrs('Nasdaq')
 		]).then(function() {
 			scb.btn.disabled = true;
 			
 			//start loading def from db
 			return Promise.all([
-				ldFromDb('shse'),
-				ldFromDb('szse')
+				ldFromDb('nyse'),
+				ldFromDb('nasdaq')
 			]);
 		}).then(function(defsObjsArr) {
 			var shseObj = defsObjsArr[0];
