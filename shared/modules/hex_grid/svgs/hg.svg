@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="hex-v" clipPathUnits="objectBoundingBox"><!--objectBoundingBox is important, so that the points becomes percentage values inside the element clipped-->
+			<polygon points=".25 0, .75 0, 1 .5, .75 1, .25 1, 0 .5"/>
+		</clipPath>
+		<clipPath id="hex-h" clipPathUnits="objectBoundingBox"><!--objectBoundingBox is important, so that the points becomes percentage values inside the element clipped-->
+			<polygon points=".5 0, 1 .25, 1 .75, .5 1, 0 .75, 0 .25"/>
+		</clipPath>
+	</defs>
+</svg>

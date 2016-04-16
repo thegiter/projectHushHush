@@ -1,19 +1,12 @@
 <?php
-	if (!defined('root')) {
-		die;
-	}
+	defined('root') or die;
+	
+	require_once root.'shared/phps/shps.php';
+	
+	echo psdMenu::createMiHtml('shps-ajax-hv-cnr', 'shps-ajax-hv-cnr dsp-non', '<div>
+	</div>
+	<div>
+	</div>
+	<div>
+	</div>', 'History View');
 ?>
-<div id="shps-ajax-hv-cnr" class="icon-wpr shps-ajax-hv-cnr dsp-non">
-	<span class="icon">
-		<div>
-		</div>
-		<div>
-		</div>
-		<div>
-		</div>
-	</span><span class="lbl clr-aft">
-		<span class="flt-rgt">
-			History View
-		</span>
-	</span>
-</div>
