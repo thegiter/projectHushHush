@@ -3,7 +3,7 @@
 	
 	class psdMenu {
 		public static function createMiHtml($cnrId, $cnrClss, $iconHtml, $lblTxt) {
-			$html = '<div ';
+			$html = '<div ';//not using button because precise alignment is requried. button comes with default behaviour that can't be removed
 			
 			if ($cnrId) {
 				$html .= 'id="'.$cnrId.'" ';
@@ -19,6 +19,8 @@
 			
 			$html .= '">
 				<span class="icon-cnr">
+					<div class="hgt-pusher">
+					</div>
 					'.hexFrameModule::getHtml('h').'
 					<div class="icon">';
 			
