@@ -216,9 +216,9 @@
 				Current Income Growth Rate
 			</h4>
 		</td>',
-		'<td data-acro="prlyv">
+		'<td data-acro="prlyvIcm">
 			<h4>
-				Price Relfecting Last Year\'s Value
+				Price Relfecting Last Year\'s Value (Icm)
 			</h4>
 		</td>',
 		'<td data-acro="cpigr">
@@ -226,14 +226,14 @@
 				Current Projected Income Growth Rate
 			</h4>
 		</td>',
-		'<td data-acro="prcv">
+		'<td data-acro="prcvIcm">
 			<h4>
-				Price Relfecting Current Value
+				Price Relfecting Current Value (Icm)
 			</h4>
 		</td>',
-		'<td data-acro="prcv0g">
+		'<td data-acro="prcv0gIcm">
 			<h2>
-				Price Relfecting Current Value Of No Growth Potential
+				Price Relfecting Current Value Of No Growth Potential (Icm)
 			</h2>
 		</td>',
 		'<td data-acro="fpigr">
@@ -241,14 +241,19 @@
 				Future Projected Income Growth Rate
 			</h4>
 		</td>',
-		'<td data-acro="fp">
+		'<td data-acro="fpIcm">
 			<h4>
-				Potential Future Price Cieling
+				Potential Future Price Cieling (Icm)
 			</h4>
 		</td>',
-		'<td data-acro="fptm">
+		'<td data-acro="fptmIcm">
 			<h2>
-				Potential Future Price Cieling in Today\'s Money
+				PFPC in Today\'s Money (Icm)
+			</h2>
+		</td>',
+		'<td data-acro="fptmE">
+			<h2>
+				PFPC in Today\'s Money (E)
 			</h2>
 		</td>',
 		'<td data-acro="dwmoe">
@@ -256,29 +261,49 @@
 				Downward Margin of Error
 			</h4>
 		</td>',
-		'<td data-acro="afptm">
+		'<td data-acro="afptmIcm">
 			<h2>
-				Adjusted Potential Future Price Cieling
+				Adjusted Potential Future Price Cieling (Icm)
 			</h2>
 		</td>',
-		'<td data-acro="lffptm">
+		'<td data-acro="lffptmIcm">
 			<h2>
-				Potential Future Price Floor
+				Potential Future Price Floor (Icm)
 			</h2>
 		</td>',
-		'<td data-acro="ep">
+		'<td data-acro="lffptmE">
+			<h2>
+				Potential Future Price Floor (E)
+			</h2>
+		</td>',
+		'<td data-acro="epIcm">
 			<h4>
-				Equilibrium Price
+				Equilibrium Price (Icm)
 			</h4>
 		</td>',
-		'<td data-acro="bp">
+		'<td data-acro="epE">
+			<h4>
+				Equilibrium Price (E)
+			</h4>
+		</td>',
+		'<td data-acro="bpIcm">
 			<h2>
-				Betting Price
+				Betting Price (Icm)
 			</h2>
 		</td>',
-		'<td data-acro="abdr">
+		'<td data-acro="bpE">
+			<h2>
+				Betting Price (E)
+			</h2>
+		</td>',
+		'<td data-acro="abdrIcm">
 			<h4>
-				Adjusted Betting Discount Rate
+				Adjusted Betting Discount Rate (Icm)
+			</h4>
+		</td>',
+		'<td data-acro="abdrE">
+			<h4>
+				Adjusted Betting Discount Rate (E)
 			</h4>
 		</td>',
 		'<td data-acro="niosi">

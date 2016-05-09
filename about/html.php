@@ -16,7 +16,7 @@
 	
 	
 	<!--tab cnr here with tab indicator styled as top of the ctt cnr piece-->
-	<div class="ctt-cnr"><!--ctt cnr will have no top piece-->
+	<div class="ctt-cnr lv2-adp-full-h"><!--ctt cnr will have no top piece-->
 		<section id="abt-pgs-wpr" class="ctt">
 			<a id="abt-shps-cnr" href="#!about/#の弑す魂の_ps" class="abt-shps-cnr skewed init dsp-non">
 				<div class="bg-pic">

@@ -46,9 +46,9 @@
 		}
 	}
 	
-	require_once root.'se/siphon/cmm/lib/siphon_data.php';
+	require_once root.'se/siphon/cmm/lib/analyze_data.php';
 	
-	$def = siphon_stock_def_CNY($se.':'.$tkr, $car, $cc, $refresh);
+	$def = seAnalyze::getStockDef($se.':'.$tkr, $car, $cc, $refresh);
 	
 	//upon receiving of the siphoned data, check if siphon successful,
 	//if failed, we will respond with failure msg instead of retrying.
