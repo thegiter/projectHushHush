@@ -28,8 +28,7 @@ var seData = {};
 				
 				break;
 			case 'dwmoe':
-			case 'abdrIcm':
-			case 'abdrE':
+			case 'abdr':
 			case 'bpcpr':
 			case 'niosi':
 				defValue = defValue * 100+'%';

@@ -219,9 +219,9 @@
 		const MOS = .8;//margin of safety
 		const VIR = 10;//value to income ratio		
 		
-		const CNYIR = 0.020;//2%
-		const ZARIR = 0.050;
-		const USDIR = 0.010;
+		const CNYIR = 0.1;//10%
+		const ZARIR = 0.2;
+		const USDIR = 0.05;
 		
 		const CNYMP = 200;
 		const ZARMP = 1000;
@@ -767,6 +767,8 @@
 			self::$def->prlyvIcm = $lyvIcm / self::$def->so;
 			self::$def->prlyvE = $lyvE / self::$def->so;
 			
+			self::$def->prlyv = (self::$def->prlyvIcm < self::$def->prlyvE) ? self::$def->prlyvIcm : self::$def->prlyvE;
+			
 			//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
 			$ar = (self::$def->tlomr < self::$def->tlroer) ? self::$def->tlomr : self::$def->tlroer;
@@ -796,6 +798,9 @@
 				self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
 			}
 			
+			self::$def->prcv = (self::$def->prcvIcm < self::$def->prcvE) ? self::$def->prcvIcm : self::$def->prcvE;
+			self::$def->prcv0g = (self::$def->prcv0gIcm < self::$def->prcv0gE) ? self::$def->prcv0gIcm : self::$def->prcv0gE;
+			
 			self::$def->niosi = (self::$def->so - $pso) / self::$def->so;
 			
 			if (self::$def->cpigr === 0) {
@@ -811,8 +816,9 @@
 			self::$def->fpIcm = $fvIcm / $pso;
 			self::$def->fpE = $fvE / $pso;
 			
-			self::$def->fptmIcm = self::$def->fpIcm / (1 + self::$ir);
-			self::$def->fptmE = self::$def->fpE / (1 + self::$ir);
+			self::$def->fp = (self::$def->fpIcm < self::$def->fpE) ? self::$def->fpIcm : self::$def->fpE;
+			
+			self::$def->fptm = self::$def->fp / (1 + self::$ir);
 			
 			if (self::$def->fpigr == 0) {
 				self::$def->dwmoe = 0;
@@ -844,6 +850,8 @@
 			self::$def->afptmIcm = self::estimatedValueIcm($at12mni, $afpigr) / $pso / (1 + self::$ir);
 			$aefv = self::estimatedValueE($feE, $at12mni, $afpigr);
 			self::$def->afptmE =  $aefv->ev / $pso / (1 + self::$ir);
+			
+			self::$def->afptm = (self::$def->afptmIcm < self::$def->afptmE) ? self::$def->afptmIcm : self::$def->afptmE;
 			
 			//price floor calculation assumes the worst case senario
 			if (self::$def->cigr > 1) {
@@ -888,19 +896,15 @@
 			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr) / $pso / (1 + self::$ir);
 			$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
 			self::$def->lffptmE = $lfaefv->ev / $pso / (1 + self::$ir);
+			
+			self::$def->lffptm = (self::$def->lffptmIcm < self::$def->lffptmE) ? self::$def->lffptmIcm : self::$def->lffptmE;
 			//end price floor calculation
 			
-			self::$def->epIcm = (self::$def->fptmIcm + self::$def->lffptmIcm) / 2;
-			self::$def->epE = (self::$def->fptmE + self::$def->lffptmE) / 2;
+			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
 			
-			
-			$bettingCalc = self::calcBetting(self::$def->lffptmIcm, self::$def->epIcm, self::$def->fptmIcm);
-			self::$def->bpIcm = $bettingCalc->bp;
-			self::$def->abdrIcm = $bettingCalc->abdr;
-			
-			$bettingCalc = self::calcBetting(self::$def->lffptmE, self::$def->epE, self::$def->fptmE);
-			self::$def->bpE = $bettingCalc->bp;
-			self::$def->abdrE = $bettingCalc->abdr;
+			$bettingCalc = self::calcBetting(self::$def->lffptm, self::$def->ep, self::$def->fptm);
+			self::$def->bp = $bettingCalc->bp;
+			self::$def->abdr = $bettingCalc->abdr;
 			
 			self::$cpHtml = $result['cp'];
 				
@@ -1048,36 +1052,36 @@
 				}
 			}
 			
-			if ((self::$def->bpIcm <= 0) || (self::$def->cp <= 0)) {
+			if ((self::$def->bp <= 0) || (self::$def->cp <= 0)) {
 				self::$def->bpcpr = -1;
 			} else {
-				self::$def->bpcpr = (self::$def->bpIcm - self::$def->cp) / self::$def->cp;
+				self::$def->bpcpr = (self::$def->bp - self::$def->cp) / self::$def->cp;
 			}
 			
-			self::$def->iv = self::$def->prcv0gIcm;
+			self::$def->iv = self::$def->prcv0g;
 			
 			//ivcpr ratio is a non greedy ratio to buy in to get the dr
 			//unless iv is 0
-			if ((self::$def->lffptmIcm <= 0) || (self::$def->cp <= 0)) {
+			if ((self::$def->lffptm <= 0) || (self::$def->cp <= 0)) {
 				self::$def->ivcpr = -1;
 			} else {
-				self::$def->ivcpr = (self::$def->lffptmIcm - self::$def->cp) / self::$def->cp;
+				self::$def->ivcpr = (self::$def->lffptm - self::$def->cp) / self::$def->cp;
 			}
 			
 			//cpfptmr ratio on the other hand is a non greedy ratio to sell at a lower price
 			//we are making less profit thus non greedy
 			//it reflects how much profit is made from fptm to cp compared to fptm
-			if (self::$def->fptmIcm == 0) {
+			if (self::$def->fptm == 0) {
 				self::$def->cpfptmr = 1;
 			} else {
-				self::$def->cpfptmr = (self::$def->cp - self::$def->fptmIcm) / abs(self::$def->fptmIcm);
+				self::$def->cpfptmr = (self::$def->cp - self::$def->fptm) / abs(self::$def->fptm);
 			}
 			
 			self::$def->pow = (22.5 - self::$def->gtap / 2) / 22.5;
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->bpcpr > self::$def->abdrIcm) && !(self::$def->niosi >= .1)) {
+			if ((self::$def->bpcpr > self::$def->abdr) && !(self::$def->niosi >= .1)) {
 				self::$def->advice = 'betting buy';
 			}
 			
