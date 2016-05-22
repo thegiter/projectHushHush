@@ -310,17 +310,18 @@
 			$result->abdr = self::BDR;
 			
 			if (($ep > 0) && ($ep > $pf)) {//lower floor fptm
-				$last_i = $pf;
+				$lastBp = $pf;
 				
-				for ($i = $pf; $i < $ep; $i += self::$increment) {
-					$mos = ($ep - $i) / ($ep - $pf);
+				for ($bp = $pf; $bp < $ep; $bp += self::$increment) {
+					$mos = ($ep - $bp) / ($ep - $pf);
 					
 					$wa = self::BDR / $mos;
 					
-					$cost = $i / (1 + $wa);
+					$cost = $bp / (1 + $wa);
 					
 					$la = ($cost - $pf) / $cost;
 					
+					//probability of going up
 					$p_up = 1 - ($cost - $pf) / ($ep - $pf) * .5;
 					
 					if ($p_up > 1) {
@@ -329,19 +330,20 @@
 						$p_up = 0;
 					}
 					
-					$p = (1 - ($i - $cost) / ($pc - $cost)) * $p_up;
+					//probability of reaching bp
+					$p = (1 - ($bp - $cost) / ($pc - $cost)) * $p_up;
 					
 					$allo = ($p - (1 - $p) / ($wa / $la)) / 2;
 					$abdr = $wa;
 					
 					if ($allo < self::B_ALLO) {
-						$result->bp = $last_i;
+						$result->bp = $lastBp;
 						$result->abdr = $abdr;
 						
 						break;
 					}
 					
-					$last_i = $i;
+					$lastBp = $bp;
 				}
 			}
 			
