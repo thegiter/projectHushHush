@@ -9,7 +9,7 @@
 		
 		<radialGradient id="gradient" r="1">
 			<stop stop-color="white" offset="50%"/>
-			<stop stop-color="black" offset="100%"/>
+			<stop stop-color="black" offset="70%"/>
 		</radialGradient>
 
 		<mask id="masking" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
