@@ -123,6 +123,21 @@
 				Trailing Return on Equity vs Last Year Return on Equity
 			</h2>
 		</td>',
+		'<td data-acro="lyroc">
+			<h3>
+				Last Year Return on Capital
+			</h3>
+		</td>',
+		'<td data-acro="t12maroc">
+			<h3>
+				Trailing 12 Month Average Return on Capital
+			</h3>
+		</td>',
+		'<td data-acro="tlrocr">
+			<h2>
+				Trailing Return on Capital vs Last Year Return on Equity
+			</h2>
+		</td>',
 		'<td data-acro="pci">
 			<h4>
 				Projected Current Income
