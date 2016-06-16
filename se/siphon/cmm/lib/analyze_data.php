@@ -247,7 +247,9 @@
 		
 		private static function pjtIgr($cigr, $ar, $ni, $so) {
 			//adjusted income growth rate
-			$aigr = $cigr + $ar - 1;//.85
+			//we say that igr is not sustainable, if ar is declining
+			//so we confirm the gr with ar
+			$aigr = ($cigr + $ar) / 2;//.85
 			
 			if ($so <= 0) {
 				$p0g = 0;
@@ -287,6 +289,7 @@
 		
 		//current equity, current ni, projected igr
 		//current ni and pjt igr gives pjc income
+		//net income is already after debt payment, so the estimatedValue is after paying debt
 		private static function estimatedValueE($ce, $ni, $pigr) {
 			$result = new stdClass;
 			
@@ -510,6 +513,42 @@
 			$vcr = $vrr / $crr;
 			
 			$ver = $vcr / (1 + $def->der);*/
+			
+			preg_match('/Annual Data[\s\S]+ROC[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no roc annual data';
+			}
+			
+			self::$def->lyroc = str_replace(',', '', $matches[8]);
+			self::$def->slyroc = str_replace(',', '', $matches[5]);
+			self::$def->tlyroc = str_replace(',', '', $matches[2]);
+			
+			//in case roc was 0
+			self::$def->slyroc = (self::$def->slyroc == 0) ? 1 : self::$def->slyroc;
+			self::$def->tlyroc = (self::$def->tlyroc == 0) ? 1 : self::$def->tlyroc;
+			
+			$lytlrocr = self::$def->lyroc / self::$def->slyroc;
+			
+			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
+
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROC[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^>]*\>)?([^<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+			
+			self::$def->t12maroc = str_replace(',', '', $matches[12]);
+			self::$def->lt12maroc = str_replace(',', '', $matches[9]);
+			self::$def->slt12maroc = str_replace(',', '', $matches[6]);
+			self::$def->tlt12maroc = str_replace(',', '', $matches[3]);
+			
+			$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
+			
+			self::$def->t12maroc = ($at12maroc < self::$def->t12maroc) ? $at12maroc : self::$def->t12maroc;
+			
+			//in case om was 0
+			if (self::$def->lyroc <= 0) {
+				self::$def->tlrocr = 0;
+			} else {
+				self::$def->tlrocr = self::$def->t12maroc / self::$def->lyroc;
+			}
 			
 			$ctt = $result['te'];
 
@@ -773,7 +812,7 @@
 			
 			//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
-			$ar = (self::$def->tlomr < self::$def->tlroer) ? self::$def->tlomr : self::$def->tlroer;
+			$ar = min(self::$def->tlomr, self::$def->tlroer, self::$def->tlrocr);
 			
 			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, $at12mni, self::$def->so);
 			
@@ -856,8 +895,10 @@
 			self::$def->afptm = (self::$def->afptmIcm < self::$def->afptmE) ? self::$def->afptmIcm : self::$def->afptmE;
 			
 			//price floor calculation assumes the worst case senario
+			$lfar = ($ar > 1) ? 1 : $ar;
+			
 			if (self::$def->cigr > 1) {
-				$lfcpigr = self::pjtIgr(1, $ar, $at12mni, self::$def->so);	
+				$lfcpigr = self::pjtIgr(1, $lfar, $at12mni, self::$def->so);	
 			} else {
 				$lfcpigr = self::$def->cpigr;
 			}
@@ -868,9 +909,9 @@
 			if ($lfcpigr == 0) {
 				$lffpigr = 0;
 			} else if ($lfcpigr > 1) {
-				$lffpigr = self::pjtIgr(1, $ar, $at12mni, $pso);
+				$lffpigr = self::pjtIgr(1, $lfar, $at12mni, $pso);
 			} else {
-				$lffpigr = self::pjtIgr($lfcpigr, $ar, $at12mni, $pso);
+				$lffpigr = self::pjtIgr($lfcpigr, $lfar, $at12mni, $pso);
 			}
 			
 			if ($lffpigr > 1) {
