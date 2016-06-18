@@ -334,8 +334,8 @@
 			<label>Exlude:</label>
 			<select id="pow-filter" name="pow">
 				<option>not set</option>
-				<option><= 80%</option>
-				<option><= 50%</option>
+				<option>&#60;= 80%</option>
+				<option>&#60;= 50%</option>
 			</select>
 		</td>',
 		'<td data-acro="advice">
