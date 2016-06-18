@@ -354,7 +354,7 @@
 		}
 		
 		private static function getCp() {
-			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>\D+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>[\s\S]+\<span\>52\-wk High\<\/span\>[\s\S]+class\="sectionQuoteDetailHigh"\>\D+([\d\.\,]+)\<\/span\>[\s\S]+\<span\>52\-wk Low\<\/span\>[\s\S]+class\="sectionQuoteDetailLow">\D+([\d\.\,]+)\<\/span\>/', self::$cpHtml, $matches);
+			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>\D+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>[\s\S]+\<span\>52\-wk High\<\/span\>[\s\S]+class\="sectionQuoteDetailHigh"\>.+([\d\.\,]+)\<\/span\>[\s\S]+\<span\>52\-wk Low\<\/span\>[\s\S]+class\="sectionQuoteDetailLow">.+([\d\.\,]+)\<\/span\>/', self::$cpHtml, $matches);
 
 			$cp = str_replace(',', '', $matches[2]);
 			$high = str_replace(',', '', $matches[4]);
