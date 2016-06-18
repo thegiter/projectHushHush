@@ -354,17 +354,31 @@
 		}
 		
 		private static function getCp() {
-			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>[\D]+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>/', self::$cpHtml, $matches);
+			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>\D+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>[\s\S]+\<span\>52\-wk High\<\/span\>[\s\S]+class\="sectionQuoteDetailHigh"\>\D+([\d\.\,]+)\<\/span\>[\s\S]+\<span\>52\-wk Low\<\/span\>[\s\S]+class\="sectionQuoteDetailLow">\D+([\d\.\,]+)\<\/span\>/', self::$cpHtml, $matches);
 
 			$cp = str_replace(',', '', $matches[2]);
+			$high = str_replace(',', '', $matches[4]);
+			$low = str_replace(',', '', $matches[5]);
 			
 			if (($cp !== 0) && !$cp) {
 				return 'get current price failed: '.self::$cpHtml;
+			} else if (($high !== 0) && !$high) {
+				return 'get 52-wk high failed: '.self::$cpHtml;
+			} else if (($low !== 0) && !$low) {
+				return 'get 52-wk low failed: '.self::$cpHtml;
 			} else if (self::$rSe == 'J.J') {
-				$cp = $cp / 100;
+				$cp /= 100;
+				$high /= 100;
+				$low /= 100;
 			}
 			
-			return $cp;
+			$result = new stdClass;
+			
+			$result->cp = $cp;
+			$result->high = $high;
+			$result->low = $low;
+			
+			return $result;
 		}
 		
 		private static function getDef_siphon() {
@@ -824,6 +838,19 @@
 			$feE = $ecv->fe;
 			
 			//projected so
+			//probability
+			$iosPAmt = 0;
+			$iosPCash = self::$def->tlrocr;
+			
+			//if issuance
+			if (self::$def->anios > 0) {
+				
+				
+			} else if (self::$def->anios < 0) {//if buyback
+				if (abs(self::$def->anios) < self::$def->so) {
+					
+				}
+			}
 			$pso = self::$def->so + self::$def->anios;
 
 			if ($pso <= 0) {
@@ -906,12 +933,14 @@
 			$lfecv = self::estimatedValueE(self::$def->ce, $at12mni, $lfcpigr);
 			$lffeE = $ecv->fe;
 			
+			$lfpso = max($pso, self::$def->so);
+			
 			if ($lfcpigr == 0) {
 				$lffpigr = 0;
 			} else if ($lfcpigr > 1) {
-				$lffpigr = self::pjtIgr(1, $lfar, $at12mni, $pso);
+				$lffpigr = self::pjtIgr(1, $lfar, $at12mni, $lfpso);
 			} else {
-				$lffpigr = self::pjtIgr($lfcpigr, $lfar, $at12mni, $pso);
+				$lffpigr = self::pjtIgr($lfcpigr, $lfar, $at12mni, $lfpso);
 			}
 			
 			if ($lffpigr > 1) {
@@ -936,11 +965,11 @@
 			
 			$lfafpigr = $lffpigr * $lfadj;
 			
-			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr) / $pso / (1 + self::$ir);
+			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr) / $lfpso / (1 + self::$ir);
 			$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
-			self::$def->lffptmE = $lfaefv->ev / $pso / (1 + self::$ir);
+			self::$def->lffptmE = $lfaefv->ev / $lfpso / (1 + self::$ir);
 			
-			self::$def->lffptm = (self::$def->lffptmIcm < self::$def->lffptmE) ? self::$def->lffptmIcm : self::$def->lffptmE;
+			self::$def->lffptm = min(self::$def->lffptmIcm, self::$def->lffptmE);
 			//end price floor calculation
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
@@ -950,12 +979,14 @@
 			self::$def->abdr = $bettingCalc->abdr;
 			
 			self::$cpHtml = $result['cp'];
-				
-			self::$def->cp = self::getCp();
+
+			$cpResult = self::getCp();
 			
-			if (!is_numeric(self::$def->cp)) {
-				return self::$def->cp;
+			if (is_string($cpResult)) {
+				return $cpResult;
 			}
+			
+			self::$def->cpResult = $cpResult;
 		}
 		
 		private static function getDef_db() {
@@ -1087,13 +1118,19 @@
 				
 				//get cp
 				self::$cpHtml = seCurl::getCtts(self::$cpUrl);
-				
-				self::$def->cp = self::getCp();
-				
-				if (!is_numeric(self::$def->cp)) {
-					return self::$def->cp;
+
+				$cpResult = self::getCp();
+			
+				if (is_string($cpResult)) {
+					return $cpResult;
 				}
+				
+				self::$def->cpResult = $cpResult;
 			}
+			
+			self::$def->cp = self::$def->cpResult->cp;
+			self::$def->high = self::$def->cpResult->high;
+			self::$def->low = self::$def->cpResult->low;
 			
 			if ((self::$def->bp <= 0) || (self::$def->cp <= 0)) {
 				self::$def->bpcpr = -1;
@@ -1120,7 +1157,7 @@
 				self::$def->cpfptmr = (self::$def->cp - self::$def->fptm) / abs(self::$def->fptm);
 			}
 			
-			self::$def->pow = (22.5 - self::$def->gtap / 2) / 22.5;
+			self::$def->pow = (22.5 - self::$def->gtap / 2) / 22.5 * (self::$def->cp - self::$def->low) / (self::$def->high - self::$def->low);
 			
 			self::$def->advice = 'hold';
 			

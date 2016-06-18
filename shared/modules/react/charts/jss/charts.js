@@ -320,6 +320,7 @@ var PieSlice = React.createClass({
 		//	ctrHoleRadius:		radius of making a hole in the center
 		//						0 to 1 (percentage)
 		//						default 0 (no hole)
+		//	
 		//APIs
 		//	css
 		//		pie-slice-cnr:						the entire slice
@@ -332,12 +333,7 @@ var PieSlice = React.createClass({
 		//		pie-slice-cnr .slice:				actual slice pieces
 		//			use this to give it color, etc. you can not give it a shadow or stroke since they are separate pieces
 		//			use filter drop-shadow on the cnr or box-shadow on wpr for a full circle
-		//		pie-slice-cnr .stroke-cnr:			stroke cnr
-		//			you can use this class to control the stroke's visibility
-		//			its opacity etc.
-		//		pie-slice-cnr .stroke:				the actual stroke
-		//			use this to set the stroke's backgroundColor etc.
-		//			same as slice
+
 		//	react object
 		//		The react object is attached to the element it creates as reactObj
 		//		elm.reactObj exposes the object, you can then use the object's methods

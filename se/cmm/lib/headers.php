@@ -135,7 +135,7 @@
 		</td>',
 		'<td data-acro="tlrocr">
 			<h2>
-				Trailing Return on Capital vs Last Year Return on Equity
+				Trailing Return on Capital vs Last Year Return on Capital
 			</h2>
 		</td>',
 		'<td data-acro="pci">
@@ -330,6 +330,13 @@
 			<h4>
 				Probability of Winning (50% is gambling, less is lose)
 			</h4>
+			
+			<label>Exlude:</label>
+			<select id="pow-filter" name="pow">
+				<option>not set</option>
+				<option><= 80%</option>
+				<option><= 50%</option>
+			</select>
 		</td>',
 		'<td data-acro="advice">
 			<h4>
