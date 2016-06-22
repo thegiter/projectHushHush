@@ -131,13 +131,13 @@
 			</div>
 			<div class="pos-rel">
 				<?php
-					require(root.'shared/phps/hr.php');
+					require root.'shared/phps/hr.php';
 				?>
 		
 			</div>
 			<div class="tpl-dft-cr ta-ctr">
 				<?php
-					require(root.'shared/footer/sml/footer.php');
+					require root.'shared/modules/ftr/sml/footer.php';
 				?>
 			
 			</div>

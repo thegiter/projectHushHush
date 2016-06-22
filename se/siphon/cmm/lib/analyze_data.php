@@ -844,14 +844,14 @@
 			
 			//if issuance
 			if (self::$def->anios > 0) {
+				$iosPAmt = 1 - self::$def->anios / (self::$def->anios + self::$def->so);
 				
-				
+				$iosPCash = -$iosPCash;
 			} else if (self::$def->anios < 0) {//if buyback
-				if (abs(self::$def->anios) < self::$def->so) {
-					
-				}
+				$iosPAmt = 1 - abs(self::$def->anios) / self::$def->so;
 			}
-			$pso = self::$def->so + self::$def->anios;
+			
+			$pso = self::$def->so + self::$def->anios * ($iosPAmt + $iosPCash) / 2;
 
 			if ($pso <= 0) {
 				self::$def->prcvIcm = 0;
