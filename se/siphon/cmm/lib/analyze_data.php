@@ -1161,11 +1161,11 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->bpcpr > self::$def->abdr) && !(self::$def->niosi >= .2)) {
+			if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->niosi < .2)) {
 				self::$def->advice = 'betting buy';
 			}
 			
-			if ((self::$def->ivcpr > self::DR) && !(self::$def->niosi >= .2)) {
+			if ((self::$def->ivcpr > self::DR) && (self::$def->niosi < .2)) {
 				self::$def->advice = 'buy';
 			}
 			
