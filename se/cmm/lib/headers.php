@@ -255,6 +255,11 @@
 			<h4>
 				Future Projected Income Growth Rate
 			</h4>
+			
+			<select id="fpigr-filter" name="fpigr">
+				<option>not set</option>
+				<option>&#60;= 1.2</option>
+			</select>
 		</td>',
 		'<td data-acro="fp">
 			<h4>
