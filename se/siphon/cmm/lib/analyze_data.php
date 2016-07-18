@@ -1157,7 +1157,9 @@
 				self::$def->cpfptmr = (self::$def->cp - self::$def->fptm) / abs(self::$def->fptm);
 			}
 			
-			self::$def->pow = (22.5 - self::$def->gtap / 2) / 22.5 * (self::$def->cp - self::$def->low) / (self::$def->high - self::$def->low);
+			//price percentage to the power of 3 is to adjust 80% to 50%, because 50% indicates gambling percentage
+			//and 80% is the minimum price percentage equivalent of gambling percentage
+			self::$def->pow = ((22.5 - self::$def->gtap / 2) / 22.5 + (((self::$def->cp - self::$def->low) / (self::$def->high - self::$def->low)) ** 3)) / 2;//** is the exponentiation operator, ie. to the power of
 			
 			self::$def->advice = 'hold';
 			

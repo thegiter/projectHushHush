@@ -31,9 +31,9 @@
 			<table>
 				<tr>
 					<td>
-						<label for="ir">Inflation Rate:</label>
+						<label for="se">SE:</label>
 					</td><td>
-						<input id="ir" name="ir" type="text"/>
+						<input id="se" name="se" type="text"/>
 					</td>
 				</tr>
 					
@@ -43,7 +43,7 @@
 					foreach ($def_cols as $def_name => $db_value) {
 						echo '<tr>
 							<td>
-								<lable for="'.$def_name.'">'.$def_name.'</lable>
+								<lable for="'.$def_name.'">'.$def_name.':</lable>
 							</td><td>
 								<input id="'.$def_name.'" type="text" name="'.$def_name.'"/>
 							</td>
