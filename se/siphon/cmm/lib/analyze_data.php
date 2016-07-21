@@ -822,7 +822,7 @@
 			self::$def->prlyvIcm = $lyvIcm / self::$def->so;
 			self::$def->prlyvE = $lyvE / self::$def->so;
 			
-			self::$def->prlyv = (self::$def->prlyvIcm < self::$def->prlyvE) ? self::$def->prlyvIcm : self::$def->prlyvE;
+			self::$def->prlyv = min(self::$def->prlyvIcm, self::$def->prlyvE) / (1 + self::$ir);
 			
 			//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
@@ -866,8 +866,8 @@
 				self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
 			}
 			
-			self::$def->prcv = (self::$def->prcvIcm < self::$def->prcvE) ? self::$def->prcvIcm : self::$def->prcvE;
-			self::$def->prcv0g = (self::$def->prcv0gIcm < self::$def->prcv0gE) ? self::$def->prcv0gIcm : self::$def->prcv0gE;
+			self::$def->prcv = min(self::$def->prcvIcm, self::$def->prcvE) / (1 + self::$ir);
+			self::$def->prcv0g = min(self::$def->prcv0gIcm, self::$def->prcv0gE) / (1 + self::$ir);
 			
 			self::$def->niosi = (self::$def->so - $pso) / self::$def->so;
 			
@@ -884,7 +884,7 @@
 			self::$def->fpIcm = $fvIcm / $pso;
 			self::$def->fpE = $fvE / $pso;
 			
-			self::$def->fp = (self::$def->fpIcm < self::$def->fpE) ? self::$def->fpIcm : self::$def->fpE;
+			self::$def->fp = min(self::$def->fpIcm, self::$def->fpE) / (1 + self::$ir);
 			
 			self::$def->fptm = self::$def->fp / (1 + self::$ir);
 			
@@ -915,11 +915,11 @@
 			//downward moe is dynamically calculated depending of different type of stock
 			//more precisely depending on the standard deviation of the stock
 			//but in this case, we are just using growth rate
-			self::$def->afptmIcm = self::estimatedValueIcm($at12mni, $afpigr) / $pso / (1 + self::$ir);
+			self::$def->afptmIcm = self::estimatedValueIcm($at12mni, $afpigr) / $pso;
 			$aefv = self::estimatedValueE($feE, $at12mni, $afpigr);
-			self::$def->afptmE =  $aefv->ev / $pso / (1 + self::$ir);
+			self::$def->afptmE =  $aefv->ev / $pso;
 			
-			self::$def->afptm = (self::$def->afptmIcm < self::$def->afptmE) ? self::$def->afptmIcm : self::$def->afptmE;
+			self::$def->afptm = min(self::$def->afptmIcm, self::$def->afptmE) / (1 + self::$ir) / (1 + self::$ir);
 			
 			//price floor calculation assumes the worst case senario
 			$lfar = ($ar > 1) ? 1 : $ar;
@@ -965,11 +965,11 @@
 			
 			$lfafpigr = $lffpigr * $lfadj;
 			
-			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr) / $lfpso / (1 + self::$ir);
+			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr) / $lfpso;
 			$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
-			self::$def->lffptmE = $lfaefv->ev / $lfpso / (1 + self::$ir);
+			self::$def->lffptmE = $lfaefv->ev / $lfpso;
 			
-			self::$def->lffptm = min(self::$def->lffptmIcm, self::$def->lffptmE);
+			self::$def->lffptm = min(self::$def->lffptmIcm, self::$def->lffptmE) / (1 + self::$ir) / (1 + self::$ir);
 			//end price floor calculation
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
