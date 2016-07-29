@@ -1163,7 +1163,7 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->niosi < .2)) {
+			if ((self::$def->tlomr > .8) && (self::$def->tlroer > .8) && (self::$def->tlrocr > .8) && (self::$def->fpigr > .8) && (self::$def->bpcpr > self::$def->abdr) && (self::$def->niosi < .2)) {
 				self::$def->advice = 'betting buy';
 			}
 			
