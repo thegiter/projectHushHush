@@ -158,6 +158,11 @@
 				Adjusted Projected Future Income
 			</h4>
 		</td>',
+		'<td data-acro="arote">
+			<h3 class="se-sortable">
+				Average Return on Tangible Equity of Last 10 Years
+			</h3>
+		</td>',
 		'<td data-acro="car" class="input">
 			Compatitive Advantage Rating
 		</td>',

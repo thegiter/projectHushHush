@@ -218,6 +218,7 @@
 		const B_ALLO = .25;//the target allocation for betting
 		const MOS = .8;//margin of safety
 		const VIR = 10;//value to income ratio		
+		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -396,6 +397,7 @@
 				'om' => 'http://www.gurufocus.com/term/operatingmargin/'.self::$guruFullTkr.'/Operating-Margin/',
 				'wacc' => 'http://www.gurufocus.com/term/wacc/'.self::$guruFullTkr.'/Weighted-Average-Cost-Of-Capital-WACC/',
 				'roe' => 'http://www.gurufocus.com/term/ROE/'.self::$guruFullTkr.'/Return-on-Equity/',
+				'rote' => 'http://www.gurufocus.com/term/ROTE/'.self::$guruFullTkr.'/Return-on-Tangible-Equity/',
 				'pe' => 'http://www.gurufocus.com/term/pe/'.self::$guruFullTkr.'/PE-Ratio/',
 				'pb' => 'http://www.gurufocus.com/term/pb/'.self::$guruFullTkr.'/PB-Ratio/',
 				'nios' => 'http://www.gurufocus.com/term/Net+Issuance+of+Stock/'.self::$guruFullTkr.'/Net-Issuance-of-Stock/',
@@ -721,6 +723,16 @@
 			self::$def->pfi = $pfv->pjtIcm;
 
 			self::$def->apfi = self::$def->pfi * self::$def->pa * $coinir;
+		
+			$ctt = $result['rote'];
+
+			preg_match('/Annual Data[\s\S]+ROTE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no rote';
+			}
+			
+			self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
 		
 			$ctt = $result['pe'];
 
@@ -1163,12 +1175,14 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->tlomr > .8) && (self::$def->tlroer > .8) && (self::$def->tlrocr > .8) && (self::$def->fpigr > .8) && (self::$def->bpcpr > self::$def->abdr) && (self::$def->niosi < .2)) {
-				self::$def->advice = 'betting buy';
-			}
-			
-			if ((self::$def->ivcpr > self::DR) && (self::$def->niosi < .2)) {
-				self::$def->advice = 'buy';
+			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH)) {
+				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->niosi < .2)) {
+					self::$def->advice = 'betting buy';
+				}
+				
+				if ((self::$def->ivcpr > self::DR) && (self::$def->niosi < .2)) {
+					self::$def->advice = 'buy';
+				}
 			}
 			
 			if (self::$def->cpfptmr >= (self::DR - .02)) {
