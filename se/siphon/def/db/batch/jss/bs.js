@@ -33,7 +33,7 @@
 		const INIT_NUM_THREADS = 5;
 		const ADDITIONAL_NUM_THREADS = 1;
 
-		const MAX_THREADS = 10;
+		const MAX_THREADS = 9;
 		//max concurrent siphoning network can handle seems to be limited to 15
 		//could be a website limitation or just server network limitation
 		
@@ -41,7 +41,7 @@
 		
 		var tkrRows = [];
 		
-		const MAX_FAILS = 5;
+		const MAX_FAILS = 10;
 		var fail_cntr = 0;
 		
 		function siphonThread(js) {
@@ -162,7 +162,7 @@
 								} else {
 									fail_cntr++;
 								
-									if (fail_cntr >= MAX_FAILS) {
+									if (se_refresh && (fail_cntr >= MAX_FAILS)) {
 										switchOffRefresh();
 									}
 								}
@@ -184,8 +184,8 @@
 					return false;
 				}
 				
-				//if 30 min passed, the thread dulicates itself
-				if (((Date.now() - tStartTs) >= (1000 * 60 * 30)) && (threadCnt < (MAX_THREADS - 1))) {
+				//if 60 min passed, the thread dulicates itself
+				if ((threadCnt < (MAX_THREADS - 1)) && ((Date.now() - tStartTs) >= (1000 * 60 * 60))) {
 					tStartTs = Date.now();
 					
 					new siphonThread(js);
