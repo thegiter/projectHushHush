@@ -63,6 +63,17 @@
 				return /\S+/.exec(tkrRow.children[0].textContent)[0];
 			}
 			
+			function delayedSN() {
+				//to avoid suspision, we will wait for 4 to 100 secs (time needed to complete one request)
+				scb.tMsgCnrs[threadNum].textContent = 'waiting...';
+				
+				setTimeout(function() {
+					scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
+					
+					siphonNext();
+				}, getRandomInt(4000, siphonTimeSecs));
+			}
+			
 			function siphonEnd(def) {
 				dataScriptP.then(function() {
 					for (var i = 2; i < scb.hdrCells.length; i++) {
@@ -87,14 +98,7 @@
 					}
 					
 					//siphon next
-					//to avoid suspision, we will wait for 4 to 100 secs (time needed to complete one request)
-					scb.tMsgCnrs[threadNum].textContent = 'waiting...';
-					
-					setTimeout(function() {
-						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
-						
-						siphonNext();
-					}, getRandomInt(4000, siphonTimeSecs));
+					delayedSN();
 				});
 			}
 			
@@ -144,7 +148,9 @@
 									noMcFails++;
 								}
 								
-								siphon(tkr, se);
+								setTimeout(function() {
+									siphon(tkr, se);
+								}, getRandomInt(4000, siphonTimeSecs));
 							} else {
 								if (noMcFails == retrys) {
 									noMcFails = 0;
@@ -167,7 +173,7 @@
 									}
 								}
 
-								siphonNext();
+								delayedSN();
 								
 								scb.tMsgCnrs[threadNum].textContent = 'max retrys reached. Ticker skipped.';
 							}
