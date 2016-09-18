@@ -408,7 +408,7 @@
 
 			$ctt = $result['mc'];
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no mc: '.$ctt;

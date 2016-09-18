@@ -33,7 +33,7 @@
 		const INIT_NUM_THREADS = 5;
 		const ADDITIONAL_NUM_THREADS = 1;
 
-		const MAX_THREADS = 8;
+		const MAX_THREADS = 15;
 		//max concurrent siphoning network can handle seems to be limited to 15
 		//could be a website limitation or just server network limitation
 		
@@ -140,7 +140,7 @@
 							siphonEnd(xhr.response);
 						} else {
 							if (retrys < MAX_RETRYS) {
-								scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retrying...';
+								scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in 5 minutes';
 								
 								retrys++;
 								
@@ -150,7 +150,7 @@
 								
 								setTimeout(function() {
 									siphon(tkr, se);
-								}, getRandomInt(4000, siphonTimeSecs));
+								}, 1000 * 60 * 5);
 							} else {
 								if (noMcFails == retrys) {
 									noMcFails = 0;
