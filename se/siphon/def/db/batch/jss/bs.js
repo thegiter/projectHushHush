@@ -33,7 +33,7 @@
 		const INIT_NUM_THREADS = 5;
 		const ADDITIONAL_NUM_THREADS = 1;
 
-		const MAX_THREADS = 9;
+		const MAX_THREADS = 8;
 		//max concurrent siphoning network can handle seems to be limited to 15
 		//could be a website limitation or just server network limitation
 		
