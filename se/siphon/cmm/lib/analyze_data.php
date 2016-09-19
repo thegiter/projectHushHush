@@ -418,7 +418,7 @@
 
 			$ctt =  $result['bps'];
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) \(As of/', $ctt, $matches);
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
 			
 			if (!$matches) {
 				return 'no bps';
@@ -493,7 +493,7 @@
 			
 			self::$def->lyie = str_replace(',', '', $matches[2]);
 			
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 			
 			self::$def->t12mie = str_replace(',', '', $matches[2]);
 			
@@ -592,7 +592,7 @@
 			
 			self::$def->lyoi = str_replace(',', '', $matches[2]);
 			
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 			
 			self::$def->t12moi = str_replace(',', '', $matches[2]);
 			

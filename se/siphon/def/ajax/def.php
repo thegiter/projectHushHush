@@ -3,7 +3,7 @@
 		define('root', '../../../../');
 	}
 	
-	require_once root.'se/siphon/cmm/lib/siphon_data.php';
+	require_once root.'se/siphon/cmm/lib/analyze_data.php';
 	
-	echo json_encode(siphon_stock_def_CNY($_POST['ticker'], $_POST['car'], $_POST['cc'], true));//true to refresh
+	echo json_encode(seAnalyze::getStockDef($_POST['ticker'], $_POST['car'], $_POST['cc'], true));//true to refresh
 ?>
