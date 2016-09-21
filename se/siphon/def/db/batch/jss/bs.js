@@ -40,6 +40,21 @@
 		var threadCnt = -1;
 		
 		var tkrRows = [];
+		var tkrsCnt;
+		
+		var statusP = document.createElement('p');
+		scb.msgCnr.appendChild(statusP);
+		
+		var startTime;
+		var procTkrsCntr = 0;
+		var elapsedTime = 0;
+		var speed = 0;
+		
+		var timeSpan = document.createElement('span');
+		var procTkrsSpan = document.createElement('span');
+		var speedSpan = document.createElement('span');
+		var progressSpan = document.createElement('span');
+		var estimateSpan = document.createElement('span');
 		
 		const MAX_FAILS = 10;
 		var fail_cntr = 0;
@@ -197,12 +212,32 @@
 					new siphonThread(js);
 				}
 				
+				//update status
+				elapsedTime = Date.now() - startTime;
+				timeSpan.textContent = elapsedTime;console.log(elapsedTime);console.log(timeSpan);console.log(timeSpan.textContent);
+				
+				procTkrsSpan.textContent = procTkrsCntr;
+				
+				if (procTkrsCntr != 0) {
+					speed = elapsedTime / 1000 / procTkrsCntr;
+				}
+				
+				speedSpan.textContent = speed;
+				
+				progressSpan.textContent = procTkrsCntr / tkrsCnt * 100;
+				
+				var estimate = (tkrsCnt - procTkrsCntr) * speed;
+				estimateSpan.textContent = parseInt(estimate / 86400)+'d '+(new Date(estimate % 86400 * 1000)).toUTCString().replace(/.*(\d{2}):(\d{2}):(\d{2}).*/, "$1h $2m $3s");
+				//end update status
+				
 				//pick a random row
 				var randIdx = getRandomInt(0, tkrRows.length);
 				tkrRow = tkrRows[randIdx];
 				
 				//remove the row from the arr so other threads won't bother with it
 				tkrRows.splice(randIdx, 1);
+				
+				procTkrsCntr++;
 				
 				//if does not have a name, the tkr is invalid, skip
 				if (!/[\S]+/.exec(tkrRow.children[1].textContent)) {
@@ -240,6 +275,23 @@
 			forEachNodeItem(scb.tkrRows, function(row) {
 				tkrRows.push(row);
 			});
+			
+			tkrsCnt = tkrRows.length;
+			statusP.textContent += 'ttl tkrs: '+tkrsCnt+'; Elapsed time: ';
+			
+			statusP.appendChild(timeSpan);
+			
+			statusP.appendChild(document.createTextNode('; Proccessed tkrs: '));
+			statusP.appendChild(procTkrsSpan);
+			
+			statusP.appendChild(document.createTextNode('; Speed: '));
+			statusP.appendChild(speedSpan);
+			statusP.appendChild(document.createTextNode('s/tkr; Progress: '));
+			statusP.appendChild(progressSpan);
+			statusP.appendChild(document.createTextNode('%; Estimated time remaining: '));
+			statusP.appendChild(estimateSpan);
+			
+			startTime = Date.now();
 			
 			//start one thread, then set time out for additional threads over 40 min
 			new siphonThread();
