@@ -214,7 +214,7 @@
 				
 				//update status
 				elapsedTime = Date.now() - startTime;
-				timeSpan.textContent = elapsedTime;console.log(elapsedTime);console.log(timeSpan);console.log(timeSpan.textContent);
+				timeSpan.textContent = elapsedTime;
 				
 				procTkrsSpan.textContent = procTkrsCntr;
 				

@@ -503,7 +503,7 @@
 			
 			$ctt = $result['roc'];
 
-			preg_match('/fiscal year[\s\S]+where[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+			preg_match('/fiscal year[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \+ \<\/td\>\<td\>(\-?\d+(\.\d+)?)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
 			
 			if (!$matches) {
 				return 'no roc ltd std';
