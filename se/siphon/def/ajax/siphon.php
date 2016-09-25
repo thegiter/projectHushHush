@@ -3,6 +3,8 @@
 		define('root', '../../../../');
 	}
 	
+	session_start();
+	
 	if (!$_SESSION['authed']) {
 		die;
 	}
