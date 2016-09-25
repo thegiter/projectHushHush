@@ -1,6 +1,6 @@
 <?php
 	if (!defined('root')) {
-		define('root', '../../');
+		define('root', '../../../../');
 	}
 	
 	if (!$_SESSION['authed']) {
