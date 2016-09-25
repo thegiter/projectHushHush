@@ -1110,8 +1110,8 @@
 				default:
 			}
 			
-			self::$cpUrl = 'http://www.reuters.com/finance/stocks/overview?symbol='.$r_tkr.self::$rSe;
-			
+			self::$cpUrl = 'http://www.reuters.com/finance/stocks/chart?symbol='.$r_tkr.self::$rSe;
+
 			//cal data either from siphon or from db, depend on refresh
 			if ($refresh) {
 				//get from siphon, include cp
