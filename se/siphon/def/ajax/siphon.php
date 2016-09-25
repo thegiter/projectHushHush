@@ -29,5 +29,6 @@
 	echo $def->lffptm.'
 	'.$def->fptm.'
 	'.$def->bp.'
+	'.$def->cp.'
 	'.$def->pow;
 ?>
