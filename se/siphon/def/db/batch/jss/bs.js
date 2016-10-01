@@ -33,7 +33,7 @@
 		const INIT_NUM_THREADS = 5;
 		const ADDITIONAL_NUM_THREADS = 1;
 
-		const MAX_THREADS = 15;
+		const MAX_THREADS = 18;
 		//max concurrent siphoning network can handle seems to be limited to 15
 		//could be a website limitation or just server network limitation
 		
@@ -58,6 +58,9 @@
 		
 		const MAX_FAILS = 10;
 		var fail_cntr = 0;
+		
+		var ttlRqss = 0;
+		const MAX_RQSS = 5;
 		
 		function siphonThread(js) {
 			threadCnt++;
@@ -118,6 +121,18 @@
 			}
 			
 			function siphon(tkr, se) {
+				//if max concurrent requests are reached,
+				//retry in 5 min
+				if (ttlRqss >= MAX_RQSS) {
+					setTimeout(function() {
+						siphon(tkr, se);
+					}, 1000 * 60 * 5);
+					
+					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 5 minutes';
+					
+					return false;
+				}
+				
 				//if enable js siphone, it needs to be updated
 				//it is not updated due to it is never used
 				if (js) {
@@ -144,7 +159,11 @@
 					//var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
 					var seurl = '/se/siphon/def/db/batch/siphon.php';
 					
+					ttlRqss++;
+					
 					shpsCmm.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+refreshParam+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
+						ttlRqss--;
+						
 						//determin if success, set retry cntr to 0
 						//if success, update the table row, else retry
 						if (xhr.response && !xhr.response.err) {//xhr.response will be null if failed
@@ -205,7 +224,7 @@
 					return false;
 				}
 				
-				//if 60 min passed, the thread dulicates itself
+				//if 60 min passed, the thread duplicates itself
 				if ((threadCnt < (MAX_THREADS - 1)) && ((Date.now() - tStartTs) >= (1000 * 60 * 60))) {
 					tStartTs = Date.now();
 					
