@@ -55,6 +55,7 @@ var seData = {};
 					elm.dataset.indicator = '';
 				}
 			case 'pow':
+			case 'powm':
 				defValue = defValue * 100+'%';
 				
 				break;

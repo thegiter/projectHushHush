@@ -338,13 +338,25 @@
 		</td>',
 		'<td data-acro="pow">
 			<h4>
-				Probability of Winning (50% is gambling, less is lose)
+				Probability of Winning Value (50% is gambling, less is lose)
 			</h4>
 			
 			<label>Exlude:</label>
 			<select id="pow-filter" name="pow">
 				<option>not set</option>
 				<option>&#60;= 80%</option>
+				<option>&#60;= 50%</option>
+			</select>
+		</td>',
+		'<td data-acro="powm">
+			<h4>
+				Probability of Winning Momentum
+			</h4>
+			
+			<label>Exlude:</label>
+			<select id="pow-filter" name="pow">
+				<option>not set</option>
+				<option>&#60;= 85%</option>
 				<option>&#60;= 50%</option>
 			</select>
 		</td>',

@@ -26,5 +26,5 @@
 	'.$def->fptm.'
 	'.$def->bp.'
 	'.$def->cp.'
-	'.$def->pow;
+	'.$def->powm;
 ?>
