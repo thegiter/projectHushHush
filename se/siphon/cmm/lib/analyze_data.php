@@ -213,7 +213,9 @@
 	}
 	
 	class seAnalyze {
-		const DR = .2;//discount rate is the minimum profit rate to justify the investment
+		//discount rate is the minimum profit rate to justify the investment, which is a rather large percentage
+		//not because we are greedy, but because we want a large safty net
+		const DR = .4;
 		const BDR = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
 		const B_ALLO = .25;//the target allocation for betting
 		const MOS = .8;//margin of safety
@@ -1184,12 +1186,12 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH)) {
-				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->niosi < .2)) {
+			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH) && (self::$def->niosi < .2)) {
+				if (self::$def->bpcpr > self::$def->abdr) {
 					self::$def->advice = 'betting buy';
 				}
 				
-				if ((self::$def->ivcpr > self::DR) && (self::$def->niosi < .2)) {
+				if (self::$def->ivcpr > self::DR) {
 					self::$def->advice = 'buy';
 				}
 			}
