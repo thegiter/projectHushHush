@@ -863,19 +863,13 @@
 				
 			//if issuance
 			if (self::$def->anios > 0) {
-				//if return stays the same (1), then there may be no need for more issuance, so issusance is 0
-				
+				//if return stays the same (1), then there may be no need for more issuance, so issusance is 0 (1 - 1)
 				//if return increases, issuance may turn into buybacks
-				if (self::$def->tlrocr > 1) {
-					$iosPCash = 1 - self::$def->tlrocr;
-				} else if (self::$def->tlrocr < 1) {//if return reduces, there may be more issuances
-					$iosPCash = 1 - self::$def->tlrocr + 1;
-				}
-				
-				$iosPCash = $iosPCash * self::$def->anios;
+				//if return reduces, there may be more issuances
+				$iosPCash = (1 - self::$def->tlrocr) * self::$def->anios;
 			} else if (self::$def->anios < 0) {//if buyback
 				//the iosPCash is directly in proportion to return change
-				$iosPCash = self::$def->tlrocr * self::$def->anios;
+				$iosPCash = self::$def->anios / (self::$def->so - self::$def->anios) * self::$def->tlrocr * self::$def->so;
 			}
 			
 			$iosPAmt = 0;
@@ -885,14 +879,13 @@
 				//the more issuance, the less likely of probability of issuance
 				$iosPAmt = 1 - $iosPCash / ($iosPCash + self::$def->so);
 			} else if ($iosPCash < 0) {//if still buyback
+				//the more buyback, the less likely of it happening
 				//if buyback is greater than shares outstanding, it might turn into an issuance
 				//to maintain a certain shares oustanding number
 				$iosPAmt = 1 - abs($iosPCash) / self::$def->so;
 			}
-			
-			$iosPAmt = $iosPAmt * $iosPCash;
-			
-			$pso = self::$def->so + $iosPAmt;
+
+			$pso = self::$def->so + $iosPAmt * $iosPCash;
 
 			if ($pso <= 0) {
 				self::$def->prcvIcm = 0;
