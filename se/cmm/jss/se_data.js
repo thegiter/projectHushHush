@@ -1,7 +1,7 @@
 var seData = {};
 
 (function() {
-	var dr = .2;
+	var dr = .4;
 	
 	var sd = seData;
 	

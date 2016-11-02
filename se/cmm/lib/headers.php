@@ -158,9 +158,9 @@
 				Adjusted Projected Future Income
 			</h4>
 		</td>',
-		'<td data-acro="arote">
+		'<td data-acro="arota">
 			<h3 class="se-sortable">
-				Average Return on Tangible Equity of Last 10 Years
+				Average Return on Tangible Assets of Last 5 Years
 			</h3>
 		</td>',
 		'<td data-acro="car" class="input">

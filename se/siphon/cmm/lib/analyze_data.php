@@ -221,6 +221,7 @@
 		const MOS = .8;//margin of safety
 		const VIR = 10;//value to income ratio		
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
+		const MIN_GROWTH_REFINE = 1;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -399,7 +400,7 @@
 				'om' => 'http://www.gurufocus.com/term/operatingmargin/'.self::$guruFullTkr.'/Operating-Margin/',
 				'wacc' => 'http://www.gurufocus.com/term/wacc/'.self::$guruFullTkr.'/Weighted-Average-Cost-Of-Capital-WACC/',
 				'roe' => 'http://www.gurufocus.com/term/ROE/'.self::$guruFullTkr.'/Return-on-Equity/',
-				'rote' => 'http://www.gurufocus.com/term/ROTE/'.self::$guruFullTkr.'/Return-on-Tangible-Equity/',
+				'rota' => 'http://www.gurufocus.com/term/ROTA/'.self::$guruFullTkr.'/Return-on-Tangible-Assets/',
 				'pe' => 'http://www.gurufocus.com/term/pe/'.self::$guruFullTkr.'/PE-Ratio/',
 				'pb' => 'http://www.gurufocus.com/term/pb/'.self::$guruFullTkr.'/PB-Ratio/',
 				'nios' => 'http://www.gurufocus.com/term/Net+Issuance+of+Stock/'.self::$guruFullTkr.'/Net-Issuance-of-Stock/',
@@ -726,15 +727,19 @@
 
 			self::$def->apfi = self::$def->pfi * self::$def->pa * $coinir;
 		
-			$ctt = $result['rote'];
+			//equity + liability (debt) = total assets
+			//return on equity is not reliable is there is a lot of liabilities
+			//return on assets is more accurate of how the company is doing
+			$ctt = $result['rota'];
 
-			preg_match('/Annual Data[\s\S]+ROTE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+ROTA[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 			
 			if (!$matches) {
-				return 'no rote';
+				return 'no rota';
 			}
 			
-			self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
+			//self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
+			self::$def->arota = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
 		
 			$ctt = $result['pe'];
 
@@ -836,7 +841,8 @@
 			self::$def->prlyvIcm = $lyvIcm / self::$def->so;
 			self::$def->prlyvE = $lyvE / self::$def->so;
 			
-			self::$def->prlyv = min(self::$def->prlyvIcm, self::$def->prlyvE) / (1 + self::$ir);
+			//self::$def->prlyv = min(self::$def->prlyvIcm, self::$def->prlyvE) / (1 + self::$ir);
+			self::$def->prlyv = self::$def->prlyvIcm / (1 + self::$ir);
 			
 			//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
@@ -853,19 +859,40 @@
 			
 			//projected so
 			//probability
-			$iosPAmt = 0;
-			$iosPCash = self::$def->tlrocr;
-			
+			$iosPCash = 0;
+				
 			//if issuance
 			if (self::$def->anios > 0) {
-				$iosPAmt = 1 - self::$def->anios / (self::$def->anios + self::$def->so);
+				//if return stays the same (1), then there may be no need for more issuance, so issusance is 0
 				
-				$iosPCash = -$iosPCash;
+				//if return increases, issuance may turn into buybacks
+				if (self::$def->tlrocr > 1) {
+					$iosPCash = 1 - self::$def->tlrocr;
+				} else if (self::$def->tlrocr < 1) {//if return reduces, there may be more issuances
+					$iosPCash = 1 - self::$def->tlrocr + 1;
+				}
+				
+				$iosPCash = $iosPCash * self::$def->anios;
 			} else if (self::$def->anios < 0) {//if buyback
-				$iosPAmt = 1 - abs(self::$def->anios) / self::$def->so;
+				//the iosPCash is directly in proportion to return change
+				$iosPCash = self::$def->tlrocr * self::$def->anios;
 			}
 			
-			$pso = self::$def->so + self::$def->anios * ($iosPAmt + $iosPCash) / 2;
+			$iosPAmt = 0;
+			
+			//if still issuance
+			if ($iosPCash > 0) {
+				//the more issuance, the less likely of probability of issuance
+				$iosPAmt = 1 - $iosPCash / ($iosPCash + self::$def->so);
+			} else if ($iosPCash < 0) {//if still buyback
+				//if buyback is greater than shares outstanding, it might turn into an issuance
+				//to maintain a certain shares oustanding number
+				$iosPAmt = 1 - abs($iosPCash) / self::$def->so;
+			}
+			
+			$iosPAmt = $iosPAmt * $iosPCash;
+			
+			$pso = self::$def->so + $iosPAmt;
 
 			if ($pso <= 0) {
 				self::$def->prcvIcm = 0;
@@ -880,8 +907,8 @@
 				self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
 			}
 			
-			self::$def->prcv = min(self::$def->prcvIcm, self::$def->prcvE) / (1 + self::$ir);
-			self::$def->prcv0g = min(self::$def->prcv0gIcm, self::$def->prcv0gE) / (1 + self::$ir);
+			self::$def->prcv = self::$def->prcvIcm / (1 + self::$ir);
+			self::$def->prcv0g = self::$def->prcv0gIcm / (1 + self::$ir);
 			
 			self::$def->niosi = (self::$def->so - $pso) / self::$def->so;
 			
@@ -898,7 +925,7 @@
 			self::$def->fpIcm = $fvIcm / $pso;
 			self::$def->fpE = $fvE / $pso;
 			
-			self::$def->fp = min(self::$def->fpIcm, self::$def->fpE) / (1 + self::$ir);
+			self::$def->fp = self::$def->fpIcm / (1 + self::$ir);
 			
 			self::$def->fptm = self::$def->fp / (1 + self::$ir);
 			
@@ -933,7 +960,7 @@
 			$aefv = self::estimatedValueE($feE, $at12mni, $afpigr);
 			self::$def->afptmE =  $aefv->ev / $pso;
 			
-			self::$def->afptm = min(self::$def->afptmIcm, self::$def->afptmE) / (1 + self::$ir) / (1 + self::$ir);
+			self::$def->afptm = self::$def->afptmIcm / (1 + self::$ir) / (1 + self::$ir);
 			
 			//price floor calculation assumes the worst case senario
 			$lfar = ($ar > 1) ? 1 : $ar;
@@ -983,7 +1010,7 @@
 			$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
 			self::$def->lffptmE = $lfaefv->ev / $lfpso;
 			
-			self::$def->lffptm = min(self::$def->lffptmIcm, self::$def->lffptmE) / (1 + self::$ir) / (1 + self::$ir);
+			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
 			//end price floor calculation
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
@@ -1186,7 +1213,7 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH) && (self::$def->niosi < .2)) {
+			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
 				if (self::$def->bpcpr > self::$def->abdr) {
 					self::$def->advice = 'betting buy';
 				}
