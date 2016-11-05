@@ -221,7 +221,7 @@
 		const MOS = .8;//margin of safety
 		const VIR = 10;//value to income ratio		
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
-		const MIN_GROWTH_REFINE = 1;
+		const MIN_GROWTH_REFINE = 1.001;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -1206,7 +1206,7 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
+			if ((self::$def->arota > 0) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
 				if (self::$def->bpcpr > self::$def->abdr) {
 					self::$def->advice = 'betting buy';
 				}
