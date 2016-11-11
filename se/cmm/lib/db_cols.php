@@ -53,6 +53,9 @@
 		'pa' => 'DECIMAL(32, 30)',
 		'pfi' => 'DECIMAL(40, 30)',
 		'apfi' => 'DECIMAL(40, 30)',
+		'arota' => 'DECIMAL(35, 30)',
+		'normArota' => 'DECIMAL(35, 30)',
+		'rotaRank' => 'DECIMAL(32, 30)',
 		'arote' => 'DECIMAL(35, 30)',
 		'car' => 'DECIMAL(4, 2)',
 		'lper' => 'DECIMAL(7, 4)',
@@ -99,6 +102,7 @@
 		'ivcpr' => 'DECIMAL(32, 30)',
 		'cpfptmr' => 'DECIMAL(32, 30)',
 		'pow' => 'DECIMAL(32, 30)',
+		'powm' => 'DECIMAL(32, 30)',
 		'advice' => 'VARCHAR(32)'
 	];
 ?>

@@ -401,6 +401,7 @@
 				'wacc' => 'http://www.gurufocus.com/term/wacc/'.self::$guruFullTkr.'/Weighted-Average-Cost-Of-Capital-WACC/',
 				'roe' => 'http://www.gurufocus.com/term/ROE/'.self::$guruFullTkr.'/Return-on-Equity/',
 				'rota' => 'http://www.gurufocus.com/term/ROTA/'.self::$guruFullTkr.'/Return-on-Tangible-Assets/',
+				'rote' => 'http://www.gurufocus.com/term/ROTE/'.self::$guruFullTkr.'/Return-on-Tangible-Equity/',
 				'pe' => 'http://www.gurufocus.com/term/pe/'.self::$guruFullTkr.'/PE-Ratio/',
 				'pb' => 'http://www.gurufocus.com/term/pb/'.self::$guruFullTkr.'/PB-Ratio/',
 				'nios' => 'http://www.gurufocus.com/term/Net+Issuance+of+Stock/'.self::$guruFullTkr.'/Net-Issuance-of-Stock/',
@@ -571,6 +572,16 @@
 			
 			$ctt = $result['te'];
 
+			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>\<td\>([\-.\d]+)\<\/td\>[\s\S]+Explanation\<\/div\>/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no te ta tl';
+			}
+			
+			//current assets and liabilities
+			self::$def->ca = str_replace(',', '', $matches[1]);
+			self::$def->cl = str_replace(',', '', $matches[2]);
+			
 			preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 			
 			if (!$matches) {
@@ -728,10 +739,22 @@
 			self::$def->apfi = self::$def->pfi * self::$def->pa * $coinir;
 		
 			//equity + liability (debt) = total assets
-			//return on equity is not reliable is there is a lot of liabilities
+			//return on equity is not reliable if there is a lot of liabilities
 			//return on assets is more accurate of how the company is doing
 			$ctt = $result['rota'];
 
+			preg_match('/is ranked[\s\S]+(lower|higher)[\s\S]+\<strong\>(\d+)%\<\/strong\> of the[\s\S]+Companies/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no rota rank';
+			}
+			
+			self::$def->rotaRank = str_replace(',', '', $matches[2]);
+			
+			if ($matches[1] == 'lower') {
+				self::$def->rotaRank = 100 - self::$def->rotaRank;
+			}
+			
 			preg_match('/Annual Data[\s\S]+ROTA[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 			
 			if (!$matches) {
@@ -741,6 +764,31 @@
 			//self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
 			self::$def->arota = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
 		
+			//normalize return on tangible assets
+			$lar = self::$def->cl / self::$def->ca;//liabilities to assets
+			$ear = 1 - $lar;//equity to assets
+			
+			$ilr = (-self::$def->t12mie) / self::$def->cl;//interest expense to liabilities
+			
+			$normAdj = .01 / $ilr;
+			
+			$normLar = $lar / $normAdj;
+			
+			$normAr = $normLar + $ear;
+			
+			self::$def->normArota = self::$def->arota / $normAr;
+			//end normalization
+		
+			$ctt = $result['rote'];
+			
+			preg_match('/Annual Data[\s\S]+ROTE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no rote';
+			}
+			
+			self::$def->arote = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
+			
 			$ctt = $result['pe'];
 
 			preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);

@@ -163,6 +163,21 @@
 				Average Return on Tangible Assets of Last 5 Years
 			</h3>
 		</td>',
+		'<td data-acro="normArota">
+			<h3 class="se-sortable">
+				Normalized AROTA of Last 5 Years
+			</h3>
+		</td>',
+		'<td data-acro="rotaRank">
+			<h3 class="se-sortable">
+				ROTA Rank in Industry
+			</h3>
+		</td>',
+		'<td data-acro="arote">
+			<h3 class="se-sortable">
+				Average ROTE of Last 5 Years
+			</h3>
+		</td>',
 		'<td data-acro="car" class="input">
 			Compatitive Advantage Rating
 		</td>',
