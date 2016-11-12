@@ -222,6 +222,7 @@
 		const VIR = 10;//value to income ratio		
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
 		const MIN_GROWTH_REFINE = 1.001;
+		const ROTA_RANK_PASS = 60;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -750,15 +751,15 @@
 			preg_match('/is ranked[\s\S]+(lower|higher)[\s\S]+\<strong\>(\d+)%\<\/strong\> of the[\s\S]+Companies/', $ctt, $matches);
 			
 			if (!$matches) {
-				return 'no rota rank';
+				self::$def->rotaRank = self::ROTA_RANK_PASS;
+			} else {
+				self::$def->rotaRank = str_replace(',', '', $matches[2]);
+				
+				if ($matches[1] == 'lower') {
+					self::$def->rotaRank = 100 - self::$def->rotaRank;
+				}
 			}
-			
-			self::$def->rotaRank = str_replace(',', '', $matches[2]);
-			
-			if ($matches[1] == 'lower') {
-				self::$def->rotaRank = 100 - self::$def->rotaRank;
-			}
-			
+
 			preg_match('/Annual Data[\s\S]+ROTA[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 			
 			if (!$matches) {
