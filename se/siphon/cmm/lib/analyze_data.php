@@ -572,7 +572,7 @@
 			
 			$ctt = $result['te'];
 
-			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> ?\- ?\<\/td\>\<td\>([\-.\d]+)\<\/td\>[\s\S]+Explanation\<\/div\>/', $ctt, $matches);
+			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> ?\- ?\<\/td\>\<td\>([\-.\d]+|N\/A)\<\/td\>[\s\S]+Explanation\<\/div\>/', $ctt, $matches);
 			
 			if (!$matches) {
 				return 'no te ta tl';
@@ -581,6 +581,10 @@
 			//current assets and liabilities
 			self::$def->ca = str_replace(',', '', $matches[1]);
 			self::$def->cl = str_replace(',', '', $matches[2]);
+			
+			if (self::$def->cl == 'N/A') {
+				self::$def->cl = 0;
+			}
 			
 			preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 			
@@ -765,18 +769,22 @@
 			self::$def->arota = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
 		
 			//normalize return on tangible assets
-			$lar = self::$def->cl / self::$def->ca;//liabilities to assets
-			$ear = 1 - $lar;//equity to assets
-			
-			$ilr = (-self::$def->t12mie) / self::$def->cl;//interest expense to liabilities
-			
-			$normAdj = .01 / $ilr;
-			
-			$normLar = $lar / $normAdj;
-			
-			$normAr = $normLar + $ear;
-			
-			self::$def->normArota = self::$def->arota / $normAr;
+			if (self::$def->cl == 0) {
+				self::$def->normArota = self::$def->arota;
+			} else {
+				$lar = self::$def->cl / self::$def->ca;//liabilities to assets
+				$ear = 1 - $lar;//equity to assets
+				
+				$ilr = (-self::$def->t12mie) / self::$def->cl;//interest expense to liabilities
+				
+				$normAdj = .01 / $ilr;
+				
+				$normLar = $lar / $normAdj;
+				
+				$normAr = $normLar + $ear;
+				
+				self::$def->normArota = self::$def->arota / $normAr;
+			}
 			//end normalization
 		
 			$ctt = $result['rote'];
