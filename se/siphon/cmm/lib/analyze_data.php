@@ -572,7 +572,7 @@
 			
 			$ctt = $result['te'];
 
-			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>\<td\>([\-.\d]+)\<\/td\>[\s\S]+Explanation\<\/div\>/', $ctt, $matches);
+			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> ?\- ?\<\/td\>\<td\>([\-.\d]+)\<\/td\>[\s\S]+Explanation\<\/div\>/', $ctt, $matches);
 			
 			if (!$matches) {
 				return 'no te ta tl';
