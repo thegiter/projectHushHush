@@ -222,7 +222,8 @@
 		const VIR = 10;//value to income ratio		
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
 		const MIN_GROWTH_REFINE = 1.001;
-		const ROTA_RANK_PASS = 60;
+		const ROTA_RANK_PASS = 60;//percent
+		const ROTE_PASS = 15;//percent
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -1062,6 +1063,18 @@
 			
 			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
 			//end price floor calculation
+			
+			//premium or discount adjustment
+			$pd = self::$def->rotaRank / ROTA_RANK_PASS * self::$def->rote / ROTE_PASS;
+			
+			self::$def->prlyv *= $pd;
+			self::$def->prcv *= $pd;
+			self::$def->prcv0g *= $pd;
+			self::$def->fp *= $pd;
+			self::$def->fptm *= $pd;
+			self::$def->afptm *= $pd;
+			self::$def->lffptm *= $pd;
+			//end premium or discount adjutment
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
 			

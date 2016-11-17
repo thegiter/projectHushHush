@@ -268,7 +268,7 @@
 		</td>',
 		'<td data-acro="prcv0g">
 			<h2>
-				Price Relfecting Current Value Of No Growth Potential
+				PRCV Of No Growth Potential
 			</h2>
 		</td>',
 		'<td data-acro="fpigr">
