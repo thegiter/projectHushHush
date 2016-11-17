@@ -1065,7 +1065,7 @@
 			//end price floor calculation
 			
 			//premium or discount adjustment
-			$pd = self::$def->rotaRank / ROTA_RANK_PASS * self::$def->rote / ROTE_PASS;
+			$pd = self::$def->rotaRank / self::ROTA_RANK_PASS * self::$def->rote / self::ROTE_PASS;
 			
 			self::$def->prlyv *= $pd;
 			self::$def->prcv *= $pd;
