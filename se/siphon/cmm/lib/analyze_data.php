@@ -799,6 +799,8 @@
 			
 			self::$def->arote = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
 			
+			self::$def->adjArote = self::$def->arote / (1 + self::$def->der);
+			
 			$ctt = $result['pe'];
 
 			preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
@@ -1065,10 +1067,8 @@
 			//end price floor calculation
 			
 			//premium or discount adjustment
-			$pd = self::$def->rotaRank / self::ROTA_RANK_PASS * self::$def->arote / self::ROTE_PASS;
+			$pd = (self::$def->rotaRank / self::ROTA_RANK_PASS + self::$def->adjArote / self::ROTE_PASS) / 2;
 			
-			self::$def->prlyv *= $pd;
-			self::$def->prcv *= $pd;
 			self::$def->prcv0g *= $pd;
 			self::$def->fp *= $pd;
 			self::$def->fptm *= $pd;
