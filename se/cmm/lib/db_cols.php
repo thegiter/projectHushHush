@@ -57,7 +57,6 @@
 		'normArota' => 'DECIMAL(35, 30)',
 		'rotaRank' => 'DECIMAL(32, 30)',
 		'arote' => 'DECIMAL(35, 30)',
-		'adjArote' => 'DECIMAL(35, 30)',
 		'car' => 'DECIMAL(4, 2)',
 		'lper' => 'DECIMAL(7, 4)',
 		'aper' => 'DECIMAL(33, 30)',

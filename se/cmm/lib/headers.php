@@ -178,11 +178,6 @@
 				Average ROTE of Last 5 Years
 			</h3>
 		</td>',
-		'<td data-acro="adjArote">
-			<h3 class="se-sortable">
-				Debt Adjusted Ave ROTE of Last 5 Years
-			</h3>
-		</td>',
 		'<td data-acro="car" class="input">
 			Compatitive Advantage Rating
 		</td>',

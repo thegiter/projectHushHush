@@ -223,7 +223,7 @@
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
 		const MIN_GROWTH_REFINE = 1.001;
 		const ROTA_RANK_PASS = 60;//percent
-		const ROTE_PASS = 15;//percent
+		const ROTE_PASS = 20;//percent
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -797,9 +797,18 @@
 				return 'no rote';
 			}
 			
-			self::$def->arote = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
+			$lyrote = str_replace(',', '', $matches[29]);
+			$slyrote = str_replace(',', '', $matches[26]);
+			$tlyrote = str_replace(',', '', $matches[23]);
+			$frlyrote = str_replace(',', '', $matches[20]);
+			$filyrote = str_replace(',', '', $matches[17]);
 			
-			self::$def->adjArote = self::$def->arote / (1 + self::$def->der);
+			//check for consistency, the difference of the highest and lowest must not exceed 50%
+			if (min($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) / max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) <= .5) {
+				self::$def->arote = 0;
+			} else {
+				self::$def->arote = ($lyrote + $slyrote + $tlyrote + $frlyrote + $filyrote) / 5;
+			}
 			
 			$ctt = $result['pe'];
 
@@ -1067,7 +1076,7 @@
 			//end price floor calculation
 			
 			//premium or discount adjustment
-			$pd = (self::$def->rotaRank / self::ROTA_RANK_PASS + self::$def->adjArote / self::ROTE_PASS) / 2;
+			$pd = self::$def->arote / self::ROTE_PASS;
 			
 			self::$def->prcv0g *= $pd;
 			self::$def->fp *= $pd;
