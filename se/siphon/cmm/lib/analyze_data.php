@@ -222,7 +222,7 @@
 		const VIR = 10;//value to income ratio		
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
 		const MIN_GROWTH_REFINE = 1.001;
-		const ROTA_RANK_PASS = 60;//percent
+		const ROTA_RANK_PASS = 40;//percent
 		const ROTE_PASS = 20;//percent
 		
 		const CNYIR = 0.1;//10%
@@ -767,8 +767,19 @@
 				return 'no rota';
 			}
 			
+			$lyrota = str_replace(',', '', $matches[29]);
+			$slyrota = str_replace(',', '', $matches[26]);
+			$tlyrota = str_replace(',', '', $matches[23]);
+			$frlyrota = str_replace(',', '', $matches[20]);
+			$filyrota = str_replace(',', '', $matches[17]);
+			
 			//self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
-			self::$def->arota = (str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 5;
+			self::$def->arota = ($lyrota + $slyrota + $tlyrota + $frlyrota + $filyrota) / 5;
+		
+			//check for consistency, the difference of the highest and lowest must not exceed 50%
+			if (max($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota) - min($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota) >= 20) {
+				self::$def->rotaRank = 0;
+			}
 		
 			//normalize return on tangible assets
 			if (self::$def->cl == 0) {
@@ -1076,7 +1087,7 @@
 			//end price floor calculation
 			
 			//premium or discount adjustment
-			$pd = self::$def->arote / self::ROTE_PASS;
+			$pd = self::$def->rotaRank / self::ROTA_RANK_PASS;
 			
 			self::$def->prcv0g *= $pd;
 			self::$def->fp *= $pd;
