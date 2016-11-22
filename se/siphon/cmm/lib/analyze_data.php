@@ -758,6 +758,8 @@
 				
 				if ($matches[1] == 'lower') {
 					self::$def->rotaRank = 100 - self::$def->rotaRank;
+				} else {
+					self::$def->rotaRank++;
 				}
 			}
 
@@ -777,7 +779,9 @@
 			self::$def->arota = ($lyrota + $slyrota + $tlyrota + $frlyrota + $filyrota) / 5;
 		
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
-			if (max($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota) - min($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota) >= 20) {
+			$lowestrota = min($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota);
+			
+			if (max($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota) - $lowestrota >= 50 || $lowestrota <= 0) {
 				self::$def->rotaRank = 0;
 			}
 		
@@ -927,6 +931,12 @@
 			//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
 			$ar = min(self::$def->tlomr, self::$def->tlroer, self::$def->tlrocr);
+			
+			if ((self::$def->tlroer == 0) && (self::$def->tlrocr != 0)) {
+				$ar = min(self::$def->tlomr, self::$def->tlrocr);
+			} else if ((self::$def->tlrocr == 0) && (self::$def->tlroer != 0)) {
+				$ar = min(self::$def->tlomr, self::$def->tlroer);
+			}
 			
 			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, $at12mni, self::$def->so);
 			
@@ -1087,13 +1097,13 @@
 			//end price floor calculation
 			
 			//premium or discount adjustment
-			$pd = self::$def->rotaRank / self::ROTA_RANK_PASS;
+			self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
 			
-			self::$def->prcv0g *= $pd;
-			self::$def->fp *= $pd;
-			self::$def->fptm *= $pd;
-			self::$def->afptm *= $pd;
-			self::$def->lffptm *= $pd;
+			self::$def->prcv0g *= self::$def->pdadj;
+			self::$def->fp *= self::$def->pdadj;
+			self::$def->fptm *= self::$def->pdadj;
+			self::$def->afptm *= self::$def->pdadj;
+			self::$def->lffptm *= self::$def->pdadj;
 			//end premium or discount adjutment
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
@@ -1296,8 +1306,8 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->arota > 0) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
-				if (self::$def->bpcpr > self::$def->abdr) {
+			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
+				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}
 				
