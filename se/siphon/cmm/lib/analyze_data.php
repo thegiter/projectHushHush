@@ -819,7 +819,9 @@
 			$filyrote = str_replace(',', '', $matches[17]);
 			
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
-			if (min($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) / max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) <= .5) {
+			$lowestrote = min($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote);
+			
+			if (max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) - $lowestrote >= 50 || ($lowestrote <= 0)) {
 				self::$def->arote = 0;
 			} else {
 				self::$def->arote = ($lyrote + $slyrote + $tlyrote + $frlyrote + $filyrote) / 5;
