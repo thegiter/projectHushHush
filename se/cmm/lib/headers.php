@@ -97,6 +97,11 @@
 				Trailing Operating Margin vs Last Year Operating Margin
 			</h2>
 		</td>',
+		'<td data-acro="aomg">
+			<h2 class="se-sortable">
+				Ave OM Growth Rate
+			</h2>
+		</td>',
 		'<td data-acro="wacodr">
 			<h3>
 				Weighted Average Cost of Debt Ratio

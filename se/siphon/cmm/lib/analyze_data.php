@@ -639,13 +639,14 @@
 			self::$def->tlyom = str_replace(',', '', $matches[2]);
 			
 			//in case om was 0
-			self::$def->slyom = (self::$def->slyom == 0) ? 1 : self::$def->slyom;
-			self::$def->tlyom = (self::$def->tlyom == 0) ? 1 : self::$def->tlyom;
+			if (self::$def->slyom <= 0 || self::$def->tlyom <= 0) {
+				self::$def->aomg = 0;
+			} else {
+				self::$def->aomg = (self::$def->lyom / self::$def->slyom + self::$def->slyom / self::$def->tlyom) / 2;
+			}
 			
-			$lytlomr = self::$def->lyom / self::$def->slyom;
+			//$lytlomr = self::$def->lyom / self::$def->slyom;
 			
-			self::$def->aomg = ((self::$def->lyom - self::$def->slyom) / abs(self::$def->slyom) + (self::$def->slyom - self::$def->tlyom) / abs(self::$def->tlyom)) / 2;
-
 			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>/', $ctt, $matches);
 			
 			self::$def->t12maom = str_replace(',', '', $matches[12]);
