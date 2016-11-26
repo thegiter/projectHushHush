@@ -224,6 +224,7 @@
 		const MIN_GROWTH_REFINE = 1.001;
 		const ROTA_RANK_PASS = 40;//percent
 		const ROTE_PASS = 20;//percent
+		const MIN_MC = 1000;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -777,12 +778,12 @@
 			$filyrota = str_replace(',', '', $matches[17]);
 			
 			//self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
-			self::$def->arota = ($lyrota + $slyrota + $tlyrota + $frlyrota + $filyrota) / 5;
+			self::$def->arota = ($lyrota + $slyrota + $tlyrota) / 3;
 		
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
-			$lowestrota = min($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota);
+			$lowestrota = min($lyrota, $slyrota, $tlyrota);
 			
-			if (max($lyrota, $slyrota, $tlyrota, $frlyrota, $filyrota) - $lowestrota >= 50 || $lowestrota <= 0) {
+			if (max($lyrota, $slyrota, $tlyrota) - $lowestrota >= 30 || $lowestrota <= 0) {
 				self::$def->rotaRank = 0;
 			}
 		
@@ -1309,7 +1310,7 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
+			if ((self::$def->mc > self::MIN_MC) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
 				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}

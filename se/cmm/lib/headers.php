@@ -165,12 +165,12 @@
 		</td>',
 		'<td data-acro="arota">
 			<h3 class="se-sortable">
-				Average Return on Tangible Assets of Last 5 Years
+				Average Return on Tangible Assets of Last 3 Years
 			</h3>
 		</td>',
 		'<td data-acro="normArota">
 			<h3 class="se-sortable">
-				Normalized AROTA of Last 5 Years
+				Normalized AROTA of Last 3 Years
 			</h3>
 		</td>',
 		'<td data-acro="rotaRank">
