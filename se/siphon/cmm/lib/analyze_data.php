@@ -455,6 +455,10 @@
 			
 			self::$def->der = str_replace(',', '', $matches[1]);
 
+			if (self::$def->der == 'N/A') {
+				return 'no der'
+			}
+			
 			self::$def->debt = self::$def->ce * self::$def->der;
 			self::$def->cap = self::$def->debt + self::$def->ce;
 			

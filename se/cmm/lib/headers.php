@@ -38,7 +38,7 @@
 			</h4>
 		</td>',
 		'<td data-acro="lyni">
-			<h3>
+			<h3 class="se-sortable">
 				Last Year Net Income
 			</h3>
 		</td>',
