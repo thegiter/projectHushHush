@@ -223,8 +223,10 @@
 		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
 		const MIN_GROWTH_REFINE = 1.001;
 		const ROTA_RANK_PASS = 40;//percent
+		const ROTA_RANK_PASS_PPLR = 90;//percent
 		const ROTE_PASS = 20;//percent
 		const MIN_MC = 1000;
+		const MIN_MC_PPLR = 100000;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -1105,13 +1107,29 @@
 			//end price floor calculation
 			
 			//premium or discount adjustment
+			//p o d
 			self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
 			
-			self::$def->prcv0g *= self::$def->pdadj;
-			self::$def->fp *= self::$def->pdadj;
-			self::$def->fptm *= self::$def->pdadj;
-			self::$def->afptm *= self::$def->pdadj;
-			self::$def->lffptm *= self::$def->pdadj;
+			//popularity
+			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
+			
+			$numDgtsMin = floor(log(self::MIN_MC_PPLR, 10) + 1);//6
+			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//4
+			
+			$mcPplrBase = 1 - ($numDgtsMin - $numDgtsMc) / 10;//.8
+			
+			$mcPplrBtm = pow(10, $numDgtsMc - 1);//1000
+			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) / 10;//4000, 9000, .04
+			
+			$mcPplr = $mcPplrBase + $mcPplrPct;//.84
+			
+			self::$def->pplradj = ($rotaPplr + $mcPplr) / 2;
+			
+			self::$def->prcv0g *= self::$def->pdadj * self::$def->pplradj;
+			self::$def->fp *= self::$def->pdadj * self::$def->pplradj;
+			self::$def->fptm *= self::$def->pdadj * self::$def->pplradj;
+			self::$def->afptm *= self::$def->pdadj * self::$def->pplradj;
+			self::$def->lffptm *= self::$def->pdadj * self::$def->pplradj;
 			//end premium or discount adjutment
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
@@ -1314,7 +1332,7 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->mc > self::MIN_MC) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
+			if ((self::$def->mc > self::MIN_MC) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
 				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}
