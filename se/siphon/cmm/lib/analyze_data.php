@@ -1116,12 +1116,12 @@
 			$numDgtsMin = floor(log(self::MIN_MC_PPLR, 10) + 1);//6
 			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//4
 			
-			$mcPplrBase = 1 - ($numDgtsMin - $numDgtsMc) / 10;//.8
+			$mcPplrBase = 1 - ($numDgtsMin - $numDgtsMc) / 5;//.6
 			
 			$mcPplrBtm = pow(10, $numDgtsMc - 1);//1000
-			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) / 10;//4000, 9000, .04
+			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) / 5;//4000, 9000, .09
 			
-			$mcPplr = $mcPplrBase + $mcPplrPct;//.84
+			$mcPplr = $mcPplrBase + $mcPplrPct;//.69
 			
 			self::$def->pplradj = ($rotaPplr + $mcPplr) / 2;
 			
