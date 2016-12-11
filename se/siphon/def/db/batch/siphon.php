@@ -14,6 +14,7 @@
 	$cc = 1;
 	$tbl_name = strtolower($se).'_defs';
 	$old_advice;
+	$def;
 	
 	require_once root.'se/cmm/lib/db.php';
 	
@@ -28,19 +29,51 @@
 			die('Database Connection Error');//mysql_error();
 		} else {//then excute sql query
 			//get all tickers from the se table
-			if (($db_def = @mysql_query('SELECT car, cc, advice FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
+			if (($db_def = @mysql_query('SELECT lu FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
 				$db_tkr_def = mysql_fetch_array($db_def);
 				
-				if ($db_tkr_def['car']) {
-					$car = $db_tkr_def['car'];
+				//check if last update is less than 5 days
+				if ($db_tkr_def['lu']) {
+					$lu = strtotime($db_tkr_def['lu']);
+					
+					$now = new DateTime('now');
+					
+					if ($lu->diff($now)->d < 5) {
+						//return db data and skip siphon
+						if ($db_def = @mysql_query('SELECT * FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
+							$db_tkr_def = mysql_fetch_array($db_def);
+							
+							$def = new stdClass;
+							
+							foreach ($db_tkr_def as $ttl => $value) {
+								if (($ttl == 'tkr') || is_numeric($ttl)) {
+									continue;
+								}
+								
+								$def->{$ttl} = $value;
+							}
+							
+							die(json_encode($def));
+						}						
+					}
 				}
 				
-				if ($db_tkr_def['cc']) {
-					$cc = $db_tkr_def['cc'];
-				}
-				
-				if ($db_tkr_def['advice']) {
-					$old_advice = $db_tkr_def['advice'];
+				//else if more than 5 days
+				//fetch car cc, etc if exist and continue to siphon
+				if (($db_def = @mysql_query('SELECT car, cc, advice FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
+					$db_tkr_def = mysql_fetch_array($db_def);
+					
+					if ($db_tkr_def['car']) {
+						$car = $db_tkr_def['car'];
+					}
+					
+					if ($db_tkr_def['cc']) {
+						$cc = $db_tkr_def['cc'];
+					}
+					
+					if ($db_tkr_def['advice']) {
+						$old_advice = $db_tkr_def['advice'];
+					}
 				}
 			}
 		}

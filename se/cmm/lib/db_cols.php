@@ -103,6 +103,7 @@
 		'cpfptmr' => 'DECIMAL(32, 30)',
 		'pow' => 'DECIMAL(32, 30)',
 		'powm' => 'DECIMAL(32, 30)',
-		'advice' => 'VARCHAR(32)'
+		'advice' => 'VARCHAR(32)',
+		'lu' => 'DATE'
 	];
 ?>

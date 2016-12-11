@@ -37,10 +37,12 @@
 				foreach ($def_names as $idx => $def_name) {
 					if ($def_name == 'advice') {
 						$q_string .= '"'.$def->{$def_name}.'"';
+					} else if ($def_name == 'lu') {
+						$q_string .= 'CURRENT_DATE()';
 					} else {
 						$value = $def->{$def_name};
 						
-						if (!$value) {
+						if (!$value || $value == 'N/A' || $value == 'NAN') {
 							$value = 'null';
 						}
 						
