@@ -42,7 +42,7 @@
 					} else {
 						$value = $def->{$def_name};
 						
-						if ((!$value) || ($value == 'N/A') || ($value == 'NAN')) {
+						if ((!$value) || ($value == 'N/A') || is_nan($value)) {
 							$value = 'null';
 						}
 						
