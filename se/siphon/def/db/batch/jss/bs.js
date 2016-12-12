@@ -116,7 +116,13 @@
 					}
 					
 					//siphon next
-					delayedSN();
+					if (def['lu']) {
+						scb.tMsgCnrs[threadNum].textContent = 'siphoning...';
+					
+						siphonNext();
+					} else {
+						delayedSN();
+					}
 				});
 			}
 			

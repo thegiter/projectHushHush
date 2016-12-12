@@ -225,7 +225,7 @@
 		const ROTA_RANK_PASS = 40;//percent
 		const ROTA_RANK_PASS_PPLR = 90;//percent
 		const ROTE_PASS = 20;//percent
-		const MIN_MC = 1000;
+		const MIN_MC = 100;
 		const MIN_MC_PPLR = 100000;
 		
 		const CNYIR = 0.1;//10%
@@ -1122,14 +1122,46 @@
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
 			
 			$numDgtsMin = floor(log(self::MIN_MC_PPLR, 10) + 1);//6
-			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//4
+			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//3
 			
-			$mcPplrBase = 1 - ($numDgtsMin - $numDgtsMc) / 5;//.6
+			$numDgtsDiff = $numDgtsMin - $numDgtsMc;//3
 			
-			$mcPplrBtm = pow(10, $numDgtsMc - 1);//1000
-			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) / 5;//4000, 9000, .09
+			$mcPplrPctTop = 1;
+			$mcPplrPctBtm = 1;
+			$tmpPct = 1;
 			
-			$mcPplr = $mcPplrBase + $mcPplrPct;//.69
+			while ($numDgtsDiff > 0) {
+				if ($numDgtsDiff == 1) {//false, false, true
+					$mcPplrPctTop = $mcPplrPctBtm;//.48
+				}
+				
+				$tmpPct -= .2;//.8, .6, .4
+				
+				$mcPplrPctBtm *= $tmpPct;//.8, .48, .192
+				
+				$numDgtsDiff--;//2, 1, 0
+			}
+			
+			while ($numDgtsDiff < 0) {//assuming -2
+				$tmpPct += .2;//1.2, 1.4
+				
+				$mcPplrPctTop *= $tmpPct;//1.2, 1.68
+				
+				$numDgtsDiff++;//-1, 0
+				
+				if ($numDgtsDiff == 0) {//false, true
+					$mcPplrPctBtm = $mcPplrPctTop;//1.68
+					
+					$tmpPct += .2;//1.6
+				
+					$mcPplrPctTop *= $tmpPct;//2.688
+				}
+			}
+			
+			$mcPplrBtm = pow(10, $numDgtsMc - 1);//100
+			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) * ($mcPplrPctTop - $mcPplrPctBtm);//200 / 900 * .288 = .064
+			
+			$mcPplr = $mcPplrPctBtm + $mcPplrPct;//.256
 			
 			self::$def->pplradj = ($rotaPplr + $mcPplr) / 2;
 			
