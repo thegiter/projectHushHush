@@ -802,9 +802,13 @@
 				
 				$ilr = (-self::$def->t12mie) / self::$def->cl;//interest expense to liabilities
 				
-				$normAdj = .01 / $ilr;
+				if ($ilr == 0) {
+					$normLar = 0;
+				} else {
+					$normAdj = .01 / $ilr;
 				
-				$normLar = $lar / $normAdj;
+					$normLar = $lar / $normAdj;
+				}
 				
 				$normAr = $normLar + $ear;
 				
