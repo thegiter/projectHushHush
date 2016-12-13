@@ -918,8 +918,9 @@
 			//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 			//if there is anios, this would result in future price significantly lower than cp
 			//this is fine, because we are gonna ignore this stock due to lack of data
-			if (self::$def->so === 0) {
-				self::$def->so = 1;
+			if (self::$def->so == 0) {
+				//self::$def->so = 1;
+				return 'no so';
 			}
 
 			if ($alyni == 0) {
@@ -1122,9 +1123,9 @@
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
 			
 			$numDgtsMin = floor(log(self::MIN_MC_PPLR, 10) + 1);//6
-			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//3
+			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//1
 			
-			$numDgtsDiff = $numDgtsMin - $numDgtsMc;//3
+			$numDgtsDiff = $numDgtsMin - $numDgtsMc;//5
 			
 			$mcPplrPctTop = 1;
 			$mcPplrPctBtm = 1;
@@ -1158,7 +1159,7 @@
 				}
 			}
 			
-			$mcPplrBtm = pow(10, $numDgtsMc - 1);//100
+			$mcPplrBtm = pow(10, $numDgtsMc - 1);//0
 			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) * ($mcPplrPctTop - $mcPplrPctBtm);//200 / 900 * .288 = .064
 			
 			$mcPplr = $mcPplrPctBtm + $mcPplrPct;//.256
