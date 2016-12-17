@@ -508,6 +508,10 @@
 			
 			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 			
+			if (!$matches) {
+				return 'no t12mie';
+			}
+			
 			self::$def->t12mie = str_replace(',', '', $matches[2]);
 			
 			self::$def->lypii = self::$def->lyni - self::$def->lyie;
@@ -1127,7 +1131,7 @@
 			
 			$numDgtsDiff = $numDgtsMin - $numDgtsMc;//5
 			
-			$mcPplrPctTop = 1;
+			$mcPplrPctTop = 1.2;
 			$mcPplrPctBtm = 1;
 			$tmpPct = 1;
 			
@@ -1143,28 +1147,22 @@
 				$numDgtsDiff--;//2, 1, 0
 			}
 			
+			$tmpPct = 1.2;
+			
 			while ($numDgtsDiff < 0) {//assuming -2
-				$tmpPct += .2;//1.2, 1.4
+				$mcPplrPctBtm = $mcPplrPctTop;//1.2, 1.68
 				
-				$mcPplrPctTop *= $tmpPct;//1.2, 1.68
+				$tmpPct += .2;//1.4, 1.6
+				
+				$mcPplrPctTop *= $tmpPct;//1.68, 2.688
 				
 				$numDgtsDiff++;//-1, 0
-				
-				if ($numDgtsDiff == 0) {//false, true
-					$mcPplrPctBtm = $mcPplrPctTop;//1.68
-					
-					$tmpPct += .2;//1.6
-				
-					$mcPplrPctTop *= $tmpPct;//2.688
-				}
 			}
 			
 			$mcPplrBtm = pow(10, $numDgtsMc - 1);//0
-			$mcPplrPct = (self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) * ($mcPplrPctTop - $mcPplrPctBtm);//200 / 900 * .288 = .064
+			$mcPplrPct = ((self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) + $rotaPplr) / 2 * ($mcPplrPctTop - $mcPplrPctBtm);//(200 / 900 + .94) / 2 * .288 = .167
 			
-			$mcPplr = $mcPplrPctBtm + $mcPplrPct;//.256
-			
-			self::$def->pplradj = ($rotaPplr + $mcPplr) / 2;
+			self::$def->pplradj = $mcPplrPctBtm + $mcPplrPct;//.359
 			
 			self::$def->prcv0g *= self::$def->pdadj * self::$def->pplradj;
 			self::$def->fp *= self::$def->pdadj * self::$def->pplradj;
