@@ -82,6 +82,11 @@
 				Last Year PII to Capital Ratio
 			</h4>
 		</td>',
+		'<td data-acro="at12mni">
+			<h3>
+				Adjusted Trailing 12 Months Net Income
+			</h3>
+		</td>',
 		'<td data-acro="lyom">
 			<h3>
 				Last Year Operating Margin
@@ -89,7 +94,7 @@
 		</td>',
 		'<td data-acro="t12maom">
 			<h3 class="se-sortable">
-				Trailing 12 Month Average Operating Margin
+				Trailing 12 Months Average Operating Margin
 			</h3>
 		</td>',
 		'<td data-acro="tlomr">
@@ -120,7 +125,7 @@
 		</td>',
 		'<td data-acro="t12maroe">
 			<h3>
-				Trailing 12 Month Average Return on Equity
+				Trailing 12 Months Average Return on Equity
 			</h3>
 		</td>',
 		'<td data-acro="tlroer">
@@ -135,7 +140,7 @@
 		</td>',
 		'<td data-acro="t12maroc">
 			<h3>
-				Trailing 12 Month Average Return on Capital
+				Trailing 12 Months Average Return on Capital
 			</h3>
 		</td>',
 		'<td data-acro="tlrocr">

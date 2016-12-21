@@ -30,6 +30,7 @@
 		'lypcr' => 'DECIMAL(32, 30)',
 		'lyoi' => 'DECIMAL(40, 30)',
 		't12moi' => 'DECIMAL(40, 30)',
+		'at12mni' => 'DECIMAL(40, 30)',
 		'lyom' => 'DECIMAL(7, 4)',
 		'slyom' => 'DECIMAL(7, 4)',
 		'tlyom' => 'DECIMAL(7, 4)',

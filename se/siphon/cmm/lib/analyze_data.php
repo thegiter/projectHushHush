@@ -226,7 +226,7 @@
 		const ROTA_RANK_PASS_PPLR = 90;//percent
 		const ROTE_PASS = 20;//percent
 		const MIN_MC = 100;
-		const MIN_MC_PPLR = 100000;
+		const T12MNI_PPLR = 10000;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -636,6 +636,8 @@
 			$alyni = self::$def->lyni * $lyoinir;
 			
 			$at12mni = self::$def->t12mni * $coinir;
+			self::$def->at12mni = $at12mni;
+			
 			
 			$ctt = $result['om'];
 			
@@ -1126,23 +1128,23 @@
 			//popularity
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
 			
-			$numDgtsMin = floor(log(self::MIN_MC_PPLR, 10) + 1);//6
-			$numDgtsMc = floor(log(self::$def->mc, 10) + 1);//1
+			$numDgtsMin = floor(log(self::T12MNI_PPLR, 10) + 1);//5
+			$numDgtsNi = floor(log($at12mni, 10) + 1);//1
 			
-			$numDgtsDiff = $numDgtsMin - $numDgtsMc;//5
+			$numDgtsDiff = $numDgtsMin - $numDgtsNi;//4
 			
-			$mcPplrPctTop = 1.2;
-			$mcPplrPctBtm = 1;
+			$niPplrPctTop = 1.2;
+			$niPplrPctBtm = 1;
 			$tmpPct = 1;
 			
 			while ($numDgtsDiff > 0) {
 				if ($numDgtsDiff == 1) {//false, false, true
-					$mcPplrPctTop = $mcPplrPctBtm;//.48
+					$niPplrPctTop = $niPplrPctBtm;//.48
 				}
 				
 				$tmpPct -= .2;//.8, .6, .4
 				
-				$mcPplrPctBtm *= $tmpPct;//.8, .48, .192
+				$niPplrPctBtm *= $tmpPct;//.8, .48, .192
 				
 				$numDgtsDiff--;//2, 1, 0
 			}
@@ -1150,19 +1152,19 @@
 			$tmpPct = 1.2;
 			
 			while ($numDgtsDiff < 0) {//assuming -2
-				$mcPplrPctBtm = $mcPplrPctTop;//1.2, 1.68
+				$niPplrPctBtm = $niPplrPctTop;//1.2, 1.68
 				
 				$tmpPct += .2;//1.4, 1.6
 				
-				$mcPplrPctTop *= $tmpPct;//1.68, 2.688
+				$niPplrPctTop *= $tmpPct;//1.68, 2.688
 				
 				$numDgtsDiff++;//-1, 0
 			}
 			
-			$mcPplrBtm = pow(10, $numDgtsMc - 1);//0
-			$mcPplrPct = ((self::$def->mc - $mcPplrBtm) / ($mcPplrBtm * 9) + $rotaPplr) / 2 * ($mcPplrPctTop - $mcPplrPctBtm);//(200 / 900 + .94) / 2 * .288 = .167
+			$niPplrBtm = pow(10, $numDgtsNi - 1);//1
+			$niPplrPct = (($at12mni - $niPplrBtm) / ($niPplrBtm * 9) + $rotaPplr) / 2 * ($niPplrPctTop - $niPplrPctBtm);//(100 / 900 + .94) / 2 * .288 = .151
 			
-			self::$def->pplradj = $mcPplrPctBtm + $mcPplrPct;//.359
+			self::$def->pplradj = $niPplrPctBtm + $niPplrPct;//.343
 			
 			self::$def->prcv0g *= self::$def->pdadj * self::$def->pplradj;
 			self::$def->fp *= self::$def->pdadj * self::$def->pplradj;
