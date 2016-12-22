@@ -227,6 +227,7 @@
 		const ROTE_PASS = 20;//percent
 		const MIN_MC = 100;
 		const T12MNI_PPLR = 10000;
+		const PPLR_PCT_STEP = .1;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -1128,43 +1129,47 @@
 			//popularity
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
 			
-			$numDgtsMin = floor(log(self::T12MNI_PPLR, 10) + 1);//5
-			$numDgtsNi = floor(log($at12mni, 10) + 1);//1
-			
-			$numDgtsDiff = $numDgtsMin - $numDgtsNi;//4
-			
-			$niPplrPctTop = 1.2;
-			$niPplrPctBtm = 1;
-			$tmpPct = 1;
-			
-			while ($numDgtsDiff > 0) {
-				if ($numDgtsDiff == 1) {//false, false, true
-					$niPplrPctTop = $niPplrPctBtm;//.48
+			if ($at12mni <= 0) {
+				self::$def->pplradj = 0;
+			} else {
+				$numDgtsMin = floor(log(self::T12MNI_PPLR, 10) + 1);//5
+				$numDgtsNi = floor(log($at12mni, 10) + 1);//1
+				
+				$numDgtsDiff = $numDgtsMin - $numDgtsNi;//4
+				
+				$niPplrPctTop = 1.2;
+				$niPplrPctBtm = 1;
+				$tmpPct = 1;
+				
+				while ($numDgtsDiff > 0) {
+					if ($numDgtsDiff == 1) {//false, false, true
+						$niPplrPctTop = $niPplrPctBtm;//.48
+					}
+					
+					$tmpPct -= .2;//.8, .6, .4
+					
+					$niPplrPctBtm *= $tmpPct;//.8, .48, .192
+					
+					$numDgtsDiff--;//2, 1, 0
 				}
 				
-				$tmpPct -= .2;//.8, .6, .4
+				$tmpPct = 1.2;
 				
-				$niPplrPctBtm *= $tmpPct;//.8, .48, .192
+				while ($numDgtsDiff < 0) {//assuming -2
+					$niPplrPctBtm = $niPplrPctTop;//1.2, 1.68
+					
+					$tmpPct += .2;//1.4, 1.6
+					
+					$niPplrPctTop *= $tmpPct;//1.68, 2.688
+					
+					$numDgtsDiff++;//-1, 0
+				}
 				
-				$numDgtsDiff--;//2, 1, 0
+				$niPplrBtm = pow(10, $numDgtsNi - 1);//1
+				$niPplrPct = (($at12mni - $niPplrBtm) / ($niPplrBtm * 9) + $rotaPplr) / 2 * ($niPplrPctTop - $niPplrPctBtm);//(100 / 900 + .94) / 2 * .288 = .151
+				
+				self::$def->pplradj = $niPplrPctBtm + $niPplrPct;//.343
 			}
-			
-			$tmpPct = 1.2;
-			
-			while ($numDgtsDiff < 0) {//assuming -2
-				$niPplrPctBtm = $niPplrPctTop;//1.2, 1.68
-				
-				$tmpPct += .2;//1.4, 1.6
-				
-				$niPplrPctTop *= $tmpPct;//1.68, 2.688
-				
-				$numDgtsDiff++;//-1, 0
-			}
-			
-			$niPplrBtm = pow(10, $numDgtsNi - 1);//1
-			$niPplrPct = (($at12mni - $niPplrBtm) / ($niPplrBtm * 9) + $rotaPplr) / 2 * ($niPplrPctTop - $niPplrPctBtm);//(100 / 900 + .94) / 2 * .288 = .151
-			
-			self::$def->pplradj = $niPplrPctBtm + $niPplrPct;//.343
 			
 			self::$def->prcv0g *= self::$def->pdadj * self::$def->pplradj;
 			self::$def->fp *= self::$def->pdadj * self::$def->pplradj;
