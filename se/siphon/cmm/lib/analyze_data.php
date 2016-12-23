@@ -225,7 +225,7 @@
 		const ROTA_RANK_PASS = 40;//percent
 		const ROTA_RANK_PASS_PPLR = 90;//percent
 		const ROTE_PASS = 20;//percent
-		const MIN_MC = 100;
+		const MIN_T12MNI = 100;
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP = .1;
 		
@@ -1171,11 +1171,17 @@
 				self::$def->pplradj = $niPplrPctBtm + $niPplrPct;//.343
 			}
 			
-			self::$def->prcv0g *= self::$def->pdadj * self::$def->pplradj;
-			self::$def->fp *= self::$def->pdadj * self::$def->pplradj;
-			self::$def->fptm *= self::$def->pdadj * self::$def->pplradj;
-			self::$def->afptm *= self::$def->pdadj * self::$def->pplradj;
-			self::$def->lffptm *= self::$def->pdadj * self::$def->pplradj;
+			$ppadj = self::$def->pdadj * self::$def->pplradj;
+			
+			self::$def->prcv0g *= $ppadj;
+			self::$def->fp *= $ppadj;
+			
+			if ($ppadj > 1) {
+				self::$def->fptm *= $ppadj;
+				self::$def->afptm *= $ppadj;
+			}
+			
+			self::$def->lffptm *= $ppadj;
 			//end premium or discount adjutment
 			
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
@@ -1378,7 +1384,9 @@
 			
 			self::$def->advice = 'hold';
 			
-			if ((self::$def->mc > self::MIN_MC) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->fpigr > self::MIN_GROWTH_REFINE) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
+			// && (self::$def->fpigr > self::MIN_GROWTH_REFINE)
+			
+			if ((self::$def->at12mni > self::MIN_T12MNI) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
 				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}
