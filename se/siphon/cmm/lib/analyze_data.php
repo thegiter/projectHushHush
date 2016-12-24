@@ -227,7 +227,8 @@
 		const ROTE_PASS = 20;//percent
 		const MIN_T12MNI = 100;
 		const T12MNI_PPLR = 10000;
-		const PPLR_PCT_STEP = .1;
+		const PPLR_PCT_STEP_DOWN = .8;
+		const PPLR_PCT_STEP_UP = 1.2;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -1001,8 +1002,14 @@
 				$iosPAmt = 1 - abs($iosPCash) / self::$def->so;
 			}
 
-			$pso = self::$def->so + $iosPAmt * $iosPCash;
-
+			$pios = $iosPAmt * $iosPCash;
+			
+			if ((-$pios) / self::$def->so > .2) {
+				$pso = self::$def->so;
+			} else {
+				$pso = self::$def->so + $pios;
+			}
+			
 			if ($pso <= 0) {
 				self::$def->prcvIcm = 0;
 				self::$def->prcv0gIcm = 0;
@@ -1137,30 +1144,28 @@
 				
 				$numDgtsDiff = $numDgtsMin - $numDgtsNi;//4
 				
-				$niPplrPctTop = 1.2;
+				$niPplrPctTop = self::PPLR_PCT_STEP_UP;
 				$niPplrPctBtm = 1;
-				$tmpPct = 1;
+				$tmpPct = self::PPLR_PCT_STEP_DOWN;
 				
 				while ($numDgtsDiff > 0) {
-					if ($numDgtsDiff == 1) {//false, false, true
-						$niPplrPctTop = $niPplrPctBtm;//.48
-					}
+					$niPplrPctTop = $niPplrPctBtm;//1, .8, .32
 					
-					$tmpPct -= .2;//.8, .6, .4
+					$niPplrPctBtm *= $tmpPct;//.8, .32, .064
 					
-					$niPplrPctBtm *= $tmpPct;//.8, .48, .192
+					$tmpPct /= 2;//.8, .4, .2
 					
 					$numDgtsDiff--;//2, 1, 0
 				}
 				
-				$tmpPct = 1.2;
+				$tmpPct = self::PPLR_PCT_STEP_UP;
 				
 				while ($numDgtsDiff < 0) {//assuming -2
-					$niPplrPctBtm = $niPplrPctTop;//1.2, 1.68
+					$niPplrPctBtm = $niPplrPctTop;//1.2, 2.88
 					
-					$tmpPct += .2;//1.4, 1.6
+					$tmpPct *= 2;//2.4, 4.8
 					
-					$niPplrPctTop *= $tmpPct;//1.68, 2.688
+					$niPplrPctTop *= $tmpPct;//2.88, 13.824
 					
 					$numDgtsDiff++;//-1, 0
 				}
@@ -1386,7 +1391,7 @@
 			
 			// && (self::$def->fpigr > self::MIN_GROWTH_REFINE)
 			
-			if ((self::$def->at12mni > self::MIN_T12MNI) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi < .2)) {
+			if ((self::$def->at12mni > self::MIN_T12MNI) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi <= .2)) {
 				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}
