@@ -963,6 +963,8 @@
 				$ar = min(self::$def->tlomr, self::$def->tlrocr);
 			} else if ((self::$def->tlrocr == 0) && (self::$def->tlroer != 0)) {
 				$ar = min(self::$def->tlomr, self::$def->tlroer);
+			} else if ((self::$def->tlrocr == 0) && (self::$def->tlroer == 0)) {
+				$ar = self::$def->tlomr;
 			}
 			
 			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, $at12mni, self::$def->so);
@@ -1148,40 +1150,44 @@
 				$niPplrPctBtm = 1;
 				$tmpPct = self::PPLR_PCT_STEP_DOWN;
 				
-				while ($numDgtsDiff > 0) {
-					$niPplrPctTop = $niPplrPctBtm;//1, .8, .32
+				if ($numDgtsDiff > 0) {
+					self::$def->pplradj = 1;
 					
-					$niPplrPctBtm *= $tmpPct;//.8, .32, .064
+					/*while ($numDgtsDiff > 0) {
+						$niPplrPctTop = $niPplrPctBtm;//1, .8, .32
+						
+						$niPplrPctBtm *= $tmpPct;//.8, .32, .064
+						
+						$tmpPct /= 2;//.8, .4, .2
+						
+						$numDgtsDiff--;//2, 1, 0
+					}*/
+				} else {
+					$tmpPct = self::PPLR_PCT_STEP_UP;
+				
+					while ($numDgtsDiff < 0) {//assuming -2
+						$niPplrPctBtm = $niPplrPctTop;//1.2, 2.88
+						
+						$tmpPct *= 2;//2.4, 4.8
+						
+						$niPplrPctTop *= $tmpPct;//2.88, 13.824
+						
+						$numDgtsDiff++;//-1, 0
+					}
 					
-					$tmpPct /= 2;//.8, .4, .2
+					$niPplrBtm = pow(10, $numDgtsNi - 1);//1
+					$niPplrPct = (($at12mni - $niPplrBtm) / ($niPplrBtm * 9) + $rotaPplr) / 2 * ($niPplrPctTop - $niPplrPctBtm);//(100 / 900 + .94) / 2 * .288 = .151
 					
-					$numDgtsDiff--;//2, 1, 0
+					self::$def->pplradj = $niPplrPctBtm + $niPplrPct;//.343
 				}
-				
-				$tmpPct = self::PPLR_PCT_STEP_UP;
-				
-				while ($numDgtsDiff < 0) {//assuming -2
-					$niPplrPctBtm = $niPplrPctTop;//1.2, 2.88
-					
-					$tmpPct *= 2;//2.4, 4.8
-					
-					$niPplrPctTop *= $tmpPct;//2.88, 13.824
-					
-					$numDgtsDiff++;//-1, 0
-				}
-				
-				$niPplrBtm = pow(10, $numDgtsNi - 1);//1
-				$niPplrPct = (($at12mni - $niPplrBtm) / ($niPplrBtm * 9) + $rotaPplr) / 2 * ($niPplrPctTop - $niPplrPctBtm);//(100 / 900 + .94) / 2 * .288 = .151
-				
-				self::$def->pplradj = $niPplrPctBtm + $niPplrPct;//.343
 			}
 			
 			$ppadj = self::$def->pdadj * self::$def->pplradj;
 			
 			self::$def->prcv0g *= $ppadj;
-			self::$def->fp *= $ppadj;
 			
 			if ($ppadj > 1) {
+				self::$def->fp *= $ppadj;
 				self::$def->fptm *= $ppadj;
 				self::$def->afptm *= $ppadj;
 			}
