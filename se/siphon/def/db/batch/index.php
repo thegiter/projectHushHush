@@ -50,6 +50,10 @@
 		}
 	}
 	
+	if (isset($_GET['ignore_lu']) && ($_GET['ignore_lu'] == 'ignore')) {
+		echo '<script src="/se/siphon/def/db/batch/jss/ignore_lu.js" type="text/javascript"></script>';
+	}
+	
 	echo '<script src="/se/siphon/cmm/lib/jss/js_siphon.js" type="text/javascript"></script>';
 	echo '<script src="/se/siphon/def/db/batch/jss/bs.js" async="async" type="text/javascript"></script>';
 	
