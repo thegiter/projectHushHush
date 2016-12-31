@@ -183,6 +183,11 @@
 				ROTA Rank in Industry
 			</h3>
 		</td>',
+		'<td data-acro="glbRank">
+			<h3 class="se-sortable">
+				Forbes Global Rank
+			</h3>
+		</td>',
 		'<td data-acro="arote">
 			<h3 class="se-sortable">
 				Average ROTE of Last 5 Years

@@ -8,13 +8,15 @@
 	switch ($se) {
 		case 'shse':
 		case 'szse':
+		case 'nyse':
+		case 'nasdaq':
 			break;
 		default:
 			die('invalid stock exchange for table');
 	}
 	
 	$tkr = $_POST['tkr'];
-	$defName = $_POST['def_name'];
+	$defName = strtolower($_POST['def_name']);
 	$defValue = $_POST['def_value'];
 	
 	require_once root.'se/cmm/lib/db.php';
@@ -26,9 +28,9 @@
 		if (!@mysql_select_db(DB_NAME)) {
 			echo 'Database Connection Error';//mysql_error();
 		} else {//then excute sql query
-			if (!@mysql_query('UPDATE '.$se.'_defs
-			SET '.$defName.'='.$defValue.'
-			WHERE tkr='.$tkr)) {
+			if (!@mysql_query('UPDATE '.$se.'_vars
+			SET '.$defName.'='.$defValue.', '.$defName.'lu=CURRENT_DATE()
+			WHERE tkr="'.$tkr.'"')) {
 				die('tkr variable insert / update error');
 			}
 		}
@@ -36,5 +38,7 @@
 	
 	//after updating user variables, we re-siphon the tkr def
 	//it then returns the json data of def obj
+	$_POST['refresh'] = 'refresh';
+	$_POST['ignore_lu'] = 'ignore';
 	require root.'se/siphon/def/db/batch/siphon.php';
 ?>

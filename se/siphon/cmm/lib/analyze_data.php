@@ -229,6 +229,9 @@
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP_DOWN = .8;
 		const PPLR_PCT_STEP_UP = 1.2;
+		const MAX_P = 100 / 40 * 1.1;
+		const MAX_D = .2;
+		const TTL_GLB_RANK = 10000;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
@@ -1133,7 +1136,7 @@
 			
 			//premium or discount adjustment
 			//p o d
-			self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
+			/*self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
 			
 			//popularity
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
@@ -1153,15 +1156,15 @@
 				if ($numDgtsDiff > 0) {
 					self::$def->pplradj = 1;
 					
-					/*while ($numDgtsDiff > 0) {
-						$niPplrPctTop = $niPplrPctBtm;//1, .8, .32
+		//			while ($numDgtsDiff > 0) {
+		//				$niPplrPctTop = $niPplrPctBtm;//1, .8, .32
 						
-						$niPplrPctBtm *= $tmpPct;//.8, .32, .064
+		//				$niPplrPctBtm *= $tmpPct;//.8, .32, .064
 						
-						$tmpPct /= 2;//.8, .4, .2
+		//				$tmpPct /= 2;//.8, .4, .2
 						
-						$numDgtsDiff--;//2, 1, 0
-					}*/
+		//				$numDgtsDiff--;//2, 1, 0
+		//			}
 				} else {
 					$tmpPct = self::PPLR_PCT_STEP_UP;
 				
@@ -1182,7 +1185,9 @@
 				}
 			}
 			
-			$ppadj = self::$def->pdadj * self::$def->pplradj;
+			$ppadj = self::$def->pdadj * self::$def->pplradj;*/
+			
+			$ppadj = pow(1 - self::$def->glbRank / self::TTL_GLB_RANK, 2) * (self::MAX_P - self::MAX_D) + self::MAX_D;
 			
 			self::$def->prcv0g *= $ppadj;
 			
@@ -1252,7 +1257,7 @@
 			return $tkr;
 		}
 		
-		static function getStockDef($fullTkr, $car, $cc, $refresh) {
+		static function getStockDef($fullTkr, $car, $cc, $glbrank, $refresh) {
 			self::$def = new stdClass;//new instance of a class can not be assigned to properties on declaration.
 			
 			self::$fullTkr = $fullTkr;
@@ -1262,6 +1267,7 @@
 			self::$cc = $cc;
 			self::$def->car = $car;
 			self::$def->cc = $cc;
+			self::$def->glbRank = $glbrank;
 			
 			self::$def->dr = self::DR;
 

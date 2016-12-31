@@ -10,8 +10,10 @@
 	$se = $_POST['se'];
 	$tkr = $_POST['tkr'];
 	$refresh = (isset($_POST['refresh']) && ($_POST['refresh'] == 'refresh')) ? true : false;
+	$ignore_lu = (isset($_POST['ignore_lu']) && ($_POST['ignore_lu'] == 'ignore')) ? true : false;
 	$car = 1;
 	$cc = 1;
+	$glbrank = 1;
 	$tbl_name = strtolower($se).'_defs';
 	$old_advice;
 	$def;
@@ -33,7 +35,7 @@
 				$db_tkr_def = mysql_fetch_array($db_def);
 				
 				//check if last update is less than 5 days
-				if ($db_tkr_def['lu']) {
+				if (!$ignore_lu && $db_tkr_def['lu']) {
 					$lu = new DateTime($db_tkr_def['lu']);
 					$now = new DateTime('now');
 					
@@ -74,13 +76,32 @@
 						$old_advice = $db_tkr_def['advice'];
 					}
 				}
+				
+				//fetch global rank, if found, check last update, must be less than a year
+				//if over a year, remove global rank, else, assign to var
+				if (($db_def = @mysql_query('SELECT glbrank, glbranklu FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"'))) {
+					$db_tkr_def = mysql_fetch_array($db_def);
+					
+					//check if last update is more than a year
+					if ($db_tkr_def['glbranklu']) {
+						$lu = new DateTime($db_tkr_def['glbranklu']);
+						$now = new DateTime('now');
+						
+						if ($lu->diff($now)->y >= 1) {
+							//remove glbrank
+							@mysql_query('DELETE FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"');
+						} else {
+							$glbrank = $db_tkr_def['glbrank'];
+						}
+					}
+				}
 			}
 		}
 	}
 	
 	require_once root.'se/siphon/cmm/lib/analyze_data.php';
 	
-	$def = seAnalyze::getStockDef($se.':'.$tkr, $car, $cc, $refresh);
+	$def = seAnalyze::getStockDef($se.':'.$tkr, $car, $cc, $glbrank, $refresh);
 	
 	//upon receiving of the siphoned data, check if siphon successful,
 	//if failed, we will respond with failure msg instead of retrying.

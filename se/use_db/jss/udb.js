@@ -21,7 +21,7 @@
 					//pass data to be styled
 					seData.style(td, defName, defValue, def);
 					
-					if ((defName == 'car') || (defName == 'cc')) {
+					if ((defName == 'car') || (defName == 'cc') || (defName == 'glbRank')) {
 						td.innerHTML = '<form method="post">\
 							<input type="hidden" name="se" value="'+se+'"/><input type="hidden" name="tkr" value="'+tkr+'"/><input type="hidden" name="def_name" value="'+defName+'"/>\
 							<input type="text" name="def_value" value="'+defValue+'"/><button type="submit">Submit</button>\
@@ -44,7 +44,7 @@
 			var se = fd.get('se');
 			var tkr = fd.get('tkr');
 			
-			shpsCmm.createAjax('post', 'update_def.php', fd, 'json', undefined, undefined, true).then(function(xhr) {
+			shpsCmm.createAjax('post', 'update_var.php', fd, 'json', undefined, undefined, true).then(function(xhr) {
 				//after receiving updates on user var, it attempts to re-siphon the def
 				//however, due to network issues, the attempt may fail
 				//if succeed, we update the data
