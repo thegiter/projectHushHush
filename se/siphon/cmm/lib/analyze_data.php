@@ -229,7 +229,7 @@
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP_DOWN = .8;
 		const PPLR_PCT_STEP_UP = 1.2;
-		const MAX_P = 100 / 40 * 1.1;
+		const MAX_P = 2.75;//100 / 40 * 1.1;
 		const MAX_D = .2;
 		const TTL_GLB_RANK = 10000;
 		
