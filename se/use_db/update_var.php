@@ -29,7 +29,7 @@
 			echo 'Database Connection Error';//mysql_error();
 		} else {//then excute sql query
 			if (!@mysql_query('INSERT INTO '.$se.'_vars(tkr, '.$defName.', '.$defName.'lu)
-			VALUES('.$tkr.', '.$defValue.', CURRENT_DATE())
+			VALUES("'.$tkr.'", '.$defValue.', CURRENT_DATE())
 			ON DUPLICATE KEY UPDATE '.$defName.'=VALUES('.$defName.'), '.$defName.'lu=VALUES('.$defName.'lu)')) {
 				die('tkr var insert / update error');
 			}
