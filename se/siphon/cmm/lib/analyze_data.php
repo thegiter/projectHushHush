@@ -231,7 +231,7 @@
 		const PPLR_PCT_STEP_UP = 1.2;
 		const MAX_P = 2.75;//100 / 40 * 1.1;
 		const MAX_D = .2;
-		const TTL_GLB_RANK = 10000;
+		const TTL_GLB_RANK = 6000;
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
