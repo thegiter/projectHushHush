@@ -28,9 +28,9 @@
 		if (!@mysql_select_db(DB_NAME)) {
 			echo 'Database Connection Error';//mysql_error();
 		} else {//then excute sql query
-			if (!@mysql_query('UPDATE '.$se.'_vars
-			SET '.$defName.'='.$defValue.', '.$defName.'lu=CURRENT_DATE()
-			WHERE tkr="'.$tkr.'"')) {
+			if (!@mysql_query('INSERT INTO '.$se.'_vars(tkr, '.$defName.', '.$defName.'lu)
+			VALUES('.$tkr.', '.$defValue.', CURRENT_DATE())
+			ON DUPLICATE KEY UPDATE '.$defName.'=VALUES('.$defName.'), '.$defName.'lu=CURRENT_DATE()')) {
 				die('tkr variable insert / update error');
 			}
 		}

@@ -44,9 +44,9 @@
 					$tkr->glbRank = 1;
 					
 					if ($vars = @mysql_query('SELECT * FROM '.$_POST['se'].'_vars WHERE tkr="'.$defRow['tkr'].'"')) {
-						$varRow = mysql_fetch_array($vars);
-						
-						$tkr->glbRank = $varRow['glbrank'];
+						if ($varRow = mysql_fetch_array($vars)) {
+							$tkr->glbRank = $varRow['glbrank'];
+						}
 					}
 				}
 				
