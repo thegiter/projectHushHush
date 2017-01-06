@@ -39,7 +39,7 @@
 					$lu = new DateTime($db_tkr_def['lu']);
 					$now = new DateTime('now');
 					
-					if ($lu->diff($now)->days < 5) {
+					if ($lu->diff($now)->days < 4) {
 						//return db data and skip siphon
 						if ($db_def = @mysql_query('SELECT * FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
 							$db_tkr_def = mysql_fetch_array($db_def);
