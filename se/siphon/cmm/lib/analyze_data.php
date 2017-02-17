@@ -219,9 +219,10 @@
 		const BDR = .03;//the betting discount rate for smaller profit yet larger risk, but potentially higher profit as well
 		const B_ALLO = .25;//the target allocation for betting
 		const MOS = .8;//margin of safety
-		const VIR = 10;//value to income ratio		
-		const MIN_GROWTH = .8;//minimum growth ratio required to buy for om roe roc fpigr
-		const MIN_GROWTH_REFINE = 1.001;
+		const VIR = 10;//value to income ratio
+		const MIN_GROWTH_HARD = .9;
+		const MIN_GROWTH = .5;//minimum growth ratio required to buy for om roe roc fpigr
+		const MIN_GROWTH_REFINE = .7;
 		const ROTA_RANK_PASS = 40;//percent
 		const ROTA_RANK_PASS_PPLR = 90;//percent
 		const ROTE_PASS = 20;//percent
@@ -1403,7 +1404,7 @@
 			
 			// && (self::$def->fpigr > self::MIN_GROWTH_REFINE)
 			
-			if ((self::$def->at12mni > self::MIN_T12MNI) && (self::$def->aomg > self::MIN_GROWTH) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi <= .2)) {
+			if ((self::$def->at12mni > self::MIN_T12MNI) && (self::$def->aomg > self::MIN_GROWTH_HARD) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi <= .2)) {
 				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}
