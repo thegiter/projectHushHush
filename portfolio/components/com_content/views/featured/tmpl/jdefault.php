@@ -1,4 +1,4 @@
-<div class="blog-featured<?php echo $this->pageclass_sfx;?>" itemscope itemtype="http://schema.org/Blog">
+<div class="blog-featured<?php echo $this->pageclass_sfx;?>" itemscope itemtype="https://schema.org/Blog">
 <?php if ($this->params->get('show_page_heading') != 0) : ?>
 <div class="page-header">
 	<h1>
@@ -12,7 +12,7 @@
 <div class="items-leading clearfix">
 	<?php foreach ($this->lead_items as &$item) : ?>
 		<div class="leading-<?php echo $leadingcount; ?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?> clearfix" 
-			itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+			itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
 			<?php
 				$this->item = &$item;
 				echo $this->loadTemplate('item');
@@ -38,10 +38,10 @@
 
 		if ($rowcount == 1) : ?>
 
-		<div class="items-row cols-<?php echo (int) $this->columns;?> <?php echo 'row-'.$row; ?> row-fluid">
+		<div class="items-row cols-<?php echo (int) $this->columns;?> <?php echo 'row-' . $row; ?> row-fluid">
 		<?php endif; ?>
 			<div class="item column-<?php echo $rowcount;?><?php echo $item->state == 0 ? ' system-unpublished' : null; ?> span<?php echo round((12 / $this->columns));?>"
-				itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+				itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
 			<?php
 					$this->item = &$item;
 					echo $this->loadTemplate('item');

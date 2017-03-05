@@ -23,93 +23,84 @@
 							<?php
 								require_once root.'shared/phps/db_news.php';
 								
-								if (!@mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)) {
-									echo 'User Connection Error';
-								}											//or die(mysql_error());
-								else {
-									if (!@mysql_select_db(DB_NAME)) {
-										echo 'Database Connection Error';
-									}											//mysql_error();
-									else {
-										$hp_news_result = @mysql_query("SELECT * FROM wp_posts WHERE post_type='post' AND post_status='publish' ORDER BY post_date DESC LIMIT 5");
+								$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+								
+								if ($mysqli->connect_error) {
+									echo 'Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error;
+								} else if (!$hp_news_result = $mysqli->query("SELECT * FROM wp_posts WHERE post_type='post' AND post_status='publish' ORDER BY post_date DESC LIMIT 5")) {
+									echo 'Posts Retrieving Error ('.$mysqli->errno.')'.$mysqli->error;
+								} else {
+									// keeps getting the next row until there are no more to get
+									function hp_construct_cats_slugs($id) {
+										global $mysqli;
 										
-										if (!$hp_news_result) {
-											echo 'Posts Retrieving Error';
-										}									//or mysql_error();
-										else {
-											// keeps getting the next row until there are no more to get
-											function hp_construct_cats_slugs($id) {
-												$term_ctg = @mysql_query("SELECT * FROM wp_terms WHERE term_id='".$id."'");	// or mysql_error();
-												
-												if (!$term_ctg) {
-													echo 'Category Retrieving Error';
-												}
-												else {
-													$tc_row = mysql_fetch_array( $term_ctg );
-													$slugs = $tc_row['slug'].'/';
-													
-													$tt = @mysql_query("SELECT * FROM wp_term_taxonomy WHERE term_id='".$id."'");	// or mysql_error();
+										if (!$term_ctg = $mysqli->query("SELECT * FROM wp_terms WHERE term_id='".$id."'")) {
+											echo 'Category Retrieving Error ('.$mysqli->errno.')'.$mysqli->error;
+										} else {
+											$term_ctg->data_seek(0);
 											
-													if (!$tt) {
-															echo 'Parent Category Retrieving Error';
-													}
-													else {
-														$tt_row = mysql_fetch_array( $tt );
+											$tc_row = $term_ctg->fetch_assoc();
+											
+											$slugs = $tc_row['slug'].'/';
+
+											if (!$tt = $mysqli->query("SELECT * FROM wp_term_taxonomy WHERE term_id='".$id."'")) {
+												echo 'Parent Category Retrieving Error ('.$mysqli->errno.')'.$mysqli->error;
+											} else {
+												$tt->data_seek(0);
 												
-														if ($tt_row['parent']) {
-															$slugs = hp_construct_cats_slugs($tt_row['parent']).$slugs;
-														}
-													}
+												$tt_row = $tt->fetch_assoc();
+										
+												if ($tt_row['parent']) {
+													$slugs = hp_construct_cats_slugs($tt_row['parent']).$slugs;
 												}
-													
-												return $slugs;
 											}
+										}
 											
-											while ($hp_news_post_row = mysql_fetch_array( $hp_news_result )) {
-												$hp_news_unixtime = strtotime($hp_news_post_row['post_date']);
-												
-												if (date('n', $hp_news_unixtime) == 5) {
-													$hp_news_M_dot = '';
-												}
-												else {
-													$hp_news_M_dot = '.';
-												}
-												
-												$hp_news_terms = @mysql_query("SELECT * FROM wp_term_relationships WHERE object_id='".$hp_news_post_row['ID']."'");	// or mysql_error();
-												
-												if (!$hp_news_terms) {
-													echo 'Related Terms Retrieving Error';
-												}
-												else {
-													while ($hp_news_tr_row = mysql_fetch_array( $hp_news_terms )) {
-														$hp_news_term_types = @mysql_query("SELECT * FROM wp_term_taxonomy WHERE term_taxonomy_id='".$hp_news_tr_row['term_taxonomy_id']."'");	// or mysql_error();
-														
-														if (!$hp_news_term_types) {
-															echo 'Term Types Retrieving Error';
+										return $slugs;
+									}
+									
+									$hp_news_result->data_seek(0);
+									
+									while ($hp_news_post_row = $hp_news_result->fetch_assoc()) {
+										$hp_news_unixtime = strtotime($hp_news_post_row['post_date']);
+										
+										if (date('n', $hp_news_unixtime) == 5) {
+											$hp_news_M_dot = '';
+										} else {
+											$hp_news_M_dot = '.';
+										}
+
+										if (!$hp_news_terms = $mysqli->query("SELECT * FROM wp_term_relationships WHERE object_id='".$hp_news_post_row['ID']."'")) {
+											echo 'Related Terms Retrieving Error ('.$mysqli->errno.')'.$mysqli->error;
+										} else {
+											$hp_news_terms->data_seek(0);
+											
+											while ($hp_news_tr_row = $hp_news_terms->fetch_assoc()) {
+												if (!$hp_news_term_types = $mysqli->query("SELECT * FROM wp_term_taxonomy WHERE term_taxonomy_id='".$hp_news_tr_row['term_taxonomy_id']."'")) {
+													echo 'Term Types Retrieving Error ('.$mysqli->errno.')'.$mysqli->error;
+													
+													break(1);
+												} else {
+													$hp_news_term_types->data_seek(0);
+													
+													while ($hp_news_tt_row = $hp_news_term_types->fetch_assoc()) {
+														if ($hp_news_tt_row['taxonomy'] == 'category') {
+															$hp_news_cats_slugs = hp_construct_cats_slugs($hp_news_tt_row['term_id']);
 															
-															break(1);
-														}
-														else {
-															while ($hp_news_tt_row = mysql_fetch_array( $hp_news_term_types )) {
-																if ($hp_news_tt_row['taxonomy'] == 'category') {
-																	$hp_news_cats_slugs = hp_construct_cats_slugs($hp_news_tt_row['term_id']);
-																	
-																	break(2);
-																}
-															}
+															break(2);
 														}
 													}
-													
-													// Print out the contents of each row
-													echo '<tr>
-														<td>
-															'.date('d M'.$hp_news_M_dot.' Y', $hp_news_unixtime).'
-														</td><td>
-															<a href="/news/'.$hp_news_cats_slugs.$hp_news_post_row['post_name'].'/" title="Read the news on its own page." target="_blank">'.$hp_news_post_row['post_title'].'</a>
-														</td>
-													</tr>';
 												}
 											}
+											
+											// Print out the contents of each row
+											echo '<tr>
+												<td>
+													'.date('d M'.$hp_news_M_dot.' Y', $hp_news_unixtime).'
+												</td><td>
+													<a href="/news/'.$hp_news_cats_slugs.$hp_news_post_row['post_name'].'/" title="Read the news on its own page." target="_blank">'.$hp_news_post_row['post_title'].'</a>
+												</td>
+											</tr>';
 										}
 									}
 								}

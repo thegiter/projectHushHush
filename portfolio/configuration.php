@@ -13,10 +13,10 @@ class JConfig {
 	public $debug_lang = '0';
 	public $dbtype = 'mysql';
 	public $host = 'localhost';
-	public $user = '435739';
-	public $password = 'sayuneijibei';
-	public $db = '435739';
-	public $dbprefix = 'shpsptf_';
+	public $user = 'shpscoza_ptfl';
+	public $password = 'shpscozaptflpw1';
+	public $db = 'shpscoza_ptfl';
+	public $dbprefix = 'ptfl_';
 	public $live_site = '';
 	public $secret = '4S5RAn11QHSCfluL';
 	public $gzip = '0';

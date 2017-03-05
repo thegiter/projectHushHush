@@ -236,7 +236,7 @@
 		
 		const CNYIR = 0.1;//10%
 		const ZARIR = 0.2;
-		const USDIR = 0.05;
+		const USDIR = 0.03;
 		
 		const CNYMP = 200;
 		const ZARMP = 1000;

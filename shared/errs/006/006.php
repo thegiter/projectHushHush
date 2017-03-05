@@ -7,7 +7,7 @@
 		</script>
 		<script type="text/javascript" src="/shared/errs/006/jss/006.js">
 		</script>
-		<script type="text/javascript" src="/shared/jss/gaa.js">
+		<script type="text/javascript" src="/shared/jss/gtm.js">
 		</script>
 
 		<link rel="stylesheet" type="text/css" href="/shared/errs/006/csss/006.css" charset="utf-8" />
@@ -95,7 +95,7 @@
 			<div class="dsp-tr">
 				<div class="err-006-ftr-cnr">
 					<?php
-						require root.'shared/footer/sml/footer.php';
+						require root.'shared/modules/ftr/sml/footer.php';
 					?>
 				</div>
 			</div>
