@@ -22,17 +22,15 @@
 	require_once root.'se/cmm/lib/db.php';
 	
 	//establish connection
-	if (!@mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)) {
-		echo 'User Connection Error';//or die(mysql_error());
-	} else {//then select db
-		if (!@mysql_select_db(DB_NAME)) {
-			echo 'Database Connection Error';//mysql_error();
-		} else {//then excute sql query
-			if (!@mysql_query('INSERT INTO '.$se.'_vars(tkr, '.$defName.', '.$defName.'lu)
-			VALUES("'.$tkr.'", '.$defValue.', CURRENT_DATE())
-			ON DUPLICATE KEY UPDATE '.$defName.'=VALUES('.$defName.'), '.$defName.'lu=VALUES('.$defName.'lu)')) {
-				die('tkr var insert / update error');
-			}
+	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+	
+	if ($mysqli->connect_error) {
+		echo 'Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error;
+	else {//then excute sql query
+		if (!@mysql_query('INSERT INTO '.$se.'_vars(tkr, '.$defName.', '.$defName.'lu)
+		VALUES("'.$tkr.'", '.$defValue.', CURRENT_DATE())
+		ON DUPLICATE KEY UPDATE '.$defName.'=VALUES('.$defName.'), '.$defName.'lu=VALUES('.$defName.'lu)')) {
+			die('tkr var insert / update error');
 		}
 	}
 	

@@ -11,16 +11,11 @@
 	//establish connection
 	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	
-	if (!$mysqli) {
-		echo 'User / DB Connection Error';//or die(mysql_error());
-	} else {//then excute sql query
-		//get all defs from the se table
-		$result = $mysqli->query('DELETE FROM '.$se.'_tkrs WHERE tkr="'.$tkr.'"');
-		
-		if (!$result) {
-			die('error deleting ticker: '.$mysqli->error);
-		} else {
-			echo 'success';
-		}
+	if ($mysqli->connect_error) {
+		echo 'Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error;
+	} else if (!$mysqli->query('DELETE FROM '.$se.'_tkrs WHERE tkr="'.$tkr.'"')) {//then excute sql query
+		die('error deleting ticker: '.$mysqli->error);
+	} else {
+		echo 'success';
 	}
 ?>

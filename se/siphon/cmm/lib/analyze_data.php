@@ -1224,19 +1224,18 @@
 			
 			$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			
-			if (!$mysqli) {
-				return 'User / DB Connection Error';//or die(mysql_error());
+			if ($mysqli->connect_error) {
+				return 'Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error;
 			} else {//then excute sql query
 				//get all defs from the se table
-				$result = $mysqli->query('SELECT * FROM '.strtolower(self::$se).'_defs WHERE tkr='.self::$tkr);
-				
-				if (!$result) {
+				if (!$result = $mysqli->query('SELECT * FROM '.strtolower(self::$se).'_defs WHERE tkr='.self::$tkr)) {
 					return 'get data from '.self::$se.' defs error: '.$mysqli->error;
 				} else {
 					if ($result->num_rows <= 0) {
 						return 'tkr not found';
 					}
 					
+					//testing without data_seek(0);
 					$tbl_arr = $result->fetch_assoc();
 					
 					foreach ($tbl_arr as $def_name => $value) {

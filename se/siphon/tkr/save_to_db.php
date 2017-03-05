@@ -23,25 +23,23 @@
 	require_once root.'se/cmm/lib/db.php';
 	
 	//establish connection
-	if (!@mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)) {
-		echo 'User Connection Error';//or die(mysql_error());
-	} else {//then select db
-		if (!@mysql_select_db(DB_NAME)) {
-			echo 'Database Connection Error';//mysql_error();
-		} else {//then excute sql query
-			//clear table
-			if (!$append) {
-				@mysql_query('TRUNCATE TABLE '.$se.'_tkrs');
-			}
-			
-			// for each tkr, insert into table
-			foreach ($tkrs as $tkr) {
-				if (!@mysql_query('INSERT INTO '.$se.'_tkrs(tkr, name) VALUES("'.$tkr->ticker.'", "'.$tkr->name.'") ON DUPLICATE KEY UPDATE name=VALUES(name)')) {
-					echo 'insert error '.$tkr->ticker.' '.$tkr->name;
-				}
-			}
+	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-			echo 'success';
+	if ($mysqli->connect_error) {
+		echo 'Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error;
+	else {//then excute sql query
+		//clear table
+		if (!$append) {
+			$mysqli->query('TRUNCATE TABLE '.$se.'_tkrs');
 		}
+		
+		// for each tkr, insert into table
+		foreach ($tkrs as $tkr) {
+			if (!$mysql->query('INSERT INTO '.$se.'_tkrs(tkr, name) VALUES("'.$tkr->ticker.'", "'.$tkr->name.'") ON DUPLICATE KEY UPDATE name=VALUES(name)')) {
+				echo 'insert error '.$tkr->ticker.' '.$tkr->name;
+			}
+		}
+
+		echo 'success';
 	}
 ?>

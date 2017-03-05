@@ -5,7 +5,7 @@
 		define('root', '../../../../../');
 	}
 	
-	require root.'se/cmm/lib/chk_auth.php';
+	require_once root.'se/cmm/lib/chk_auth.php';
 	
 	$se = $_POST['se'];
 	$tkr = $_POST['tkr'];
@@ -24,75 +24,81 @@
 	//but we don't know if the data for the ticker exist or not
 	//if ticker exist and has any of the car or cc values, we will use those from the db for the siphon
 	//else if no data for these fields, then we assume no user specified data, and we will use the default ones
-	if (!@mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)) {
-		die('User Connection Error');//or die(mysql_error());
+	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+	
+	if ($mysqli->connect_error) {
+		die('Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error);
 	} else {//then select db
-		if (!@mysql_select_db(DB_NAME)) {
-			die('Database Connection Error');//mysql_error();
-		} else {//then excute sql query
-			//get all tickers from the se table
-			if (($db_def = @mysql_query('SELECT lu FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
-				$db_tkr_def = mysql_fetch_array($db_def);
+		//get all tickers from the se table
+		if (($db_def = $mysqli->query('SELECT lu FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
+			$db_def->data_seek(0);
+			
+			$db_tkr_def = $db_def->fetch_assoc();
+			
+			//check if last update is less than 5 days
+			if (!$ignore_lu && $db_tkr_def['lu']) {
+				$lu = new DateTime($db_tkr_def['lu']);
+				$now = new DateTime('now');
 				
-				//check if last update is less than 5 days
-				if (!$ignore_lu && $db_tkr_def['lu']) {
-					$lu = new DateTime($db_tkr_def['lu']);
-					$now = new DateTime('now');
-					
-					if ($lu->diff($now)->days < 4) {
-						//return db data and skip siphon
-						if ($db_def = @mysql_query('SELECT * FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
-							$db_tkr_def = mysql_fetch_array($db_def);
-							
-							$def = new stdClass;
-							
-							foreach ($db_tkr_def as $ttl => $value) {
-								if (($ttl == 'tkr') || is_numeric($ttl)) {
-									continue;
-								}
-								
-								$def->{$ttl} = $value;
+				if ($lu->diff($now)->days < 4) {
+					//return db data and skip siphon
+					if ($db_def = $mysqli->query('SELECT * FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
+						$db_def->data_seek(0);
+						
+						$db_tkr_def = $db_def->fetch_assoc();
+						
+						$def = new stdClass;
+						
+						foreach ($db_tkr_def as $ttl => $value) {
+							if (($ttl == 'tkr') || is_numeric($ttl)) {
+								continue;
 							}
 							
-							die(json_encode($def));
-						}						
-					}
-				}
-				
-				//else if more than 5 days
-				//fetch car cc, etc if exist and continue to siphon
-				if (($db_def = @mysql_query('SELECT car, cc, advice FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
-					$db_tkr_def = mysql_fetch_array($db_def);
-					
-					if ($db_tkr_def['car']) {
-						$car = $db_tkr_def['car'];
-					}
-					
-					if ($db_tkr_def['cc']) {
-						$cc = $db_tkr_def['cc'];
-					}
-					
-					if ($db_tkr_def['advice']) {
-						$old_advice = $db_tkr_def['advice'];
-					}
-				}
-				
-				//fetch global rank, if found, check last update, must be less than a year
-				//if over a year, remove global rank, else, assign to var
-				if (($db_def = @mysql_query('SELECT glbrank, glbranklu FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"'))) {
-					$db_tkr_def = mysql_fetch_array($db_def);
-					
-					//check if last update is more than a year
-					if ($db_tkr_def['glbranklu']) {
-						$lu = new DateTime($db_tkr_def['glbranklu']);
-						$now = new DateTime('now');
-						
-						if ($lu->diff($now)->y >= 1) {
-							//remove glbrank
-							@mysql_query('DELETE FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"');
-						} else {
-							$glbrank = $db_tkr_def['glbrank'];
+							$def->{$ttl} = $value;
 						}
+						
+						die(json_encode($def));
+					}						
+				}
+			}
+			
+			//else if more than 5 days
+			//fetch car cc, etc if exist and continue to siphon
+			if ($db_def = $mysqli->query('SELECT car, cc, advice FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
+				$db_def->data_seek(0);
+				
+				$db_tkr_def = $db_def->fetch_assoc();
+				
+				if ($db_tkr_def['car']) {
+					$car = $db_tkr_def['car'];
+				}
+				
+				if ($db_tkr_def['cc']) {
+					$cc = $db_tkr_def['cc'];
+				}
+				
+				if ($db_tkr_def['advice']) {
+					$old_advice = $db_tkr_def['advice'];
+				}
+			}
+			
+			//fetch global rank, if found, check last update, must be less than a year
+			//if over a year, remove global rank, else, assign to var
+			if ($db_def = $mysqli->query('SELECT glbrank, glbranklu FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"')) {
+				$db_def->data_seek(0);
+				
+				$db_tkr_def = $db_def->fetch_assoc();
+				
+				//check if last update is more than a year
+				if ($db_tkr_def['glbranklu']) {
+					$lu = new DateTime($db_tkr_def['glbranklu']);
+					$now = new DateTime('now');
+					
+					if ($lu->diff($now)->y >= 1) {
+						//remove glbrank
+						$mysqli->query('DELETE FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"');
+					} else {
+						$glbrank = $db_tkr_def['glbrank'];
 					}
 				}
 			}
@@ -126,7 +132,7 @@
 	//we check if advice changed to sell or buy, and update to advice table
 	if ((($def->advice == 'buy') || ($def->advice == 'sell') || ($def->advice == 'be ready to sell')) && (!isset($old_advice) || ($def->advice != $old_advice))) {
 		//update tbl
-		if (!@mysql_query('INSERT INTO advice_updates(tkr, old_advice, new_advice)
+		if (!$mysqli->query('INSERT INTO advice_updates(tkr, old_advice, new_advice)
 		VALUES("'.$tkr.'", "'.$old_advice.'", "'.$def->advice.'")
 		ON DUPLICATE KEY UPDATE old_advice=VALUES(old_advice), new_advice=VALUES(new_advice)')) {
 			die('insert / update advice updates tbl error');

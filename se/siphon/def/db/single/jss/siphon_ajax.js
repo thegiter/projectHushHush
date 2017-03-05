@@ -1,0 +1,1 @@
+seSingle.init('/se/siphon/def/db/single/def.php');
