@@ -15,7 +15,7 @@
  */
 	
 	require_once dirname(__FILE__).'/../shared/phps/db_news.php';
-
+	
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
 
