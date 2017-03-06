@@ -23,7 +23,7 @@
 		<link rel="stylesheet" type="text/css" href="/shared/errs/csss/cmn_dft.css"/>
 		<link rel="stylesheet" type="text/css" href="/shared/csss/logo.css"/>
 		<link rel="stylesheet" type="text/css" href="/shared/csss/hr.css"/>
-		<link rel="stylesheet" type="text/css" href="/shared/footer/sml/csss/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="/shared/modules/ftr/sml/csss/footer.css"/>
 		
 		<title><?php
 			echo $err; 
