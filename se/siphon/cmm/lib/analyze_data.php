@@ -290,12 +290,12 @@
 			return $aigr;
 		}
 		
-		private static function estimatedValueIcm($ni, $pigr) {
+		private static function estimatedValueIcm($ni, $pigr, $dda, $capE) {
 			if ($ni < 0) {
 				$pigr = abs($pigr);
 			}
 			
-			$ev = $ni * $pigr * self::VIR / (1 + self::DR);
+			$ev = ($ni + $dda + $capE) * $pigr * self::VIR / (1 + self::DR);
 			
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
@@ -305,7 +305,7 @@
 		//current equity, current ni, projected igr
 		//current ni and pjt igr gives pjc income
 		//net income is already after debt payment, so the estimatedValue is after paying debt
-		private static function estimatedValueE($ce, $ni, $pigr) {
+		/*private static function estimatedValueE($ce, $ni, $pigr) {
 			$result = new stdClass;
 			
 			if ($ni < 0) {
@@ -319,7 +319,7 @@
 			//a company's value can be negative, if it has too much debt and is losing money
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
 			return $result;
-		}
+		}*/
 		
 		private static function calcBetting($pf, $ep, $pc) {
 			$result = new stdClass;
@@ -416,6 +416,9 @@
 				'pe' => 'http://www.gurufocus.com/term/pe/'.self::$guruFullTkr.'/PE-Ratio/',
 				'pb' => 'http://www.gurufocus.com/term/pb/'.self::$guruFullTkr.'/PB-Ratio/',
 				'nios' => 'http://www.gurufocus.com/term/Net+Issuance+of+Stock/'.self::$guruFullTkr.'/Net-Issuance-of-Stock/',
+				'dda' => 'http://www.gurufocus.com/term/DDA/'.self::$guruFullTkr.'/Depreciation-Depletion-and-Amortization/',
+				'capE' => 'http://www.gurufocus.com/term/Cash+Flow_CPEX/'.self::$guruFullTkr.'/Capital-Expenditure/',
+				'cCapE' => 'http://www.gurufocus.com/term/ChangeInWorkingCapital/'.self::$guruFullTkr.'/Change-In-Working-Capital/',
 				'cp' => self::$cpUrl
 			];
 
@@ -941,26 +944,57 @@
 				self::$def->cigr = $at12mni / $alyni;
 			}
 			
-			//value is the worth of (current income + expectation of future income growth (positive or negative))
-			//lyv is lyni + the current igr (assuming one was to predict the igr accurately last year)
 			if ($alyni < 0) {
 				self::$def->cigr = abs(self::$def->cigr);
 			}
 			
-			$lyvIcm = $alyni * self::$def->cigr * self::VIR / (1 + self::DR);
+			//value is the worth of (current income + expectation of future income growth (positive or negative))
+			//+ d & d & amortization + expected capital expenditure
+			//lyv is lyni + the current igr + lydda + current capE (assuming one was to predict the igr and capE accurately last year)
+			$ctt = $result['dda'];//depreciation depletion and amortization
+			
+			preg_match('/Annual Data[\s\S]+DDA[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no dda';
+			}
+			
+			self::$def->lydda = str_replace(',', '', $matches[2]);
+			
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no t12mdda';
+			}
+			
+			self::$def->t12mdda = str_replace(',', '', $matches[2]);
+			
+			$ctt = $result['capE'];
+			
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no t12mcapE';
+			}
+			
+			self::$def->t12mcapE = str_replace(',', '', $matches[2]);
+			
+			$lyvIcm = ($alyni + self::$def->lydda + self::$def->t12mcapE) * self::$def->cigr * self::VIR / (1 + self::DR);
 			
 			//alternative valuation is equity + expected income (assuming expecation is accurate)
-			$lyvE = (self::$def->lye + $at12mni) / (1 + self::DR);
+			//$lyvE = (self::$def->lye + $at12mni) / (1 + self::DR);
 			
 			//last year value price is then last year value / by expected (this year's) so
 			self::$def->prlyvIcm = $lyvIcm / self::$def->so;
-			self::$def->prlyvE = $lyvE / self::$def->so;
+			//self::$def->prlyvE = $lyvE / self::$def->so;
 			
 			//self::$def->prlyv = min(self::$def->prlyvIcm, self::$def->prlyvE) / (1 + self::$ir);
 			self::$def->prlyv = self::$def->prlyvIcm / (1 + self::$ir);
 			
-			//thus, cv is t12mni (current ni) + the expected igr of the future (although we do not know what the igr will be in the future)
+			//thus, cv is t12mni (current ni) + the expected igr of the future + current dda + future capE
+			//(although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
+			//and future capE = current capE - current change in capE
 			$ar = min(self::$def->tlomr, self::$def->tlroer, self::$def->tlrocr);
 			
 			if ((self::$def->tlroer == 0) && (self::$def->tlrocr != 0)) {
@@ -973,12 +1007,24 @@
 			
 			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, $at12mni, self::$def->so);
 			
-			$cvIcm = self::estimatedValueIcm($at12mni, self::$def->cpigr);
+			$ctt = $result['cCapE'];
+			
+			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			
+			if (!$matches) {
+				return 'no t12mcCapE';
+			}
+			
+			self::$def->t12mcCapE = str_replace(',', '', $matches[2]);
+			
+			$cpcapE = self::$def->t12mcapE - self::$def->t12mcCapE;
+			
+			$cvIcm = self::estimatedValueIcm($at12mni, self::$def->cpigr, self::$def->t12mdda, $cpcapE);
 			
 			//alternative current value is equity + projected income
-			$ecv = self::estimatedValueE(self::$def->ce, $at12mni, self::$def->cpigr);
+			/*$ecv = self::estimatedValueE(self::$def->ce, $at12mni, self::$def->cpigr);
 			$cvE = $ecv->ev;
-			$feE = $ecv->fe;
+			$feE = $ecv->fe;*/
 			
 			//projected so
 			//probability
@@ -1019,14 +1065,14 @@
 			if ($pso <= 0) {
 				self::$def->prcvIcm = 0;
 				self::$def->prcv0gIcm = 0;
-				self::$def->prcvE = 0;
-				self::$def->prcv0gE = 0;
+				//self::$def->prcvE = 0;
+				//self::$def->prcv0gE = 0;
 			} else {
 				self::$def->prcvIcm = $cvIcm / $pso;
 				self::$def->prcv0gIcm = $at12mni * self::VIR / (1 + self::DR) / $pso;
 				
-				self::$def->prcvE = $cvE / $pso;
-				self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
+				//self::$def->prcvE = $cvE / $pso;
+				//self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
 			}
 			
 			self::$def->prcv = self::$def->prcvIcm / (1 + self::$ir);
@@ -1040,12 +1086,12 @@
 				self::$def->fpigr = self::pjtIgr(self::$def->cpigr, $ar, $at12mni, $pso);
 			}
 			
-			$fvIcm = self::estimatedValueIcm($at12mni, self::$def->fpigr);
-			$efv = self::estimatedValueE($feE, $at12mni, self::$def->fpigr);
-			$fvE = $efv->ev;
+			$fvIcm = self::estimatedValueIcm($at12mni, self::$def->fpigr, self::$def->t12mdda, $cpcapE);
+			//$efv = self::estimatedValueE($feE, $at12mni, self::$def->fpigr);
+			//$fvE = $efv->ev;
 			
 			self::$def->fpIcm = $fvIcm / $pso;
-			self::$def->fpE = $fvE / $pso;
+			//self::$def->fpE = $fvE / $pso;
 			
 			self::$def->fp = self::$def->fpIcm / (1 + self::$ir);
 			
@@ -1078,9 +1124,9 @@
 			//downward moe is dynamically calculated depending of different type of stock
 			//more precisely depending on the standard deviation of the stock
 			//but in this case, we are just using growth rate
-			self::$def->afptmIcm = self::estimatedValueIcm($at12mni, $afpigr) / $pso;
-			$aefv = self::estimatedValueE($feE, $at12mni, $afpigr);
-			self::$def->afptmE =  $aefv->ev / $pso;
+			self::$def->afptmIcm = self::estimatedValueIcm($at12mni, $afpigr, self::$def->t12mdda, $cpcapE) / $pso;
+			//$aefv = self::estimatedValueE($feE, $at12mni, $afpigr);
+			//self::$def->afptmE =  $aefv->ev / $pso;
 			
 			self::$def->afptm = self::$def->afptmIcm / (1 + self::$ir) / (1 + self::$ir);
 			
@@ -1093,8 +1139,8 @@
 				$lfcpigr = self::$def->cpigr;
 			}
 			
-			$lfecv = self::estimatedValueE(self::$def->ce, $at12mni, $lfcpigr);
-			$lffeE = $ecv->fe;
+			//$lfecv = self::estimatedValueE(self::$def->ce, $at12mni, $lfcpigr);
+			//$lffeE = $ecv->fe;
 			
 			$lfpso = max($pso, self::$def->so);
 			
@@ -1128,9 +1174,9 @@
 			
 			$lfafpigr = $lffpigr * $lfadj;
 			
-			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr) / $lfpso;
-			$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
-			self::$def->lffptmE = $lfaefv->ev / $lfpso;
+			self::$def->lffptmIcm = self::estimatedValueIcm($at12mni, $lfafpigr, self::$def->t12mdda, $cpcapE) / $lfpso;
+			//$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
+			//self::$def->lffptmE = $lfaefv->ev / $lfpso;
 			
 			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
 			//end price floor calculation
@@ -1259,10 +1305,10 @@
 		
 		static function getStockDef($fullTkr, $car, $cc, $glbrank, $refresh) {
 			self::$def = new stdClass;//new instance of a class can not be assigned to properties on declaration.
-			
+
 			self::$fullTkr = $fullTkr;
 			self::$guruFullTkr = $fullTkr;
-			
+
 			self::$car = $car;
 			self::$cc = $cc;
 			self::$def->car = $car;
