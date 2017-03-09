@@ -25,7 +25,7 @@
 					</div>';
 
 			if ($this->caption) {
-				$caption_html = 'These mordern art blocks are dynamically generated. It is different every time you initiate the page. Refresh the page to see what I mean.';
+				$caption_html = 'These mordern art blocks are dynamically generated. It is different every time you instantiate the page. Refresh the page to see what I mean.';
 						
 				$html .= '<div class="ftd-caption-bg-bd">
 					<div class="ftd-caption-bg-hd">

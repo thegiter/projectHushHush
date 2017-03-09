@@ -11,9 +11,9 @@
 							
 							if (!$ptfl_isHome) {
 								$ptfl_url = JURI::root();
+								
 								echo '<a href="'.$ptfl_url.'" title="Go to the portfolio section\'s homepage." rel="home">'.$ptfl_siteName.'</a>';
-							}
-							else {
+							} else {
 								echo $ptfl_siteName;
 							};
 						?>
@@ -23,7 +23,7 @@
 							function jCredit_colorfulLetters($string) {
 								$letters = str_split($string);
 								$cntr = 0;
-								$colors_class = array('red', 'blue', 'orange', 'green');	//must be in this order
+								$colors_class = ['red', 'blue', 'orange', 'green'];	//must be in this order
 								$html = '';
 								
 								foreach ($letters as $letter) {
