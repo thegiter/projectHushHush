@@ -14,7 +14,7 @@
 	//establish connection
 	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	
-	if (!$mysqli) {
+	if ($mysqli->connect_error) {
 		echo 'User / DB Connection Error';//or die(mysql_error());
 	} else {//then excute sql query
 		foreach ($ses as $se) {

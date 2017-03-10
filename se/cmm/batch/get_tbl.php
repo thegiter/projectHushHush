@@ -17,33 +17,33 @@
 	require_once root.'se/cmm/lib/db.php';
 	
 	//establish connection
-	if (!@mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)) {
-		echo 'User Connection Error';//or die(mysql_error());
-	} else {//then select db
-		if (!@mysql_select_db(DB_NAME)) {
-			echo 'Database Connection Error';//mysql_error();
-		} else {//then excute sql query
-			//get all tickers from the se table
-			if (!($tkrs = @mysql_query('SELECT * FROM '.strtolower($_POST['se']).'_tkrs'))) {
-				echo 'get data from db error';
-			} else {
-				$rsp = new stdClass;
-				$rsp->html = '';
-				
-				while ($tkr = mysql_fetch_array($tkrs)) {
-					$rsp->html .= '<tr>
-						<td data-se="'.$_POST['se'].'">
-							'.$tkr['tkr'].'
-						</td><td>
-							'.htmlspecialchars($tkr['name']).'
-						</td>
-					</tr>';
-				}
-				
-				$rsp->status = 'success';
-				
-				echo json_encode($rsp);
+	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+	
+	if ($mysqli->connect_error) {
+		echo 'Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error;
+	} else {//then excute sql query
+		//get all tickers from the se table
+		if (!$tkrs = $mysqli->query('SELECT * FROM '.strtolower($_POST['se']).'_tkrs')) {
+			echo 'get data from db error';
+		} else {
+			$tkrs->data_seek(0);
+			
+			$rsp = new stdClass;
+			$rsp->html = '';
+			
+			while ($tkr = $tkrs->fetch_assoc()) {
+				$rsp->html .= '<tr>
+					<td data-se="'.$_POST['se'].'">
+						'.$tkr['tkr'].'
+					</td><td>
+						'.htmlspecialchars($tkr['name']).'
+					</td>
+				</tr>';
 			}
+			
+			$rsp->status = 'success';
+			
+			echo json_encode($rsp);
 		}
 	}
 ?>

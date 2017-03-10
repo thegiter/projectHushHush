@@ -9,6 +9,13 @@
 	$doc->shpsAjax->hook = 'portfolio';
 	$doc->shpsAjax->ttl = 'Portfolio';
 	
+	//indicate only files necessary for page to intro,
+	//these files will be cached
+	
+	//each file is loaded asynchronously
+	//however, each group is installed sequentially
+	//while each file within the group are installed parallel, i.e. installed as they are downloaded
+	
 	$r =& $doc->shpsAjax->rscs;
 	
 	$rGrpCnt = count($r);
@@ -18,27 +25,31 @@
 	$r1 =& $r[$rGrpCnt];
 	
 	$r1[0] = new stdClass;
-	$r1[0]->type = 'module';
-	$r1[0]->url = '/shared/modules/lv2/common/';
+	$r1[0]->type = 'cpnList';
+	$r1[0]->cpns = [];
+	
+	$r1[0]->cpns[0] = new stdClass;
+	$r1[0]->cpns[0]->name = 'bg_basic';
+	$r1[0]->cpns[0]->required = true;
+	
+	$r1[0]->cpns[1] = new stdClass;
+	$r1[0]->cpns[1]->name = 'bg_inttile';
+	$r1[0]->cpns[1]->close = true;
+	
+	$r1[1] = new stdClass;
+	$r1[1]->type = 'module';
+	$r1[1]->url = '/shared/modules/lv2/common/';
+	
+	$r1[2] = new stdClass;
+	$r1[2]->type = 'module';
+	$r1[2]->url = '/shared/modules/lv2/featured/';
 //sec grp
 	$r[$rGrpCnt + 1] = [];
 	$r2 =& $r[$rGrpCnt + 1];
 	
 	$r2[0] = new stdClass;
-	$r2[0]->type = 'cpnList';
-	$r2[0]->cpns = [];
-	
-	$r2[0]->cpns[0] = new stdClass;
-	$r2[0]->cpns[0]->name = 'bg_basic';
-	$r2[0]->cpns[0]->required = true;
-	
-	$r2[0]->cpns[1] = new stdClass;
-	$r2[0]->cpns[1]->name = 'bg_inttile';
-	$r2[0]->cpns[1]->close = true;
-	
-	$r2[1] = new stdClass;
-	$r2[1]->type = 'link';
-	$r2[1]->url = '/portfolio/components/com_content/views/featured/tmpl/csss/default.css';
+	$r2[0]->type = 'link';
+	$r2[0]->url = '/portfolio/components/com_content/views/featured/tmpl/csss/default.css';
 //3rd grp
 	$r[$rGrpCnt + 2] = [];
 	$r3 =& $r[$rGrpCnt + 2];

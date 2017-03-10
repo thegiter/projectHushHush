@@ -1,0 +1,11 @@
+How To Documentation
+
+The ajax sys and module sys loads files from manifest files, then triggers the onload and intro methods of the page or module or component loaded.
+
+In your manifest files, indicate the necessary files that must be loaded in order for the page to initialize, and the order for those files to install.
+
+Then in your methods, load additional files in your methods and you can decide when is the best time to load them.
+
+The additional files you load can then be cached or non cached based on their importance.
+
+E.g, in modules manager, you would set cached param to true, in total element onloader, you would use blob url to indicate it must be cached.

@@ -30,7 +30,7 @@
 		die('Connect Error ('.$mysqli->connect_errno.')'.$mysqli->connect_error);
 	} else {//then select db
 		//get all tickers from the se table
-		if (($db_def = $mysqli->query('SELECT lu FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"'))) {
+		if ($db_def = $mysqli->query('SELECT lu FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
 			$db_def->data_seek(0);
 			
 			$db_tkr_def = $db_def->fetch_assoc();

@@ -1,0 +1,1 @@
+!function(){const o="lv2_common";var t=shpsCmm.moduleMgr;t.hooks[o]=function(o){var t=o.obj={},e=t.lv2Cmm={};e.morphFtdBlk=function(o){forEachNodeItem(o.getElementsByClassName("ftd-ctt-col"),function(o,t){forEachNodeItem(o.children,function(o,t){0===t&&console.log(getComputedStyle(o).getPropertyValue("top"))})})}}}();

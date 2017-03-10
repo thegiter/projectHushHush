@@ -10,7 +10,7 @@
 		
 		public function __toString() {
 			$html = '<div id="'.$this->cnr_id.'" class="ftd-cnr dsp-non"> <!-- ftd stands for featured -->
-					<div class="ftd-ctt-cnr fade-in-norm opa-0">
+					<div class="ftd-ctt-cnr fade-in-norm opa-0 vsb-hid"><!--can not use dsp non, because it must has height and width for ctt to generate-->
 						<div class="dsp-tr">
 						</div>
 					</div>

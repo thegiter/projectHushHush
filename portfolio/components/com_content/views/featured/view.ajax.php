@@ -1,6 +1,6 @@
 <?php
 	defined('_JEXEC') or die;
-	($_POST['refpg'] == '#!portfolio/') or die;
+	(strpos($_POST['refpg'], '#!portfolio/') === 0) or die;
 	
 	class ContentViewFeatured extends JViewLegacy {
 		protected $item = null;
@@ -20,7 +20,7 @@
 					$shpsptfl_ftd[$key]['img_hgt'] = htmlspecialchars($images->image_intro_caption);
 				}
 				
-				$shpsptfl_ftd[$key]['item_link'] = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid));
+				$shpsptfl_ftd[$key]['item_link'] = str_replace('/portfolio/', '#!portfolio/#', JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid)));
 				
 				if ($urls && !empty($urls->urlatext)) {
 					$shpsptfl_ftd[$key]['txt'] = true;
