@@ -104,15 +104,16 @@ shpsCmm.domReady().then(function() {
 			}
 			
 			var cell = row.children[idx];
+			var ctt = cell.textContent;
 			var tmp;
 			
 			//css query selector, because getElementsByName can not be used on elements, only document
 			//returns null if no match found, select decendants
 			if (tmp = cell.querySelector('[name="def_value"]')) {
-				cell = tmp;
+				ctt = tmp.value;
 			}
 			
-			return /(\-)?[\d\.]+/.exec(cell.textContent)[0];
+			return /(\-)?[\d\.]+/.exec(ctt)[0];
 		}, 'num', [tkrCol]);
 		
 		elm.addEventListener('click', toggleSort);
