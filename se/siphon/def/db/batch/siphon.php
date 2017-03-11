@@ -131,6 +131,10 @@
 	
 	//we check if advice changed to sell or buy, and update to advice table
 	if ((($def->advice == 'buy') || ($def->advice == 'sell') || ($def->advice == 'be ready to sell')) && (!isset($old_advice) || ($def->advice != $old_advice))) {
+		if (!isset($old_advice)) {
+			$old_advice = '';
+		}
+		
 		//update tbl
 		if (!$mysqli->query('INSERT INTO advice_updates(tkr, old_advice, new_advice)
 		VALUES("'.$tkr.'", "'.$old_advice.'", "'.$def->advice.'")

@@ -1235,6 +1235,7 @@
 			$ppadj = self::$def->pdadj * self::$def->pplradj;*/
 			
 			$ppadj = pow(1 - self::$def->glbRank / self::TTL_GLB_RANK, 2) * (self::MAX_P - self::MAX_D) + self::MAX_D;
+			self::$def->ppadj = $ppadj;
 			
 			self::$def->prcv0g *= $ppadj;
 			
@@ -1450,7 +1451,7 @@
 			// && (self::$def->fpigr > self::MIN_GROWTH_REFINE)
 			
 			if ((self::$def->at12mni > self::MIN_T12MNI) && (self::$def->aomg > self::MIN_GROWTH_HARD) && (self::$def->tlomr > self::MIN_GROWTH) && (self::$def->tlroer > self::MIN_GROWTH) && (self::$def->tlrocr > self::MIN_GROWTH) && (self::$def->cpigr > self::MIN_GROWTH_REFINE) && (self::$def->niosi <= .2)) {
-				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->pdadj > 1)) {
+				if ((self::$def->bpcpr > self::$def->abdr) && (self::$def->ppadj > 1)) {
 					self::$def->advice = 'betting buy';
 				}
 				
