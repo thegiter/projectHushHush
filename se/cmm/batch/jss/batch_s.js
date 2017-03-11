@@ -103,7 +103,14 @@ shpsCmm.domReady().then(function() {
 				return 0;
 			}
 			
-			return /(\-)?[\d\.]+/.exec(row.children[idx].textContent)[0];
+			var cell = row.children[idx];
+			var tmp;
+			
+			if (tmp = cell.getElementsByName('def-value')[0]) {
+				cell = tmp;
+			}
+			
+			return /(\-)?[\d\.]+/.exec(cell.textContent)[0];
 		}, 'num', [tkrCol]);
 		
 		elm.addEventListener('click', toggleSort);
