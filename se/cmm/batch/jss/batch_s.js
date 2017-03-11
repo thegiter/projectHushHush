@@ -108,7 +108,7 @@ shpsCmm.domReady().then(function() {
 			
 			//css query selector, because getElementsByName can not be used on elements, only document
 			//returns null if no match found, select decendants
-			if (tmp = cell.querySelector('[name="def-value"]')) {
+			if (tmp = cell.querySelector('[name="def_value"]')) {
 				cell = tmp;
 			}
 			
