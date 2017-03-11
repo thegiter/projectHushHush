@@ -234,9 +234,9 @@
 		const MAX_D = .1;
 		const TTL_GLB_RANK = 6000;
 		
-		const CNYIR = 0.1;//10%
+		const CNYIR = 0.6;//10%
 		const ZARIR = 0.2;
-		const USDIR = 0.03;
+		const USDIR = 0.02;
 		
 		const CNYMP = 200;
 		const ZARMP = 1000;
