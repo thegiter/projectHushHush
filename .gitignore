@@ -2,6 +2,7 @@
 *.dev.js
 *.dev.css
 gulpfile.js
+.babelrc
 
 #xampp
 xampp/

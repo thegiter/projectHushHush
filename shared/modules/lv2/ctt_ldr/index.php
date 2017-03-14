@@ -7,7 +7,7 @@
 	
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Sat, 10 Mar 2017 14:42:40 GMT');
+	cacheCtrlModule::validate('Sat, 14 Mar 2017 14:42:40 GMT');
 	
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -20,7 +20,7 @@
 	$manifest = new stdClass;
 	
 	//provide hook only if the module provides a hook in its js
-	//$manifest->hook = 'lv2_common';
+	$manifest->hook = 'lv2_ctt_ldr';
 	
 	$r =& $manifest->rscs;
 	$r = [];
@@ -34,13 +34,13 @@
 //grp0
 	$r[0] = [];
 	
-	$r[0][0] = new stdClass;
+	/*$r[0][0] = new stdClass;
 	$r[0][0]->type = 'link';
-	$r[0][0]->url = '/shared/modules/lv2/common/csss/cmm.css';
-/*	
-	$r[0][1] = new stdClass;
-	$r[0][1]->type = 'script';
-	$r[0][1]->url = '/shared/modules/lv2/common/jss/cmm.js';*/
+	$r[0][0]->url = '/shared/modules/lv2/ctt_ldr/csss/cl.css';*/
+	
+	$r[0][0] = new stdClass;
+	$r[0][0]->type = 'script';
+	$r[0][0]->url = '/shared/modules/lv2/ctt_ldr/jss/cl.js';
 	//define $r[][]->async = false; to turn off async loading for the script
 	
 	//modules also need to be defined

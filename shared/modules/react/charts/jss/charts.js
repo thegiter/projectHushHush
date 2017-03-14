@@ -228,6 +228,9 @@ var PieSlice = React.createClass({
 					this.wprStyle.clipPath = 'url(#'+this.clipSvgId+')';
 				}
 				
+				//curly braces inside the jsx/html syntax is used to indicate javascript
+				//so js comments must also be in curly braces
+				//single quotes are also not valid in jsx/html, so you must use them in {}, too
 				return (
 					<div className={'pie-slice-cnr '+this.initCls+' '+this.pointerEvtsCls+' '+this.props.clss} ref={function(elm) {
 						theThis.cnr = elm;
@@ -370,7 +373,12 @@ var PieSlice = React.createClass({
 		//	react object
 		//		The react object is attached to the element it creates as reactThis
 		//		elm.reactThis exposes the object, you can then use the object's methods
-		//		
+		//
+		
+		//React elements must be Capitalized,
+		//so in order to use this, you will have to assign it to a variable
+		//for example, var Pie = obj.pie
+		//then you can use: <Pie />
 		obj.Pie = React.createClass({
 			render: function() {
 				

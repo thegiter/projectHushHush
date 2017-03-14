@@ -43,6 +43,10 @@
 	$r1[2] = new stdClass;
 	$r1[2]->type = 'module';
 	$r1[2]->url = '/shared/modules/lv2/featured/';
+
+	$r1[3] = new stdClass;
+	$r1[3]->type = 'module';
+	$r1[3]->url = '/shared/modules/lv2/ctt_ldr/';
 //sec grp
 	$r[$rGrpCnt + 1] = [];
 	$r2 =& $r[$rGrpCnt + 1];

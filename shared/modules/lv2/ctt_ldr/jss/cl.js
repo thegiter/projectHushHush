@@ -1,0 +1,1 @@
+"use strict";!function(){var e="lv2_ctt_ldr",t=shpsCmm.moduleMgr;t.hooks[e]=function(e){var t=e.obj={},c=t.lv2CttLdr=function(e,t){var r=c.elm;ReactDOM.render(React.createElement(r,{clss:t}),e)};c.elm=function(e){return React.createElement("div",{className:e.clss})}}}();
