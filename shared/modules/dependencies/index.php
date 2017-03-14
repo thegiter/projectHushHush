@@ -45,6 +45,7 @@
 //grp1
 	$r[1] = [];
 
+	//reactDom requires react js to be loaded first
 	$r[1][0] = new stdClass;
 	$r[1][0]->type = 'script';
 	$r[1][0]->url = 'https://unpkg.com/react-dom@15.4.2/dist/react-dom.min.js';
