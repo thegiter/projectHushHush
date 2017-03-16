@@ -2,21 +2,14 @@
 	if (!defined('root')) {
 		die;
 	}
-	
+
 	if (!defined('da')) {
 		define('da', false);
 	}
 ?>
 <div id="abt-bd" class="bd-wpr abt-bd fade-in-intro-fast opa-0">
-	<?php
-		require_once root.'shared/modules/lv2/common/cmm.php';
-		
-		echo lv2CmmModule::getTtlHtml('About');
-	?>
-	
-	
 	<!--tab cnr here with tab indicator styled as top of the ctt cnr piece-->
-	<div class="ctt-cnr lv2-adp-full-h"><!--ctt cnr will have no top piece-->
+	<div class="ctt-cnr lv2-cmm-adp-full-h"><!--ctt cnr will have no top piece-->
 		<section id="abt-pgs-wpr" class="ctt">
 			<a id="abt-shps-cnr" href="#!about/#の弑す魂の_ps" class="abt-shps-cnr skewed init dsp-non">
 				<div class="bg-pic">
@@ -28,21 +21,21 @@
 						</p>
 					</div>
 				</div>
-				
+
 				<h3><?php
 					function wrapL($txt) {
 						$ls = str_split($txt);
-						
+
 						$html = '';
-						
+
 						foreach ($ls as $l) {
 							$html .= '
 							<span>'.$l.'</span>';
 						}
-						
+
 						return $html;
 					}
-					
+
 					echo wrapL('The Site');
 				?>
 
@@ -51,11 +44,11 @@
 				<div class="bg-pic">
 				</div>
 				<h3><?php
-					echo wrapL('The Owner');	
+					echo wrapL('The Owner');
 				?>
 
 				</h3>
-				
+
 				<div class="abt-xx-ctt">
 					<div class="abt-pnl-rgt">
 						<p>
@@ -65,7 +58,7 @@
 				</div>
 			</a>
 		</section>
-		
+
 		<div><!--the gloss-->
 		</div>
 	</div>
