@@ -230,7 +230,7 @@
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP_DOWN = .8;
 		const PPLR_PCT_STEP_UP = 1.2;
-		const MAX_P = 2;//
+		const MAX_P = 1.96;//DR * DR = 1.4 * 1.4
 		const MAX_D = .1;
 		const TTL_GLB_RANK = 6000;
 
@@ -1174,7 +1174,7 @@
 
 			$lfafpigr = $lffpigr * $lfadj;
 
-			$lfaefv = self::estimatedValueE($feE, $at12mni, $lffpigr);
+			$lfaefv = self::estimatedValueE(self::$def->ce, $at12mni, $lfafpigr);
 			self::$def->lffptmIcm = (self::estimatedValueIcm($at12mni, $lfafpigr, self::$def->t12mdda, $cpcapE) + $lfaefv->ev) / $lfpso;
 			//self::$def->lffptmE = $lfaefv->ev / $lfpso;
 
