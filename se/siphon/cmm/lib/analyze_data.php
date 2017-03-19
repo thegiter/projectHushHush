@@ -1009,15 +1009,23 @@
 
 			$ctt = $result['cCapE'];
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/Quarterly Data[\s\S]+ChangeInWorkingCapital[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
 
-			if (!$matches) {
-				return 'no t12mcCapE';
+			if ($matches) {
+				//add up 4 quarters
+				self::$def->t12mcCapE = str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2]);
+			} else {
+				//check for semi-annual data
+				preg_match('/Semi-Annual Data[\s\S]+ChangeInWorkingCapital[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+
+				if ($matches) {
+					self::$def->t12mcCapE = str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2]);
+				} else {
+					return 'no quaterly semi annually cCapE';
+				}
 			}
 
-			self::$def->t12mcCapE = str_replace(',', '', $matches[2]);
-
-			$cpcapE = self::$def->t12mcapE - self::$def->t12mcCapE;
+			$cpcapE = self::$def->t12mcapE - self::$def->t12mcCapE;//crt proected
 
 			$cvIcm = self::estimatedValueIcm($at12mni, self::$def->cpigr, self::$def->t12mdda, $cpcapE);
 
