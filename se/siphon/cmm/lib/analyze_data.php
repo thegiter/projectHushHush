@@ -232,7 +232,7 @@
 		const PPLR_PCT_STEP_UP = 1.2;
 		const MAX_P = 1.96;//DR * DR = 1.4 * 1.4
 		const MAX_D = .1;
-		const TTL_GLB_RANK = 6000;
+		const TTL_GLB_RANK = 4000;
 
 		const CNYIR = 0.6;//10%
 		const ZARIR = 0.2;
