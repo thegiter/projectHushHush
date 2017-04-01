@@ -62,13 +62,4 @@
 	$r3[0]->type = 'script';
 	$r3[0]->url = '/portfolio/components/com_content/views/featured/tmpl/jss/shpsptflhp.js';
 	//define $r[][]->async = false; to turn off async loading for the script
-
-	require_once root.'shared/modules/lv2/featured/ftd.php';
-
-	$ftd = new lv2FtdModule;
-
-	$ftd->cnr_id = 'shpsptfl-hp';
-	$ftd->caption = true;
-
-	echo $ftd;
 ?>

@@ -3,6 +3,8 @@
 *.dev.css
 gulpfile.js
 .babelrc
+.eslintrc
+package.json
 
 #xampp
 xampp/

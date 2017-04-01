@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<clipPath id="slider" clipPathUnits="objectBoundingBox"><!--objectBoundingBox is important, so that the points becomes percentage values inside the element clipped-->
+			<rect width="1" height=".2"/>
+			<rect y="0.8" width="1" height=".2"/>
+		</clipPath>
+	</defs>
+</svg>
