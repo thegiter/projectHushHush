@@ -2,7 +2,7 @@
 	if (!defined('root')) {
 		die;
 	}
-	
+
 	$mis = [
 		'portfolio' => [
 			'name' => 'Portfolio',
@@ -11,7 +11,7 @@
 		],
 		'news' => [
 			'name' => 'News',
-			'href' => '#',//'href' => '#!news/',
+			'href' => '#!news/',//'href' => '#!news/',
 			'smi' => true
 		],
 		'about' => [

@@ -10,7 +10,7 @@
 		</script>
 		<script type="text/javascript" src="/shared/errs/jss/003.js">
 		</script>
-		<script type="text/javascript" src="/shared/jss/gaa.js">
+		<script type="text/javascript" src="/shared/jss/gtm.js">
 		</script>
 
 		<link rel="stylesheet" type="text/css" href="/shared/errs/csss/003.css" charset="utf-8"/>
@@ -18,7 +18,7 @@
 
 		<title>003 Error - の弑す魂の PS</title>
 	</head>
-	
+
 	<body class="pos-stt">
 		<div id="cnr" class="bd-wpr">
 			<div class="dsp-tr">
@@ -47,25 +47,25 @@
 								<h3 class="no-mrg-top no-mrg-btm">
 									Firefox can not load the page
 								</h3>
-				
+
 								<div class="pos-rel">
 									<?php
 										require(root.'shared/phps/hr.php');
 									?>
-				
+
 								</div>
-				
+
 								<p>
 									The page you requested does not currently support Firefox
 								</p>
-				
+
 								<div class="pos-rel">
 									<?php
 										require(root.'shared/phps/hr.php');
 									?>
-				
+
 								</div>
-				
+
 								<ul id="err-003-lst">
 									<li>
 										It appears that you are using Firefox.
@@ -77,7 +77,7 @@
 										It is recommended to use Google Chrome to view the page.
 									</li>
 								</ul>
-				
+
 								<button type="button" id="err-003-btn" class="tahoma" title="Open the Google Chrome EULA page.">Download Google Chrome</button>
 							</div>
 						</div>
@@ -97,7 +97,7 @@
 					<?php
 						require(root.'shared/footer/sml/footer.php');
 					?>
-					
+
 				</div>
 			</div>
 		</div>

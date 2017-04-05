@@ -14,7 +14,7 @@
 		</script>
 		<script src="/shared/errs/jss/tpl_ie.js" type="text/javascript">
 		</script>
-		<script type="text/javascript" src="/shared/jss/gaa.js">
+		<script type="text/javascript" src="/shared/jss/gtm.js">
 		</script>
 
 		<link rel="stylesheet" type="text/css" href="/shared/errs/csss/<?php
@@ -25,21 +25,21 @@
 		<link rel="stylesheet" type="text/css" href="/shared/csss/hr.css" charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="/shared/csss/logo_sml.css" charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="/shared/footer/sml/csss/footer.css" charset="utf-8" />
-		
+
 		<title><?php
 			echo $err;
 		?> Error - の弑す魂の PS</title>
 	</head>
-	
+
 	<body class="bd-wpr shared-css-bg-basic">
 		<div id="cnr" class="vsb-hid">
 			<?php
 				require(root.'shared/phps/read_bg.php');
-				
+
 				switch ($err) {
 					case '001':
 						$err_layout_tbl = $err_layout_tr = $err_layout_tc = 'div';
-					
+
 						break;
 					case '005':
 						$err_layout_tbl = 'table';
@@ -66,19 +66,19 @@
 							switch ($err) {
 								case '001':
 									echo 'Internet Explorer';
-								
+
 									break;
 								case '005':
 									echo 'This program';
 							}
 						?> cannot display the webpage
 					</h3>
-				
+
 					<div class="tpl-ie-hr-cnr">
 						<?php
 							require(root.'shared/phps/hr.php');
 						?>
-					
+
 					</div>
 					<div class="tpl-ie-ctt-txt">
 						<?php
@@ -86,7 +86,7 @@
 								echo '<p id="err-005-mlc-ttl">
 									Most likely causes:
 								</p>
-							
+
 								<ul id="err-005-mlc-lst">
 									<li>
 										<span>Your browser identifies itself as Maxthon 2.0.</span>
@@ -104,7 +104,7 @@
 						<p>
 							What you can try:
 						</p>
-					
+
 						<ul class="tpl-ie-wyt-lst no-style no-indent" id="err-<?php
 							echo $err;
 						?>-wyt-lst">
@@ -123,13 +123,13 @@
 							?>>
 								<?php
 									require root.'shared/dtc/rec.php';
-									
+
 									$recBrow = new dtcRecModule;
-									
+
 									if (isset($dtc_rec) && $dtc_rec != 'ie') {
 										$recBrow->bc = $dtc_rec;
 									}
-									
+
 									$recBrowInfo = $recBrow->getInfo();
 								?>
 								Use <?php
@@ -147,13 +147,13 @@
 									switch ($err) {
 										case '001':
 											echo '<button type="button" id="err-001-dcp-btn" class="vsb-hid">Diagnose Connection Problems</button>';
-										
+
 											break;
 										case '005':
 											echo 'Retype the address.';
 									}
 								?>
-							
+
 							</li>
 							<?php
 								if ($err == '005') {
@@ -164,7 +164,7 @@
 								}
 							?>
 						</ul>
-					
+
 						<<?php
 							echo $err_layout_tbl;
 						?> class="mor-inf-cnr dsp-tbl">
@@ -190,7 +190,7 @@
 							?>>
 							<<?php
 								echo $err_layout_tr;
-								
+
 								if ($err == '005') {
 									echo ' id="err-005-mic"';	//mic stands for mor-inf-ctt
 								}
@@ -213,7 +213,7 @@
 												switch ($err) {
 													case '001':
 														echo 'Internet Explorer';
-												
+
 														break;
 													case '005':
 														echo 'Maxthon 2.0';
@@ -225,7 +225,7 @@
 												switch ($err) {
 													case '001':
 														echo 'Internet Explorer';
-										
+
 														break;
 													case '005':
 														echo 'Maxthon 2.0';
@@ -234,7 +234,7 @@
 												switch ($err) {
 													case '001':
 														echo 'is pretending to be Internet Explorer';
-											
+
 														break;
 													case '005':
 														echo 'has sent a header containing User-Agent info similar to Maxthon 2.0\'s';
@@ -250,7 +250,7 @@
 											echo '<h4 id="err-001-olu">
 												For offline users
 											</h4>
-							
+
 											<p>
 												Not for you, you are not offline.
 											</p>';
@@ -273,7 +273,7 @@
 			</<?php
 				echo $err_layout_tbl;
 			?>>
-			
+
 			<h1 class="img-cnr tpl-ie-logo no-mrg-top no-mrg-btm">
 				<a href="/" class="dsp-ib" title="Go to the homepage.">
 					<img src="/shared/imgs/tsp.gif" alt="の弑す魂の PS" class="logo-sml" />
@@ -284,7 +284,7 @@
 			<?php
 				require root.'shared/footer/sml/footer.php';
 			?>
-			
+
 		</div>
 	</body>
 </html>
