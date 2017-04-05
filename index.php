@@ -12,7 +12,7 @@
 	require_once root.'shared/cache_ctrl/validate.php';
 
 	//not using etag, because apache deflate gzip changes it
-	cacheCtrlModule::validate('Sun, 3 Apr 2017 13:20:06 GMT');
+	cacheCtrlModule::validate('Sun, 5 Apr 2017 13:20:06 GMT');
 
 	require_once root.'shared/cache_ctrl/front_end.php';//not using far_future now for testing purposes
 
@@ -29,7 +29,7 @@
 		<meta name="keywords" content="弑魂,SHPS,Personal website,Desmond Zhu" />
 		<meta name="google-site-verification" content="WiIzb9FaspCvU6Lxe-COLQr1_LSfwfWQOpkc5meOHNc" />
 
-		<script src="/jss/installer.js" type="text/javascript">
+		<script src="/jss/installer.js">
 		</script>
 
 		<title>の弑す魂の PS</title>
