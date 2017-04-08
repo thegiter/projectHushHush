@@ -41,7 +41,7 @@
 
 				</h3>
 			</a><a id="abt-sh-cnr" href="#!about/#の弑す魂の" class="abt-sh-cnr skewed init dsp-non">
-				<div class="bg-pic">
+				<div class="bg-pic pos-abs-ful">
 				</div>
 				<h3><?php
 					echo wrapL('The Owner');
