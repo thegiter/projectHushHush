@@ -11,7 +11,7 @@
 		],
 		'news' => [
 			'name' => 'News',
-			'href' => '#!news/',//'href' => '#!news/',
+			'href' => '#',//'href' => '#!news/',
 			'smi' => true
 		],
 		'about' => [

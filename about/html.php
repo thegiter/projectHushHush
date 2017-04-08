@@ -12,7 +12,7 @@
 	<div class="ctt-cnr lv2-cmm-adp-full-h"><!--ctt cnr will have no top piece-->
 		<section id="abt-pgs-wpr" class="ctt">
 			<a id="abt-shps-cnr" href="#!about/#の弑す魂の_ps" class="abt-shps-cnr skewed init dsp-non">
-				<div class="bg-pic">
+				<div class="bg-pic pos-abs-ful">
 				</div>
 				<div class="abt-xx-ctt">
 					<div class="abt-pnl-rgt">
@@ -61,7 +61,5 @@
 
 		<div><!--the gloss-->
 		</div>
-	</div>
-	<div class="bg-overlay">
 	</div>
 </div>

@@ -7,7 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Fri, 14 Mar 2017 14:42:40 GMT');
+	cacheCtrlModule::validate('Fri, 7 Apr 2017 14:42:40 GMT');
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -40,7 +40,7 @@
 
 	$r[0][0] = new stdClass;
 	$r[0][0]->type = 'script';
-	$r[0][0]->url = 'https://unpkg.com/react@15.4.2/dist/react.min.js';
+	$r[0][0]->url = '/shared/modules/dependencies/jss/react.min.js';
 	$r[0][0]->async = false;
 //grp1
 	$r[1] = [];
@@ -48,7 +48,7 @@
 	//reactDom requires react js to be loaded first
 	$r[1][0] = new stdClass;
 	$r[1][0]->type = 'script';
-	$r[1][0]->url = 'https://unpkg.com/react-dom@15.4.2/dist/react-dom.min.js';
+	$r[1][0]->url = '/shared/modules/dependencies/jss/react-dom.min.js';
 	$r[1][0]->async = false;
 
 	echo json_encode($manifest);

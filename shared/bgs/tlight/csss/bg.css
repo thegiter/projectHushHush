@@ -11,7 +11,8 @@
 	background-image:		url(../imgs/bg_ptn.png);
 }
 .bg-tlight > div{
-	position:				absolute;
+	pointer-events: none;
+	position:	absolute;
 	max-width:	40vmin;
 	width:		40%;
 	mix-blend-mode: overlay;

@@ -3,16 +3,16 @@
 		die;
 	}
 ?>
-<div id="bg-tlight" class="bg-tlight fade-in-norm opa-0">
-	<div class="dsp-non zi-hud disabled">
+<div id="bg-tlight" class="bg-tlight fade-in-norm opa-0 dsp-non">
+	<div class="zi-hud dsp-non">
 		<div>
 		</div>
 	</div>
-	<div class="dsp-non zi-hud disabled">
+	<div class="zi-hud dsp-non">
 		<div>
 		</div>
 	</div>
-	<div class="dsp-non zi-hud disabled">
+	<div class="zi-hud dsp-non">
 		<div>
 		</div>
 	</div>
