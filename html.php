@@ -5,22 +5,12 @@
 ?>
 		<div id="psd-bd-cnr">	<!-- pseudo body container -->
 			<aside id="psd-menu-cnr">
-				<?php
-					require_once root.'shared/modules/hex_grid/hg.php';
-					
-					$hg = new hexGridModule;
-					
-					$hg->rows = 25;
-					$hg->cols = 35;
-					
-					echo $hg;
-				?>
 				<div id="psd-menu-scrl-cnr">
 				</div>
 				<div class="sdw">
 				</div>
 			</aside>
-			
+
 			<section id="psd-vp-cnr" class="psd-vp-cnr"><!--pseudo viewport container-->
 				<div id="psd-bg-cnr">
 				</div>
@@ -32,10 +22,10 @@
 				<main id="psd-ctt-cnr" role="main">
 				</main>
 			</section>
-			
+
 			<aside>
 			</aside>
-			
+
 			<section><!--notification pane-->
 			</section>
 		</div>

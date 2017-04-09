@@ -1,6 +1,8 @@
 #Dev files
 *.dev.js
 *.dev.css
+*.less
+*.jsx
 gulpfile.js
 .babelrc
 .eslintrc

@@ -30,7 +30,7 @@
 
 	$r1[0]->cpns[0] = new stdClass;
 	$r1[0]->cpns[0]->name = 'bg_basic';
-	$r1[0]->cpns[0]->required = true;//this means we either need this cpn in intro, or we need this cpn for another cpn
+	//$r1[0]->cpns[0]->required = true;//this means we either need this cpn in intro, or we need this cpn for another cpn
 
 	$r1[0]->cpns[1] = new stdClass;
 	$r1[0]->cpns[1]->name = 'bg_inttile';
