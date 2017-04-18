@@ -1,7 +1,8 @@
 @charset "utf-8";
 body{
 	white-space:	nowrap;
-	position:	absolute;
+	position:		absolute;
+	color:			orange;
 }
 body > :not(.thead){
 	white-space: initial;
@@ -14,6 +15,7 @@ body > :not(.thead){
 	width:		95vw;
 	z-index:	1;
 	word-wrap:	break-word;
+	color:			hsl(30, 100%, 21%);
 }
 #msg-cnr > span{
 	margin:	.5em;
@@ -36,6 +38,7 @@ body > :not(.thead){
 .tbody{
 	display:		inline-block;
 	vertical-align:	top;
+	color:			hsl(30, 100%, 21%);
 }
 .tkr-col{
 	position:	sticky;
