@@ -12,7 +12,7 @@ if (!defined('root')) {
 
 require_once root.'shared/ajax_chk/ajax_chk.php';
 
-require_once root.'shared/cache_ctrl/json.php';	
+require_once root.'shared/cache_ctrl/json.php';
 
 /**
  * Define the application's minimum supported PHP version as a constant so it can be referenced within the application.
@@ -54,7 +54,7 @@ JDEBUG ? JProfiler::getInstance('Application')->setStart($startTime, $startMem)-
 $app = JFactory::getApplication('site');
 
 $doc = JFactory::getDocument();
-	
+
 $doc->shpsAjax = new stdClass;
 $doc->shpsAjax->rscs = [];
 
@@ -67,12 +67,12 @@ $tmp_ob = ob_get_clean();
 
 if ($tmp_ob != '') {
 	$r =& $doc->shpsAjax->rscs;
-	
+
 	$rGrpCnt = count($r);
-	
+
 	$r[$rGrpCnt] = [];
 	$r1 =& $r[$rGrpCnt];
-	
+
 	$r1[0] = new stdClass;
 	$r1[0]->type = 'html';
 	$r1[0]->html = $tmp_ob;

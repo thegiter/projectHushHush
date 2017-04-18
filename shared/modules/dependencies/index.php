@@ -7,7 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Fri, 7 Apr 2017 14:42:40 GMT');
+	cacheCtrlModule::validate('Fri, 14 Apr 2017 14:42:40 GMT');
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -42,6 +42,10 @@
 	$r[0][0]->type = 'script';
 	$r[0][0]->url = '/shared/modules/dependencies/jss/react.min.js';
 	$r[0][0]->async = false;
+
+	$r[0][1] = new stdClass;
+	$r[0][1]->type = 'module';
+	$r[0][1]->url = '/shared/modules/js_frameworks/scrl_snap/';
 //grp1
 	$r[1] = [];
 

@@ -1,1 +1,0 @@
-var shpsptfl_tmpl_teo = new ttlElmOnload();

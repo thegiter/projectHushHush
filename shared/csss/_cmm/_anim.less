@@ -1,0 +1,25 @@
+.fade-in-norm{
+	transition:		opacity 1.5s ease-in;
+}
+.fade-in-fast{/*is kind of bad, because it's so fast you might as well not fade*/
+	transition:	opacity .5s;
+}
+.fade-in-intro-fast{
+	transition:	opacity 1s;
+}
+@keyframes caret-flash{
+	from{
+		opacity:	0;
+	}
+	to{
+		opacity: 	1;
+	}
+}
+.type-speed{
+    transition: width 3s, max-width 4s;
+}
+.caret-flash{
+    animation:                  caret-flash .5s;
+    animation-iteration-count:	infinite;
+    animation-direction:        alternate;
+}
