@@ -141,7 +141,7 @@ shpsCmm.domMgr.domReady().then(function() {
 				},
 				iType: 'dropdown',
 				fType: 'include',
-				cType: 'exact'
+				cType: '='
 			},
 			{
 				elm: document.getElementById('pc-filter'),
@@ -156,7 +156,7 @@ shpsCmm.domMgr.domReady().then(function() {
 				},
 				iType: 'dropdown',
 				fType: 'include',
-				cType: 'exact'
+				cType: '='
 			},
 			{
 				elm: document.getElementById('lper-filter'),
@@ -175,7 +175,7 @@ shpsCmm.domMgr.domReady().then(function() {
 				},
 				iType: 'dropdown',
 				fType: 'exclude',
-				cType: 'greaterEqual'
+				cType: '>='
 			},
 			{
 				elm: document.getElementById('wacodr-filter'),
@@ -198,7 +198,7 @@ shpsCmm.domMgr.domReady().then(function() {
 				},
 				iType: 'dropdown',
 				fType: 'exclude',
-				cType: 'greaterEqual'
+				cType: '>='
 			},
 			{
 				elm: document.getElementById('fpigr-filter'),
@@ -221,7 +221,7 @@ shpsCmm.domMgr.domReady().then(function() {
 				},
 				iType: 'dropdown',
 				fType: 'include',
-				cType: 'lessEqual'
+				cType: '<='
 			}
 		];
 
