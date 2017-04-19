@@ -38,12 +38,12 @@ body > :not(.thead){
 .tbody{
 	display:		inline-block;
 	vertical-align:	top;
-	color:			hsl(30, 100%, 21%);
 }
 .tkr-col{
 	position:	sticky;
 	left:		0;
 	background-color:	rgba(255, 255, 255, .8);
+	color:				hsl(30, 100%, 21%);
 }
 .tkr-col > tr,
 .tbody > tr{
