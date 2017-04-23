@@ -40,16 +40,16 @@
 
 			scb.tMsgCnrs.textContent = '';
 
-			var fd = new FormData(this);
-			var se = fd.get('se');
-			var tkr = fd.get('tkr');
+			const fd = new FormData(this);
+			const se = fd.get('se');
+			const tkr = fd.get('tkr');
 
 			shpsCmm.ajaxMgr.createAjax('post', 'update_var.php', fd, 'json', undefined, undefined, true).then(function(xhr) {
 				//after receiving updates on user var, it attempts to re-siphon the def
 				//however, due to network issues, the attempt may fail
 				//if succeed, we update the data
-				if (xhr.response) {
-					var row = evt.target.parentNode.parentNode;
+				if (xhr.response) {console.log(evt.target, evt.target.parentNode, evt.target.parentNode.parentNode);
+					const row = evt.target.parentNode.parentNode;
 
 					//reset row
 					row.innerHTML = '';
