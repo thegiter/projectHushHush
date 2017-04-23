@@ -5,7 +5,7 @@
 ?>
 	<section id="hp-bd" class="fade-in-norm opa-0 dsp-non">
 		<div id="hp-cnr">
-			<div>
+			<div class="pos-rel">
 				<div id="hp-bigpic-base" class="hp-bigpic-in-init">
 				</div>
 			</div><div>

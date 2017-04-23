@@ -7,7 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Sun, 23 Apr 2017 17:42:40 GMT');
+	cacheCtrlModule::validate('Wed, 21 Apr 2016 14:42:40 GMT');
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -19,10 +19,14 @@
 
 	$manifest = new stdClass;
 
-	$manifest->hook = 'basic_bg';
+	//provide hook only if the module provides a hook in its js
+	$manifest->hook = 'ldg_td_bars';
 
 	$r =& $manifest->rscs;
 	$r = [];
+
+	//indicate only files necessary for module to work,
+	//these files will be cached
 
 	//each file is loaded asynchronously
 	//however, each group is installed sequentially
@@ -30,31 +34,19 @@
 //grp0
 	$r[0] = [];
 
-	//images must be defined in a group before css, so that we will replace the url to the cache url
 	$r[0][0] = new stdClass;
-	$r[0][0]->type = 'img';
-	$r[0][0]->url = '/shared/cpns/bgs/basic/svgs/bg.svg';
+	$r[0][0]->type = 'module';
+	$r[0][0]->url = '/shared/modules/td_cube/';
+
+	$r[0][1] = new stdClass;
+	$r[0][1]->type = 'link';
+	$r[0][1]->url = '/shared/modules/ldg_signs/td_bars/csss/tb.css';
 //grp1
 	$r[1] = [];
 
-	//sadly no object literals in php
 	$r[1][0] = new stdClass;
-	$r[1][0]->type = 'link';
-	$r[1][0]->url = '/shared/cpns/bgs/basic/csss/bg.css';
-//grp2
-	$r[2] = [];
-
-	$r[2][0] = new stdClass;
-	$r[2][0]->type = 'html';
-	ob_start();//output buffering
-	require root.'shared/cpns/bgs/basic/html.php';
-	$r[2][0]->html = ob_get_clean();
-//grp3
-	$r[3] = [];
-
-	$r[3][0] = new stdClass;
-	$r[3][0]->type = 'script';
-	$r[3][0]->url = '/shared/cpns/bgs/basic/jss/bg.js';
+	$r[1][0]->type = 'script';
+	$r[1][0]->url = '/shared/modules/ldg_signs/td_bars/jss/tb.js';
 	//define $r[][]->async = false; to turn off async loading for the script
 
 	echo json_encode($manifest);
