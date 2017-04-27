@@ -142,17 +142,6 @@
 			?>
 
 		</div>
-		<?php
-			require_once root.'shared/modules/menu/btn/btn.php';
-
-			$mb = new menuBtnModule;
-
-			$mb->id = 'hp-menu-btn';
-			$mb->clss = 'no-style clickable';
-
-			echo $mb;
-		?>
-
 
 		<ul id="hp-menu" class="no-style">
 			<?php
@@ -160,7 +149,6 @@
 
 				$menu_html = '';//clear variable $menu_html in case another menu was produced and $menu_html is not empty
 
-				require_once root.'shared/modules/tooltips/simple/tt.php';
 				//if tooltip's css is not loaded, then the tooltips simply would not show
 				//so we don't need  to hide it, they are hidden by default
 				//so we just need to load them when ready and not need to hide/intro them
@@ -175,11 +163,7 @@
 					//create_tooltip($cnrTag, $cnrId, $cnrClss, $cnrAttr, $hvrTag, $hvrId, $hvrClss, $hvrAttr, $ctt, $tooltip) syntax
 					if ($mi_ppt['smi']) {
 						$menu_html .= '<span class="sep">
-						</span>'.create_tooltip('span', null, 'expand-btn-cnr', null, 'button', null, 'no-style clickable', 'type="button"', '<div class="ver">
-							</div>
-							<div class="hor">
-							</div>', 'Toggle sub-menus.').'
-						'.$omc;
+						</span>'.$omc;
 					}
 
 					$menu_html .= '
