@@ -47,6 +47,10 @@
 	$r1[3] = new stdClass;
 	$r1[3]->type = 'module';
 	$r1[3]->url = '/shared/modules/lv2/ctt_ldr/';
+
+	$r1[4] = new stdClass;
+	$r1[4]->type = 'img';
+	$r1[4]->url = '/portfolio/components/com_content/views/featured/tmpl/imgs/ptn.jpg';
 //sec grp
 	$r[$rGrpCnt + 1] = [];
 	$r2 =& $r[$rGrpCnt + 1];

@@ -8,7 +8,6 @@
  */
 
 	defined('_JEXEC') or die;
-	defined('root') or die;
 
 	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 

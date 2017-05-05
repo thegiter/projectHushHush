@@ -7,7 +7,6 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 	defined('_JEXEC') or die;
-	defined('root') or die;
 
 	if (defined('shpsptfl_ajax')) {
 		require 'shpsdefault.php';
