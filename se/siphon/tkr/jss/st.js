@@ -48,7 +48,7 @@
 		//now, we loop through each table row, starting from the second row, and construct our data
 		const theRows = cnr.getElementsByTagName('tr');
 
-		shpsCmm.domMgr.forEachNodeItem(theRows, function (row, idx) {
+		shpsCmm.domMgr.forEachNode(theRows, function (row, idx) {
 			//for each row, the first cell contains ticker symbol, the 7th contains company name
 			const tkr = {};
 
@@ -119,7 +119,7 @@
 				//the right table has the first table row containing the headings
 				let theTbl;
 
-				shpsCmm.domMgr.forEachNodeItem(tbls, function(tbl) {
+				shpsCmm.domMgr.forEachNode(tbls, function(tbl) {
 					if (tbl.getElementsByTagName('tr')[0].getElementsByTagName('td')[0].textContent.search('证券代码') != -1) {
 						theTbl = tbl;
 					}
@@ -128,7 +128,7 @@
 				//now, we loop through each table row, starting from the second row, and construct our data
 				const theRows = theTbl.getElementsByTagName('tr');
 
-				shpsCmm.domMgr.forEachNodeItem(theRows, function (row, idx) {
+				shpsCmm.domMgr.forEachNode(theRows, function (row, idx) {
 					//for each row, the first cell contains a link of ticker symbol, the second contains company name
 					const tkr = {};
 
@@ -183,7 +183,7 @@
 
 				//loop through each row
 				//first row is heading, start from 2nd row
-				shpsCmm.domMgr.forEachNodeItem(trs, function (tr, idx) {
+				shpsCmm.domMgr.forEachNode(trs, function (tr, idx) {
 					//combine first cell and second cell html in each row, seperated by comma
 					//symbol before the first comma is the ticker
 					//before the second comma is the name inside double quotes
