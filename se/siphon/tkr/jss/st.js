@@ -13,7 +13,7 @@
 	form.addEventListener('submit', function(evt) {
 		evt.preventDefault();
 
-		var fd = new FormData(form);
+		const fd = new FormData(form);
 
 		switch (se = fd.get('se')) {
 			case 'SHSE':
@@ -41,33 +41,32 @@
 		}
 	});
 
-	var btn = document.getElementById('sp-btn');
-	var trCntr = 0;
-	var tkrCntr = 0;
+	const btn = document.getElementById('sp-btn');
+	let trCntr = 0, tkrCntr = 0;
 
 	function recuringGetTkrs(cnr, tkrsArr) {//for when there are too many tickers
 		//now, we loop through each table row, starting from the second row, and construct our data
-		var theRows = cnr.getElementsByTagName('tr');
+		const theRows = cnr.getElementsByTagName('tr');
 
-		for (var i = 0; i < theRows.length; i++) {
+		shpsCmm.domMgr.forEachNodeItem(theRows, function (row, idx) {
 			//for each row, the first cell contains ticker symbol, the 7th contains company name
-			var ticker = {};
+			const tkr = {};
 
-			var cells = theRows[i].getElementsByTagName('td');
+			const cells = row.getElementsByTagName('td');
 
-			var matches = /\s*(\d+)\s*/.exec(cells[0].textContent);
+			const matches = /\s*(\d+)\s*/.exec(cells[0].textContent);
 
-			var name = cells[6].textContent;
+			const name = cells[6].textContent;
 
 			if (matches && /[\S]+/.exec(name)) {//if found digits and name is not empty
-				ticker.ticker = matches[1];
-				ticker.name = name;
+				tkr.ticker = matches[1];
+				tkr.name = name;
 
-				tkrsArr.push(ticker);
+				tkrsArr.push(tkr);
 			}
 
-			cnr.removeChild(theRows[i]);
-		}
+			cnr.removeChild(row);
+		});
 
 		if (cnr.getElementsByTagName('tr').length > 0) {
 			recuringGetTkrs(cnr, tkrsArr);
@@ -77,13 +76,15 @@
 	function upload(tickers, se, append) {
 		msgCnr.textContent = 'Uploading...';
 
+		let rest;
+
 		if (tickers.length > MAX_NUM_TKRS) {
-			var first = tickers.splice(0, MAX_NUM_TKRS);
-			var rest = tickers;
+			const first = tickers.splice(0, MAX_NUM_TKRS);
+			rest = tickers;
 			tickers = first;
 		}
 
-		var appendParam = '';
+		let appendParam = '';
 
 		if (append) {
 			appendParam = '&append=append';
@@ -91,7 +92,7 @@
 
 		//tickers now contain all the ticker data for the page
 		//we upload the data to server
-		shpsCmm.createAjax('post', 'save_to_db.php', 'tkrs_json='+encodeURIComponent(JSON.stringify(tickers))+'&se='+se+appendParam).then(function(xhr) {
+		shpsCmm.ajaxMgr.createAjax('post', 'save_to_db.php', 'tkrs_json='+encodeURIComponent(JSON.stringify(tickers))+'&se='+se+appendParam).then(function(xhr) {
 			//check when server respond if successful
 			if (xhr.responseText == 'success') {
 				msgCnr.textContent = 'Done!';
@@ -106,42 +107,43 @@
 	}
 
 	btn.addEventListener('click', function() {
-		var ifDoc = ifWdw.document;
-		var tickers = [];
+		const ifDoc = ifWdw.document;
+		const tickers = [];
 
 		switch (se) {
-			case 'SHSE':
+			case 'SHSE': {
 				//get all tables
-				var tbls = ifDoc.getElementsByTagName('table');
+				const tbls = ifDoc.getElementsByTagName('table');
 
 				//loop through to find the right table
 				//the right table has the first table row containing the headings
-				var theTbl;
+				let theTbl;
 
-				forEachNodeItem(tbls, function(tbl) {
+				shpsCmm.domMgr.forEachNodeItem(tbls, function(tbl) {
 					if (tbl.getElementsByTagName('tr')[0].getElementsByTagName('td')[0].textContent.search('证券代码') != -1) {
 						theTbl = tbl;
 					}
 				});
 
 				//now, we loop through each table row, starting from the second row, and construct our data
-				var theRows = theTbl.getElementsByTagName('tr');
+				const theRows = theTbl.getElementsByTagName('tr');
 
-				for (var i = 1; i < theRows.length; i++) {
+				shpsCmm.domMgr.forEachNodeItem(theRows, function (row, idx) {
 					//for each row, the first cell contains a link of ticker symbol, the second contains company name
-					var ticker = {};
+					const tkr = {};
 
-					var cells = theRows[i].getElementsByTagName('td');
+					const cells = row.getElementsByTagName('td');
 
-					ticker.ticker = /\s*(\d+)\s*/.exec(cells[0].getElementsByTagName('a')[0].textContent)[1];
-					ticker.name = cells[1].textContent;
+					tkr.ticker = /\s*(\d+)\s*/.exec(cells[0].getElementsByTagName('a')[0].textContent)[1];
+					tkr.name = cells[1].textContent;
 
-					tickers.push(ticker);
-				}
+					tickers.push(tkr);
+				});
 
 				upload(tickers, se);
 
 				break;
+			}
 			case 'SZSE':
 				//get the table
 				var theTbl = ifDoc.getElementsByTagName('table')[0];
@@ -156,7 +158,7 @@
 
 				//loop through each row
 				//first row is heading, start from 2nd row
-				for (var i = 1; i < trs.length; i++) {
+				for (let i = 1; i < trs.length; i++) {
 					var tr = trs[i];
 					//first cell is name, second is tkr
 					//if name is not like ZAdigits
@@ -176,20 +178,19 @@
 
 				break;
 			case 'NYSE':
-			case 'Nasdaq':
-				var trs = ifDoc.getElementsByTagName('table')[0].getElementsByTagName('tbody')[0].children;
+			case 'Nasdaq': {
+				const trs = ifDoc.getElementsByTagName('table')[0].getElementsByTagName('tbody')[0].children;
 
 				//loop through each row
 				//first row is heading, start from 2nd row
-				for (var i = 1; i < trs.length; i++) {
-					var tr = trs[i];
+				shpsCmm.domMgr.forEachNodeItem(trs, function (tr, idx) {
 					//combine first cell and second cell html in each row, seperated by comma
 					//symbol before the first comma is the ticker
 					//before the second comma is the name inside double quotes
 					//possible span in second comma, for the apostrophy symbol
 					//create ticker
 
-					var txt = tr.children[0].textContent;
+					let txt = tr.children[0].textContent;
 
 					if (tr.children[1]) {
 						txt += tr.children[1].textContent;
@@ -197,13 +198,13 @@
 
 					txt = txt.replace(/(?:\r\n|\r|\n)/g, ' ');
 
-					matches = /^([A-Z\.]+),"([^"]+)"/.exec(txt);
+					const matches = /^([A-Z\.]+),"([^"]+)"/.exec(txt);
 
 					if (matches) {
-						var sName = matches[2];
+						let sName = matches[2];
 
 						if (sName.indexOf('Fund') == -1) {
-							var tkr = matches[1];
+							const tkr = matches[1];
 
 							//select is a reserved word, therefore must be escaped
 							sName = sName.replace(/\bselect/gi, 'ESCSelect');
@@ -215,11 +216,12 @@
 							});
 						}
 					}
-				}
+				});
 
 				upload(tickers, se);
 
 				break;
+			}
 			default:
 				return false;
 		}
