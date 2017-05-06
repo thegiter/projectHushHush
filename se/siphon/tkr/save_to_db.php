@@ -35,7 +35,7 @@
 
 		// for each tkr, insert into table
 		foreach ($tkrs as $tkr) {
-			if (!$mysql->query('INSERT INTO '.$se.'_tkrs(tkr, name) VALUES("'.$tkr->ticker.'", "'.$tkr->name.'") ON DUPLICATE KEY UPDATE name=VALUES(name)')) {
+			if (!$mysqli->query('INSERT INTO '.$se.'_tkrs(tkr, name) VALUES("'.$tkr->ticker.'", "'.$tkr->name.'") ON DUPLICATE KEY UPDATE name=VALUES(name)')) {
 				echo 'insert error '.$tkr->ticker.' '.$tkr->name;
 			}
 		}
