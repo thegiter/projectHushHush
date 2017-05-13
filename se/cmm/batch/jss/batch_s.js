@@ -113,15 +113,21 @@ shpsCmm.domMgr.domReady().then(function() {
 
 				let ctt = cell.textContent;
 
-				const tmp = cell.querySelector('[name="def_value"]');
-
 				//css query selector, because getElementsByName can not be used on elements, only document
 				//returns null if no match found, select decendants
+				const tmp = cell.querySelector('[name="def_value"]');
+
 				if (tmp) {
 					ctt = tmp.value;
 				}
 
-				return /(\-)?[\d\.]+/.exec(ctt)[0];
+				const match = /(\-)?[\d\.]+/.exec(ctt);
+
+				if (match) {
+					return match[0];
+				}
+
+				return match;
 			}, 'num', [tkrCol]);
 
 			elm.addEventListener('click', toggleSort);

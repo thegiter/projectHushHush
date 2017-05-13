@@ -7,7 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Thu, 21 Apr 2017 14:42:40 GMT');
+	cacheCtrlModule::validate('Thu, 3 May 2017 14:42:40 GMT');
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -40,23 +40,19 @@
 
 	$r[0][1] = new stdClass;
 	$r[0][1]->type = 'img';
-	$r[0][1]->url = '/shared/modules/lv2/featured/imgs/ptn.jpg';
+	$r[0][1]->url = '/shared/modules/lv2/featured/imgs/bg/ttl_bd_sdw.jpg';
 
 	$r[0][2] = new stdClass;
 	$r[0][2]->type = 'img';
-	$r[0][2]->url = '/shared/modules/lv2/featured/imgs/bg/ttl_bd_sdw.jpg';
+	$r[0][2]->url = '/shared/modules/lv2/featured/imgs/bg/ttl_ass.png';
 
 	$r[0][3] = new stdClass;
 	$r[0][3]->type = 'img';
-	$r[0][3]->url = '/shared/modules/lv2/featured/imgs/bg/ttl_ass.png';
+	$r[0][3]->url = '/shared/modules/lv2/featured/imgs/bg/caption_hd.png';
 
 	$r[0][4] = new stdClass;
 	$r[0][4]->type = 'img';
-	$r[0][4]->url = '/shared/modules/lv2/featured/imgs/bg/caption_hd.png';
-
-	$r[0][5] = new stdClass;
-	$r[0][5]->type = 'img';
-	$r[0][5]->url = '/shared/modules/lv2/featured/imgs/bg/caption_bd_sdw.jpg';
+	$r[0][4]->url = '/shared/modules/lv2/featured/imgs/bg/caption_bd_sdw.jpg';
 //grp1
 	$r[1] = [];
 
