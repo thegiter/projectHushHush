@@ -1,0 +1,66 @@
+@sze: ~"(100% + var(--border-sze))";
+@circ_ang: ~"calc(@{sze} * 0.70710678118 + @{sze} / 2)";
+@circ_norm: ~"calc(@{sze} * 0.70710678118 + @{sze})";
+
+@dotC_1: ~"rgba(var(--color-rgb), .05)";
+@dotC_2: ~"rgba(var(--color-rgb), .1)";
+@dotC_3: ~"rgba(var(--color-rgb), .2)";
+@dotC_4: ~"rgba(var(--color-rgb), .3)";
+@dotC_5: ~"rgba(var(--color-rgb), .4)";
+@dotC_6: ~"rgba(var(--color-rgb), .6)";
+@dotC_7: ~"rgba(var(--color-rgb), .8)";
+@dotC_8: ~"rgba(var(--color-rgb), 1)";
+
+.css-spiners-bs(@topC, @trC, @rgtC, @brC, @btmC, @blC, @lftC, @tlC) {
+    box-shadow: // Top
+                0 ~"calc(@{circ_norm} * -1)" 0 0 @topC,
+                // Top Right
+                @circ_ang ~"calc(@{circ_ang} * -1)" 0 0 @trC,
+                // Right
+                @circ_norm 0 0 0 @rgtC,
+                // Bottom right
+                @circ_ang @circ_ang 0 0 @brC,
+                // Bottom
+                0 @circ_norm 0 0 @btmC,
+                // Bottom Left
+                ~"calc(@{circ_ang} * -1)" @circ_ang 0 0 @blC,
+                // Left
+                ~"calc(@{circ_norm} * -1)" 0 0 0 @lftC,
+                // Top left
+                ~"calc(@{circ_ang} * -1)" ~"calc(@{circ_ang} * -1)" 0 0 @tlC;
+}
+@keyframes css-spiners-circles {
+    0% {
+        .css-spiners-bs(@dotC_1, @dotC_2, @dotC_3, @dotC_4, @dotC_5, @dotC_6, @dotC_7, @dotC_8);
+    }
+    12.5% {
+        .css-spiners-bs(@dotC_8, @dotC_1, @dotC_2, @dotC_3, @dotC_4, @dotC_5, @dotC_6, @dotC_7);
+    }
+    25% {
+        .css-spiners-bs(@dotC_7, @dotC_8, @dotC_1, @dotC_2, @dotC_3, @dotC_4, @dotC_5, @dotC_6);
+    }
+    37.5% {
+        .css-spiners-bs(@dotC_6, @dotC_7, @dotC_8, @dotC_1, @dotC_2, @dotC_3, @dotC_4, @dotC_5);
+    }
+    50% {
+        .css-spiners-bs(@dotC_5, @dotC_6, @dotC_7, @dotC_8, @dotC_1, @dotC_2, @dotC_3, @dotC_4);
+    }
+    62.5% {
+        .css-spiners-bs(@dotC_4, @dotC_5, @dotC_6, @dotC_7, @dotC_8, @dotC_1, @dotC_2, @dotC_3);
+    }
+    75% {
+        .css-spiners-bs(@dotC_3, @dotC_4, @dotC_5, @dotC_6, @dotC_7, @dotC_8, @dotC_1, @dotC_2);
+    }
+    87.5% {
+        .css-spiners-bs(@dotC_2, @dotC_3, @dotC_4, @dotC_5, @dotC_6, @dotC_7, @dotC_8, @dotC_1);
+    }
+    100% {
+        .css-spiners-bs(@dotC_1, @dotC_2, @dotC_3, @dotC_4, @dotC_5, @dotC_6, @dotC_7, @dotC_8);
+    }
+}
+.css-spiners.type-7 > span{
+    .css-spiners-os-border;
+
+    border-radius: 50%;
+    animation: css-spiners-circles var(--anim-dur) linear infinite;
+}

@@ -1,0 +1,46 @@
+@keyframes css-spiners-type-11{
+    0%{
+        transform: none;
+    }
+    100%{
+        transform: translateY(-200%);
+    }
+}
+.css-spiners.type-11 > span{
+    &,
+    &::after,
+    &::before{
+        border-radius: 50%;
+        background-color: ~"rgb(var(--color-rgb))";
+        animation: css-spiners-type-11 var(--anim-dur) ease-in-out alternate infinite;
+    }
+
+    @osBorder:  ~"calc(50% - @{radius} / 3)";
+
+    top:    @osBorder;
+    bottom: @osBorder;
+    left:   @osBorder;
+    right:  @osBorder;
+
+    animation-delay: ~"calc(var(--anim-dur) * .75)";
+
+    &::after,
+    &::before {
+        content: '';
+        position:   absolute;
+        width:      100%;
+        top:        0;
+        bottom:     0;
+    }
+
+    @location: ~"calc(100% + var(--gap))";
+
+    &::before {
+        right: @location;
+    }
+
+    &::after {
+        left: @location;
+        animation-delay: ~"calc(var(--anim-dur) * .75 * 2)";
+    }
+}

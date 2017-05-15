@@ -1,0 +1,25 @@
+.css-spiners.type-1 > span{
+    .css-spiners-os-border;
+
+    border:             var(--border-sze) solid ~"rgb(var(--color-rgb))";
+    border-right-color: transparent;
+    border-radius:      50%;
+    animation: css-spiners-rotate var(--anim-dur) linear infinite;
+
+    &::after{
+        content: '';
+        display:    block;
+        width:      var(--border-sze);
+        height:     var(--border-sze);
+        background-color: ~"rgb(var(--color-rgb))";
+        border-radius:  50%;
+        position:   absolute;
+
+        //y = sin(deg) * radius; x = cos(deg) * radius
+        top:        50% - 50% * sin(45deg);
+        left:       50% + 50% * cos(45deg);
+
+        transform-origin:   left center;
+        transform:          translatey(calc(-50% + 1px)) rotate(-45deg);
+    }
+}

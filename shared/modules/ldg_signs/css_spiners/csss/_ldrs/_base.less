@@ -1,0 +1,48 @@
+@keyframes css-spiners-rotate{
+    0%{
+      transform: rotate(0);
+    }
+    100%{
+      transform: rotate(360deg);
+    }
+}
+@keyframes css-spiners-scale {
+    0%{
+        transform: scale(0);
+        opacity: 0;
+    }
+    50%{
+        opacity: 1;
+    }
+    100%{
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+.css-spiners{
+    --color-rgb:            0, 82, 236;
+    --sze:                  1;
+    --hgt:                  .8;
+    --border-sze:           .5em;
+    --gap:                  .75em;
+    --anim-dur:             1s;
+
+    width: 30%;
+    transform: translate(-50%, -50%);
+
+    &::before{
+        content:        '';
+        display:        block;
+        padding-bottom: 100%;
+    }
+}
+
+@radius:    ~"(100% - var(--border-sze) * 2) * var(--sze) / 2";
+@osBorder:  ~"calc(50% - @{radius})";
+
+.css-spiners-os-border{
+    top:    @osBorder;
+    bottom: @osBorder;
+    left:   @osBorder;
+    right:  @osBorder;
+}

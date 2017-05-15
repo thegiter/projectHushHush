@@ -1,0 +1,22 @@
+.css-spiners.type-4 > span{
+    .css-spiners-os-border;
+
+    border:         var(--border-sze) solid ~"rgba(var(--color-rgb), .5)";
+    border-radius:  50%;
+    animation: css-spiners-rotate var(--anim-dur) ease-in-out infinite;
+
+    &::after {
+        --dot-sze: 18%;
+
+        content: '';
+        position:       absolute;
+        top:            ~"calc(var(--border-sze) * -1 - var(--dot-sze) / 2 + var(--border-sze) / 2)";
+        left:           50%;
+        width:          var(--dot-sze);
+        height:         var(--dot-sze);
+        margin-left:    ~"calc(var(--dot-sze) * -1 / 2)";
+
+        border-radius: 50%;
+        background-color: ~"rgb(var(--color-rgb))";
+    }
+}

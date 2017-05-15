@@ -1,0 +1,36 @@
+.css-spiners.type-6 > span{
+    .css-spiners-os-border;
+
+    border:         var(--border-sze) solid transparent;
+    border-radius:  50%;
+
+    &::before,
+    &::after{
+        content: '';
+        border-radius: 50%;
+        position: absolute;
+        animation: css-spiners-scale var(--anim-dur) ease-out infinite;
+        border: var(--border-sze) solid;
+    }
+
+    &::before{
+        border-color:  ~"rgba(var(--color-rgb), .5)";
+
+        @location: ~"calc(var(--border-sze) * -1 - .2 * (100% + var(--border-sze)) / 2)";
+
+        top:        @location;
+        left:       @location;
+        bottom:     @location;
+        right:      @location;
+        opacity: 0;
+    }
+
+    &::after {
+        border-color: ~"rgb(var(--color-rgb))";
+        top:    ~"calc(var(--border-sze) * -1)";
+        left:   ~"calc(var(--border-sze) * -1)";
+        bottom: ~"calc(var(--border-sze) * -1)";
+        right:  ~"calc(var(--border-sze) * -1)";
+        animation-delay: ~"calc(var(--anim-dur) / 2)";
+    }
+}

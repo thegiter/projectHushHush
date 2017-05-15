@@ -1,0 +1,47 @@
+@keyframes css-spiners-type-10{
+    0%{
+        transform: scale(0);
+    }
+    100%{
+        transform: none;
+    }
+}
+.css-spiners.type-10 > span{
+    &,
+    &::after,
+    &::before{
+        border-radius: 50%;
+        animation:          css-spiners-type-10 var(--anim-dur) ease alternate infinite;
+        background-color: ~"rgb(var(--color-rgb))";
+    }
+
+    @osBorder:  ~"calc(50% - @{radius} / 2)";
+
+    top:    @osBorder;
+    bottom: @osBorder;
+    left:   @osBorder;
+    right:  @osBorder;
+
+    animation-delay:    ~"calc(var(--anim-dur) / 5 * 2)";
+
+    &::after,
+    &::before {
+        content: '';
+        position: absolute;
+        top:    0;
+        bottom: 0;
+        width:  100%;
+    }
+
+    @location: ~"calc((100% + var(--gap)) * -1)";
+
+    &::before {
+        left: @location;
+        animation-delay: ~"calc(var(--anim-dur) / 5 * 1)";
+    }
+
+    &::after {
+        right: @location;
+        animation-delay: ~"calc(var(--anim-dur) / 5 * 3)";
+    }
+}

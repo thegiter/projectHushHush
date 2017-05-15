@@ -1,0 +1,43 @@
+@keyframes css-spiners-type-9{
+    0%, 100% {
+        transform: none;
+    }
+    50% {
+        transform: scaleY(~"calc(1 / var(--hgt))");
+    }
+}
+.css-spiners.type-9 > span{
+    @osBorder_hgt:  ~"calc(50% - @{radius} * var(--hgt))";
+    @osBorder_wdt:  ~"calc(50% - (@{radius} - var(--gap)) / 6)";
+
+    top:    @osBorder_hgt;
+    bottom: @osBorder_hgt;
+    left:   @osBorder_wdt;
+    right:  @osBorder_wdt;
+    background-color:   ~"rgb(var(--color-rgb))";
+    animation:          css-spiners-type-9 var(--anim-dur) ease-in-out infinite;
+    animation-delay:    ~"calc(var(--anim-dur) / 5 * 2)";
+
+    &::after,
+    &::before{
+        content: '';
+        position: absolute;
+        top:        0;
+        bottom:     0;
+        width:      100%;
+        background-color:  ~"rgb(var(--color-rgb))";
+        animation: css-spiners-type-9 var(--anim-dur) ease-in-out infinite;
+    }
+
+    @os: ~"calc(100% + var(--gap))";
+
+    &::before {
+        right: @os;
+        animation-delay: ~"calc(var(--anim-dur) / 5 * 1)";
+    }
+
+    &::after {
+        left: @os;
+        animation-delay: ~"calc(var(--anim-dur) / 5 * 3)";
+    }
+}

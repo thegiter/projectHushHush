@@ -1,0 +1,39 @@
+.css-spiners-bs(@c1, @c2, @c3, @c4, @c5) {
+    box-shadow: ~"calc(var(--gap) * -1 * 2)" 0 0 @c1,
+                ~"calc(var(--gap) * -1)" 0 0 @c2,
+                0 0 0 @c3,
+                var(--gap) 0 0 @c4,
+                ~"calc(var(--gap) * 2)" 0 0 @c5;
+}
+
+@keyframes css-spiners-type-12{
+    @solidC: .125em ~"rgb(var(--color-rgb))";
+    @transC: 0 ~"rgba(var(--color-rgb), .2)";
+
+    0% {
+        .css-spiners-bs(@solidC, @transC, @transC, @transC, @transC);
+    }
+    25% {
+        .css-spiners-bs(@transC, @solidC, @transC, @transC, @transC);
+    }
+    50% {
+        .css-spiners-bs(@transC, @transC, @solidC, @transC, @transC);
+    }
+    75% {
+        .css-spiners-bs(@transC, @transC, @transC, @solidC, @transC);
+    }
+    100% {
+        .css-spiners-bs(@transC, @transC, @transC, @transC, @solidC);
+    }
+}
+.css-spiners.type-12 > span{
+    @osBorder:  ~"calc(50% - @{radius} / 4)";
+
+    top:    @osBorder;
+    bottom: @osBorder;
+    left:   @osBorder;
+    right:  @osBorder;
+
+    border-radius: 50%;
+    animation: css-spiners-type-12 var(--anim-dur) linear alternate infinite;
+}
