@@ -1,0 +1,19 @@
+{
+    "short_name": "SHPS",
+    "name": "SHPS",
+    "icons": [
+        {
+          "src": "shared/imgs/favicon.ico",
+          "sizes": "32x32",
+          "type": "image/x-icon"
+        }, {
+          "src": "shared/imgs/site_icon_256.png",
+          "sizes": "256x260",
+          "type": "image/png"
+        }
+    ],
+    "start_url": "/?utm_source=homescreen",
+    "background_color": "#0E0D0B",
+    "Theme_color": "#47433a",
+    "display": "standalone"
+}
