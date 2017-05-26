@@ -1,6 +1,7 @@
 {
     "short_name": "SHPS",
     "name": "SHPS",
+    "description": "Desmond's personal website, currently in its beta.",
     "icons": [
         {
           "src": "shared/imgs/favicon.ico",
@@ -14,6 +15,6 @@
     ],
     "start_url": "/?utm_source=homescreen",
     "background_color": "#0E0D0B",
-    "Theme_color": "#47433a",
+    "theme_color": "#47433a",
     "display": "standalone"
 }
