@@ -12,7 +12,7 @@
 	require_once root.'shared/cache_ctrl/validate.php';
 
 	//not using etag, because apache deflate gzip changes it
-	cacheCtrlModule::validate('Sun, 21 May 2017 13:20:06 GMT');
+	cacheCtrlModule::validate('Sun, 26 May 2017 13:20:06 GMT');
 
 	require_once root.'shared/cache_ctrl/front_end.php';//not using far_future now for testing purposes
 
@@ -35,6 +35,6 @@
 		<title>SHPS / の弑す魂の PS</title>
 	</head>
 
-	<body id="the-shps-ajax-bd" class="ful-bd">
+	<body id="the-shps-ajax-bd" class="pos-abs-ful">
 	</body>
 </html>

@@ -30,6 +30,9 @@
 
     AddType application/javascript                      js
 
+ # Cascading Stylesheet
+
+    AddType text/css                                    css
 
   # Manifest files
 
@@ -377,7 +380,7 @@ ServerSignature Off
 	</FilesMatch>
 
 	#content resources, 1 week
-	<FilesMatch "\.(flv|ico|pdf|avi|mov|mp4|ppt|doc|mp3|wmv|wav|ogg|txt|xml)$">
+	<FilesMatch "\.(flv|ico|pdf|avi|mov|mp4|ppt|doc|mp3|wmv|wav|ogg|txt|xml|json)$">
 		Header set Cache-Control "max-age=604800"
 	</FilesMatch>
 

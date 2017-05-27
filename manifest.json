@@ -4,6 +4,10 @@
     "description": "Desmond's personal website, currently in its beta.",
     "icons": [
         {
+          "src": "shared/imgs/site_icon_16.png",
+          "sizes": "16x16",
+          "type": "image/x-icon"
+        }, {
           "src": "shared/imgs/favicon.ico",
           "sizes": "32x32",
           "type": "image/x-icon"
