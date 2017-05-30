@@ -12,9 +12,15 @@
 	require_once root.'shared/cache_ctrl/validate.php';
 
 	//not using etag, because apache deflate gzip changes it
-	cacheCtrlModule::validate('Sun, 26 May 2017 13:20:06 GMT');
+	cacheCtrlModule::validate('Sun, 28 May 2017 13:20:06 GMT');
 
-	require_once root.'shared/cache_ctrl/front_end.php';//not using far_future now for testing purposes
+	require_once root.'shared/cache_ctrl/front_end.php';//far_future is no longer needed because of service workers
+
+	//server push is render blocking, push only the assets that are required for the initial render
+	//requires http/2, which requires https
+	$h = 'Link: </shared/csss/default.css>; rel=preload; as=style';
+	$h .= ', </jss/installer.js>; rel=preload; as=script';
+	header($h);
 
 	require root.'shared/phps/dtdec_x.php';
 
@@ -26,7 +32,7 @@
 
 		<!--<meta name="robots" content="noindex,follow" />-->
 		<meta name="description" content="Desmond Zhu's personal website. Currently in its beta." />
-		<meta name="keywords" content="弑魂,SHPS,Personal website,Desmond Zhu" />
+		<meta name="keywords" content="弑魂,SHPS,Personal website,Desmond Zhu,Single Page,Progressive Web App,offline" />
 		<meta name="google-site-verification" content="WiIzb9FaspCvU6Lxe-COLQr1_LSfwfWQOpkc5meOHNc" />
 
 		<script src="/jss/installer.js">
