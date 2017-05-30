@@ -208,8 +208,6 @@
 
 			return $result;
 		}
-
-
 	}
 
 	class seAnalyze {
@@ -234,7 +232,11 @@
 		const MAX_D = .1;
 		const TTL_GLB_RANK = 4000;
 
-		const CNYIR = 0.6;//10%
+		const NI_SZE_STD = 20000;//mil
+		const RETURN_STD = 20;//pct
+		const ROTA_RANK_STD = 40;
+
+		const CNYIR = 0.06;//10%
 		const ZARIR = 0.2;
 		const USDIR = 0.02;
 
@@ -1192,7 +1194,7 @@
 
 			//premium or discount adjustment
 			//p o d
-			/*self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
+	/*		self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
 
 			//popularity
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
@@ -1244,7 +1246,19 @@
 			$ppadj = self::$def->pdadj * self::$def->pplradj;*/
 
 			$ppadj = pow(1 - self::$def->glbRank / self::TTL_GLB_RANK, 2) * (self::MAX_P - self::MAX_D) + self::MAX_D;
+
+			//profitability adjustment
+			if ($at12mni <= 0) {
+				$profitadj = 0;
+			} else {
+				$profitadj = ($at12mni / self::NI_SZE_STD + self::$def->t12maom / self::RETURN_STD + self::$def->t12maroe / self::RETURN_STD + self::$def->t12maroc / self::RETURN_STD + self::$def->rotaRank / self::ROTA_RANK_STD + self::$def->arote / self::RETURN_STD) / 6;
+			}
+			//end profitability adj
+
+			self::$def->profitadj = $profitadj;
 			self::$def->ppadj = $ppadj;
+
+			$ppadj *= $profitadj;
 
 			self::$def->prcv0g *= $ppadj;
 
@@ -1469,12 +1483,14 @@
 				}
 			}
 
-			if (self::$def->cpfptmr >= (self::DR - .02)) {
-				self::$def->advice = 'be ready to sell';
-			}
+			if (self::$def->rotaRank > 0 && self::$def->arote > 0) {
+				if (self::$def->cpfptmr >= (self::DR - .02)) {
+					self::$def->advice = 'be ready to sell';
+				}
 
-			if (self::$def->cpfptmr >= self::DR || $cc <= 0) {
-				self::$def->advice = 'sell';
+				if (self::$def->cpfptmr >= self::DR || $cc <= 0) {
+					self::$def->advice = 'sell';
+				}
 			}
 
 			return self::$def;
