@@ -61,7 +61,7 @@
 		var progressSpan = document.createElement('span');
 		var estimateSpan = document.createElement('span');
 
-		const MAX_FAILS = 10;
+		const MAX_FAILS = 18;
 		var fail_cntr = 0;
 
 		var ttlRqss = 0;
@@ -137,9 +137,9 @@
 				if (ttlRqss >= MAX_RQSS) {
 					setTimeout(function() {
 						siphon(tkr, se);
-					}, 1000 * 60 * 5);
+					}, 1000 * 60 * 2);
 
-					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 5 minutes';
+					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 2 minutes';
 
 					return false;
 				}
@@ -184,7 +184,7 @@
 
 							siphonEnd(xhr.response);
 						} else if (retrys < MAX_RETRYS) {
-							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in 5 minutes';
+							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in 10 minutes';
 
 							retrys++;
 
@@ -194,7 +194,7 @@
 
 							setTimeout(function() {
 								siphon(tkr, se);
-							}, 1000 * 60 * 5);
+							}, 1000 * 60 * 10);
 						} else {
 							if (noMcFails == retrys) {
 								noMcFails = 0;
