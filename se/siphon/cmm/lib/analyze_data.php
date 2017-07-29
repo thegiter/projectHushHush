@@ -5,9 +5,11 @@
 		die('CURL is not installed!');
 	}
 
+	ini_set('max_execution_time', 180);
+
 	class seCurl {
 		const MAXRETRY = 5;
-		const MAXTIME = 30;
+		const MAXTIME = 170;
 
 		//often file_get_contents is disabled, using this is as a workaround
 		static function getCtts($url) {
@@ -51,8 +53,8 @@
 				curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 				curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 				curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, 30);
-				curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, 30); //timeout in seconds
+				curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, self::MAXTIME);
+				curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, self::MAXTIME); //timeout in seconds
 
 				// post?
 				if (is_array($d) && !empty($d['post'])) {
@@ -854,7 +856,7 @@
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
 			$lowestrote = min($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote);
 
-			if (max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) - $lowestrote >= 50 || ($lowestrote <= 0)) {
+			if (((max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) - $lowestrote) >= 50) || ($lowestrote <= 0)) {
 				self::$def->arote = 0;
 			} else {
 				self::$def->arote = ($lyrote + $slyrote + $tlyrote + $frlyrote + $filyrote) / 5;
@@ -1251,7 +1253,7 @@
 			if ($at12mni <= 0) {
 				$profitadj = 0;
 			} else {
-				$profitadj = ($at12mni / self::NI_SZE_STD + self::$def->t12maom / self::RETURN_STD + self::$def->t12maroe / self::RETURN_STD + self::$def->t12maroc / self::RETURN_STD + self::$def->rotaRank / self::ROTA_RANK_STD + self::$def->arote / self::RETURN_STD) / 6;
+				$profitadj = ($at12mni / self::NI_SZE_STD + self::$def->t12maom / self::RETURN_STD + self::$def->t12maroe / self::RETURN_STD + self::$def->t12maroc / self::RETURN_STD + self::$def->rotaRank / self::ROTA_RANK_STD) / 5;
 			}
 			//end profitability adj
 
