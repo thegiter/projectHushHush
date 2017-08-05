@@ -664,7 +664,7 @@
 
 			$ctt = $result['oi'];
 
-			preg_match('/Annual Data[\s\S]+Operating Income[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
