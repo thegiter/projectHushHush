@@ -855,7 +855,7 @@
 				}
 			}
 
-			preg_match('/Annual Data[\s\S]+Return-on-Tangible-Asset[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -908,7 +908,7 @@
 
 			$ctt = $result['rote'];
 
-			preg_match('/Annual Data[\s\S]+Return-on-Tangible-Equity[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
