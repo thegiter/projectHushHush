@@ -335,37 +335,39 @@
 				$lastBp = $pf;
 
 				for ($bp = $pf; $bp < $ep; $bp += self::$increment) {
-					$mos = ($ep - $bp) / ($ep - $pf);
+					if ($bp != 0) {
+						$mos = ($ep - $bp) / ($ep - $pf);
 
-					$wa = self::BDR / $mos;
+						$wa = self::BDR / $mos;
 
-					$cost = $bp / (1 + $wa);
+						$cost = $bp / (1 + $wa);
 
-					$la = ($cost - $pf) / $cost;
+						$la = ($cost - $pf) / $cost;
 
-					//probability of going up
-					$p_up = 1 - ($cost - $pf) / ($ep - $pf) * .5;
+						//probability of going up
+						$p_up = 1 - ($cost - $pf) / ($ep - $pf) * .5;
 
-					if ($p_up > 1) {
-						$p_up = 1;
-					} else if ($p_up < 0) {
-						$p_up = 0;
+						if ($p_up > 1) {
+							$p_up = 1;
+						} else if ($p_up < 0) {
+							$p_up = 0;
+						}
+
+						//probability of reaching bp
+						$p = (1 - ($bp - $cost) / ($pc - $cost)) * $p_up;
+
+						$allo = ($p - (1 - $p) / ($wa / $la)) / 2;
+						$abdr = $wa;
+
+						if ($allo < self::B_ALLO) {
+							$result->bp = $lastBp;
+							$result->abdr = $abdr;
+
+							break;
+						}
+
+						$lastBp = $bp;
 					}
-
-					//probability of reaching bp
-					$p = (1 - ($bp - $cost) / ($pc - $cost)) * $p_up;
-
-					$allo = ($p - (1 - $p) / ($wa / $la)) / 2;
-					$abdr = $wa;
-
-					if ($allo < self::B_ALLO) {
-						$result->bp = $lastBp;
-						$result->abdr = $abdr;
-
-						break;
-					}
-
-					$lastBp = $bp;
 				}
 			}
 
