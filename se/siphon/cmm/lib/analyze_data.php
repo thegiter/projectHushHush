@@ -487,7 +487,7 @@
 
 			$ctt = $result['ni'];
 
-			preg_match('/Annual Data[\s\S]+Net Income[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
