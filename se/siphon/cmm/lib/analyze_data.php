@@ -479,13 +479,17 @@
 			self::$def->debt = self::$def->ce * self::$def->der;
 			self::$def->cap = self::$def->debt + self::$def->ce;
 
-			preg_match('/Annual Data[\s\S]+Debt-to-Equity[\s\S]+\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>\s*\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no slyder';
 			}
 
-			self::$def->slyder = str_replace(',', '', $matches[2]);
+			self::$def->slyder = str_replace(',', '', $matches[count($matches - 2)[2]]);
 
 			$ctt = $result['ni'];
 
