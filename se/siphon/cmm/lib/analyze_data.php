@@ -489,7 +489,7 @@
 				return 'no slyder';
 			}
 
-			self::$def->slyder = str_replace(',', '', $matches[count($matches - 2)[2]]);
+			self::$def->slyder = str_replace(',', '', $matches[count($matches) - 2][2]);
 
 			$ctt = $result['ni'];
 
