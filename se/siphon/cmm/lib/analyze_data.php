@@ -650,7 +650,7 @@
 				self::$def->cl = 0;
 			}
 
-			preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
