@@ -236,7 +236,7 @@
 
 		const NI_SZE_STD = 20000;//mil
 		const RETURN_STD = 20;//pct
-		const ROTA_RANK_STD = 40;
+		const ROTA_RANK_STD = 60;
 
 		const CNYIR = 0.06;//10%
 		const ZARIR = 0.2;
@@ -1367,7 +1367,7 @@
 			if ($at12mni <= 0) {
 				$profitadj = 0;
 			} else {
-				$profitadj = pow(($at12mni / self::NI_SZE_STD + self::$def->t12maom / self::RETURN_STD + self::$def->t12maroe / self::RETURN_STD + self::$def->t12maroc / self::RETURN_STD + self::$def->rotaRank / self::ROTA_RANK_STD) / 5, 2);
+				$profitadj = pow($at12mni / self::NI_SZE_STD * .35 + self::$def->t12maom / self::RETURN_STD * .2 + self::$def->t12maroe / self::RETURN_STD * .2 + self::$def->t12maroc / self::RETURN_STD * .2 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
 			}
 			//end profitability adj
 
