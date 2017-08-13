@@ -1376,7 +1376,9 @@
 
 			$ppadj *= $profitadj;
 
-			self::$def->prcv0g *= $ppadj * $ppadj / 3.75;
+			$ppadj *= $ppadj / 3.75;
+
+			self::$def->prcv0g *= $ppadj;
 
 			if ($ppadj > 1) {
 				self::$def->fp *= $ppadj;
