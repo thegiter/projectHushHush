@@ -1023,7 +1023,7 @@
 
 			$ctt = $result['nios'];
 
-			preg_match('/Annual Data[\s\S]+Net Issuance of Stock[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
