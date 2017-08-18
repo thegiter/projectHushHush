@@ -1060,7 +1060,7 @@
 			//lyv is lyni + the current igr + lydda + current capE (assuming one was to predict the igr and capE accurately last year)
 			$ctt = $result['dda'];//depreciation depletion and amortization
 
-			preg_match('/Annual Data[\s\S]+Depreciation, Depletion and Amortization[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
