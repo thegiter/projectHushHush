@@ -559,7 +559,9 @@
 
 			$ctt = $result['roc'];
 
-			preg_match('/fiscal year[\s\S]+Invested Capital[\s\S]+A\: [\s\S]+A\: [\s\S]+Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+			preg_match('/fiscal year[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+
+			preg_match('/Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>/', $matches[0], $matches);
 
 			if (!$matches) {
 				return 'no roc ltd std';
