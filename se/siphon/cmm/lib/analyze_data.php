@@ -614,7 +614,7 @@
 
 			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
 
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROC[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
