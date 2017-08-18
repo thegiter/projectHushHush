@@ -507,7 +507,7 @@
 
 			//gurufocus does not update net income to the current year,
 			//we add up the quaterly data to get tailing net income
-			preg_match('/Quarterly Data[\s\S]+Net Income[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -518,7 +518,7 @@
 				self::$def->t12mni = str_replace(',', '', $matches[count($matches) - 1][2]) + str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]);
 			} else {
 				//check for semi-annual data
-				preg_match('/Semi-Annual Data[\s\S]+Net Income[\s\S]+Calculation/', $ctt, $matches);
+				preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
 
 				$tmpMatch = $matches[0];
 
