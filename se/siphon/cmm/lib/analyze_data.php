@@ -559,18 +559,18 @@
 
 			$ctt = $result['roc'];
 
-			preg_match('/fiscal year[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+			preg_match('/fiscal year[\s\S]+Invested Capital[\s\S]+A\: [\s\S]+A\: [\s\S]+Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no roc ltd std';
 			}
 
-			self::$def->lyltd = str_replace(',', '', $matches[3]);
-			self::$def->lystd = str_replace(',', '', $matches[4]);
+			self::$def->lyltd = str_replace(',', '', $matches[1]);
+			self::$def->lystd = str_replace(',', '', $matches[2]);
 
 			self::$def->lyd = self::$def->lyltd + self::$def->lystd;
 
-			self::$def->lye = str_replace(',', '', $matches[5]);
+			self::$def->lye = str_replace(',', '', $matches[3]);
 
 			self::$def->lycap = self::$def->lye + self::$def->lyd;
 
