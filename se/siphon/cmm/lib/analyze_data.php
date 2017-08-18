@@ -618,6 +618,10 @@
 
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
+			if (!$matches) {
+				return 'no roc quarterly data';
+			}
+
 			self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
 			self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
 			self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
