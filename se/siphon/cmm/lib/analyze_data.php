@@ -732,11 +732,15 @@
 				$lytlomr = self::$def->lyom / self::$def->slyom;
 			}
 
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Operating Margin[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no t12mom';
+			}
 
 			$len = count($matches);
 
@@ -805,11 +809,15 @@
 
 			self::$def->aroeg = ((self::$def->lyroe - self::$def->slyroe) / abs(self::$def->slyroe) + (self::$def->slyroe - self::$def->tlyroe) / abs(self::$def->tlyroe)) / 2;
 
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+ROE[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no t12mroe';
+			}
 
 			$len = count($matches);
 
