@@ -432,7 +432,7 @@
 
 			$ctt = $result['mc'];
 
-			preg_match('/Market Cap \(M\)\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil \(As of/', $ctt, $matches);
+			preg_match('/Market Cap \(M\)\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no mc: '.$ctt;
