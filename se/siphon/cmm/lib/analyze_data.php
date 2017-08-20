@@ -236,7 +236,7 @@
 
 		const NI_SZE_STD = 20000;//mil
 		const RETURN_STD = 20;//pct
-		const RETURN_GRW_STD = .6;
+		const RETURN_GRW_STD = .7;
 		const ROTA_RANK_STD = 60;
 
 		const CNYIR = 0.06;//10%
