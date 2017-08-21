@@ -1389,7 +1389,7 @@
 			self::$def->profitadj = $profitadj;
 			self::$def->ppadj = $ppadj;
 
-			$ppadj = $profitadj * .9 + $ppadj * .1;
+			$ppadj = $profitadj * .7 + $ppadj * .3;
 
 			if ($ppadj > 1) {
 				$ppadj = ($ppadj - 1) * $ppadj / 3.75 + 1;
