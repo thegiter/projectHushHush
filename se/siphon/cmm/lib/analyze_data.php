@@ -441,6 +441,10 @@
 
 			self::$def->mc = str_replace(',', '', $matches[2]);
 
+			if (self::$def->mc = 0) {
+				return 'no mc: mc is 0'
+			}
+
 			$ctt =  $result['bps'];
 
 			preg_match('/Book Value per Share\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
