@@ -38,14 +38,14 @@
 		const INIT_NUM_THREADS = 5;
 		const ADDITIONAL_NUM_THREADS = 1;
 
-		const MAX_THREADS = 18;
+		const MAX_THREADS = 27;
 		//max concurrent siphoning network can handle seems to be limited to 15
 		//could be a website limitation or just server network limitation
 
 		var threadCnt = -1;
 
-		var tkrRows = [];
-		var tkrsCnt;
+		let tkrRows = [];
+		let tkrsCnt;
 
 		var statusP = document.createElement('p');
 		scb.msgCnr.appendChild(statusP);
@@ -61,11 +61,11 @@
 		var progressSpan = document.createElement('span');
 		var estimateSpan = document.createElement('span');
 
-		const MAX_FAILS = 18;
+		const MAX_FAILS = MAX_THREADS;
 		var fail_cntr = 0;
 
-		var ttlRqss = 0;
 		const MAX_RQSS = 5;
+		var ttlRqss = 0;
 
 		function siphonThread(js) {
 			threadCnt++;
