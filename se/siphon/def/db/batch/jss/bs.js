@@ -74,7 +74,7 @@
 
 			var threadNum = threadCnt;
 
-			scb.msgCnr.appendChild(document.createElement('span'));
+			scb.msgCnr.insertBefore(document.createElement('span'), statusP);
 			scb.tMsgCnrs = scb.msgCnr.children;
 
 			var retrys = 0;
