@@ -1536,7 +1536,7 @@
 				default:
 			}
 
-			self::$cpUrl = 'http://www.reuters.com/finance/stocks/chart/'.$r_tkr.self::$rSe;
+			self::$cpUrl = 'https://www.reuters.com/finance/stocks/chart/'.$r_tkr.self::$rSe;
 
 			//cal data either from siphon or from db, depend on refresh
 			if ($refresh) {
