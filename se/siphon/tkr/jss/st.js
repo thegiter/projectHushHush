@@ -1,4 +1,4 @@
-﻿shpsCmm.domMgr.domReady().then(function() {
+shpsCmm.domMgr.domReady().then(function() {
 	const MAX_NUM_TKRS = 1000;
 
 	const form = document.getElementById('se-form'),
@@ -203,7 +203,7 @@
 					if (matches) {
 						let sName = matches[2];
 
-						if (sName.indexOf('Fund') == -1) {
+						if ((sName.indexOf('Fund') == -1) && (sName.indexOf(' ETF') == -1)) {
 							const tkr = matches[1];
 
 							//select is a reserved word, therefore must be escaped

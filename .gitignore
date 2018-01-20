@@ -18,6 +18,9 @@ node_modules/
 #Docs
 Doc.txt
 doc.txt
+domainandissuer.certs.txt
+domain.key.txt
+letsencrypt.key.txt
 Ajax Sys and Module Sys How To.txt
 Before Uninstall.txt
 loading example.txt

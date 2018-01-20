@@ -9,6 +9,10 @@
 	$doc->shpsAjax->hook = 'portfolio';
 	$doc->shpsAjax->ttl = 'Portfolio';
 
+	$doc->shpsAjax->settings = new stdClass;
+
+	$doc->shpsAjax->settings->psdMenuDoExpScrlCnrId = 'ptfl-bd';
+
 	//indicate only files necessary for page to intro,
 	//these files will be cached
 

@@ -30,6 +30,9 @@
 
     AddType application/javascript                      js
 
+ # Cascading Stylesheet
+
+    AddType text/css                                    css
 
   # Manifest files
 
@@ -369,15 +372,15 @@ ServerSignature Off
 ####
 
 ##general
-	
+
 	#normal resources
 	#presentational files that collaborate, 1 day
 	<FilesMatch "\.(jpg|jpeg|png|gif|bmp|swf|svg|js|css|svg)$">
 		Header set Cache-Control "max-age=86400"
 	</FilesMatch>
-	
+
 	#content resources, 1 week
-	<FilesMatch "\.(flv|ico|pdf|avi|mov|mp4|ppt|doc|mp3|wmv|wav|ogg|txt|xml)$">
+	<FilesMatch "\.(flv|ico|pdf|avi|mov|mp4|ppt|doc|mp3|wmv|wav|ogg|txt|xml|json)$">
 		Header set Cache-Control "max-age=604800"
 	</FilesMatch>
 
@@ -385,29 +388,29 @@ ServerSignature Off
 	<FilesMatch "\favicon.ico$">
 		Header set Cache-Control "max-age=2592000"
 	</FilesMatch>
-	
+
 	#third party static, 1 year
 	<FilesMatch "\.(woff|woff2)$">
 		Header set Cache-Control "max-age=31536000"
 	</FilesMatch>
 
-##specific	
-	
+##specific
+
 	#gm discount
 	<FilesMatch "^gm/discount.jpg$">
 		Header set Cache-Control "max-age=0, private, no-store, no-cache, must-revalidate"
 	</FilesMatch>
-	
+
 	#gm featured
 	<FilesMatch "^gm/featured.jpg$">
 		Header set Cache-Control "max-age=0, private, no-store, no-cache, must-revalidate"
 	</FilesMatch>
 
 ##global
-	
+
 	#no transform
 	Header merge Cache-Control "no-transform"
-	
+
 	#FileETag INode MTime Size
 	#deflate fucks up etag, therefore we disable etag, because we still want gzip
 	FileETag None
@@ -436,9 +439,6 @@ ErrorDocument 403 shared/phps/get/err_403.php?ir=true
 
 # inner directories should override outer ones, hence on top
 # Mod_Rewrite urls are not case sensitive
-
-### Contour #################################################
-RewriteRule ^shared/contour/contour.php$ - [L]
 
 ### Drop Shadow 15 15 #######################################
 RewriteRule ^shared/ds_1515/ds.php$ - [L]
@@ -502,8 +502,8 @@ RewriteRule ^(.+/)?index.php$ - [L]
 #RewriteRule . - [R=404,L]
 #request_uri begins with a prepended slash, unlike the pattern uri portion of rewriterule. Additionally, if an external redirect is enforced, ie. uisng the [R] flag, substitution uri portion of rewriterule must be relative to the root and has a slash prepended
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/(debug|se)/
-RewriteCond %{REQUEST_FILENAME} !.(css|jpg|png|gif|js|xhtml|html|ico|woff2|woff|svg)$
+RewriteCond %{REQUEST_URI} !^/(debug|se|.well-known)/
+RewriteCond %{REQUEST_FILENAME} !.(css|jpg|png|gif|js|xhtml|html|ico|woff2|woff|svg|json)$
 RewriteCond %{REQUEST_URI} !^/robots\.txt$
 RewriteRule . udr_cst/?ir=true [L]
 #mod_rewrite always takes precedence over directory index, so there is no point putting directory index on top

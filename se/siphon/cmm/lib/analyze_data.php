@@ -5,9 +5,11 @@
 		die('CURL is not installed!');
 	}
 
+	ini_set('max_execution_time', 180);
+
 	class seCurl {
 		const MAXRETRY = 5;
-		const MAXTIME = 30;
+		const MAXTIME = 170;
 
 		//often file_get_contents is disabled, using this is as a workaround
 		static function getCtts($url) {
@@ -51,8 +53,8 @@
 				curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 				curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 				curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, 30);
-				curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, 30); //timeout in seconds
+				curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, self::MAXTIME);
+				curl_setopt($chs_arr[$id], CURLOPT_TIMEOUT, self::MAXTIME); //timeout in seconds
 
 				// post?
 				if (is_array($d) && !empty($d['post'])) {
@@ -208,8 +210,6 @@
 
 			return $result;
 		}
-
-
 	}
 
 	class seAnalyze {
@@ -230,11 +230,16 @@
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP_DOWN = .8;
 		const PPLR_PCT_STEP_UP = 1.2;
-		const MAX_P = 1.96;//DR * DR = 1.4 * 1.4
+		const MAX_P = 1.5;
 		const MAX_D = .1;
 		const TTL_GLB_RANK = 4000;
 
-		const CNYIR = 0.6;//10%
+		const NI_SZE_STD = 20000;//mil
+		const RETURN_STD = 20;//pct
+		const RETURN_GRW_STD = 1;
+		const ROTA_RANK_STD = 60;
+
+		const CNYIR = 0.06;//10%
 		const ZARIR = 0.2;
 		const USDIR = 0.02;
 
@@ -335,37 +340,39 @@
 				$lastBp = $pf;
 
 				for ($bp = $pf; $bp < $ep; $bp += self::$increment) {
-					$mos = ($ep - $bp) / ($ep - $pf);
+					if ($bp != 0) {
+						$mos = ($ep - $bp) / ($ep - $pf);
 
-					$wa = self::BDR / $mos;
+						$wa = self::BDR / $mos;
 
-					$cost = $bp / (1 + $wa);
+						$cost = $bp / (1 + $wa);
 
-					$la = ($cost - $pf) / $cost;
+						$la = ($cost - $pf) / $cost;
 
-					//probability of going up
-					$p_up = 1 - ($cost - $pf) / ($ep - $pf) * .5;
+						//probability of going up
+						$p_up = 1 - ($cost - $pf) / ($ep - $pf) * .5;
 
-					if ($p_up > 1) {
-						$p_up = 1;
-					} else if ($p_up < 0) {
-						$p_up = 0;
+						if ($p_up > 1) {
+							$p_up = 1;
+						} else if ($p_up < 0) {
+							$p_up = 0;
+						}
+
+						//probability of reaching bp
+						$p = (1 - ($bp - $cost) / ($pc - $cost)) * $p_up;
+
+						$allo = ($p - (1 - $p) / ($wa / $la)) / 2;
+						$abdr = $wa;
+
+						if ($allo < self::B_ALLO) {
+							$result->bp = $lastBp;
+							$result->abdr = $abdr;
+
+							break;
+						}
+
+						$lastBp = $bp;
 					}
-
-					//probability of reaching bp
-					$p = (1 - ($bp - $cost) / ($pc - $cost)) * $p_up;
-
-					$allo = ($p - (1 - $p) / ($wa / $la)) / 2;
-					$abdr = $wa;
-
-					if ($allo < self::B_ALLO) {
-						$result->bp = $lastBp;
-						$result->abdr = $abdr;
-
-						break;
-					}
-
-					$lastBp = $bp;
 				}
 			}
 
@@ -373,7 +380,7 @@
 		}
 
 		private static function getCp() {
-			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>\D+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>[\s\S]+\<span\>52\-wk High\<\/span\>[\s\S]+class\="sectionQuoteDetailHigh"\>.+;([\d\.\,]+)\<\/span\>[\s\S]+\<span\>52\-wk Low\<\/span\>[\s\S]+class\="sectionQuoteDetailLow">.+;([\d\.\,]+)\<\/span\>/', self::$cpHtml, $matches);
+			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>\s+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>[\s\S]+\<span\>52\-wk High\<\/span\>[\s\S]+class\="sectionQuoteDetailHigh"\>.+;([\d\.\,]+)\<\/span\>[\s\S]+\<span\>52\-wk Low\<\/span\>[\s\S]+class\="sectionQuoteDetailLow">.+;([\d\.\,]+)\<\/span\>/', self::$cpHtml, $matches);
 
 			$cp = str_replace(',', '', $matches[2]);
 			$high = str_replace(',', '', $matches[4]);
@@ -403,24 +410,24 @@
 		private static function getDef_siphon() {
 			//siphon and set up def
 			$rqss = [
-				'mc' => 'https://www.gurufocus.com/term/mktcap/'.self::$guruFullTkr.'/Market-Cap/',
+				'mc' => 'https://www.gurufocus.com/term/mktcap/'.self::$guruFullTkr.'/Market-Cap-(M)/',
 				'bps' => 'https://www.gurufocus.com/term/Book+Value+Per+Share/'.self::$guruFullTkr.'/Book-Value-per-Share/',
-				'so' => 'https://www.gurufocus.com/term/BS_share/'.self::$guruFullTkr.'/Shares-Outstanding-EOP/',
+				'so' => 'https://www.gurufocus.com/term/BS_share/'.self::$guruFullTkr.'/Shares-Outstanding-(EOP)/',
 				'der' => 'https://www.gurufocus.com/term/deb2equity/'.self::$guruFullTkr.'/Debt-to-Equity/',
 				'ni' => 'https://www.gurufocus.com/term/Net+Income/'.self::$guruFullTkr.'/Net-Income/',
 				'ie' => 'https://www.gurufocus.com/term/InterestExpense/'.self::$guruFullTkr.'/Interest-Expense/',
-				'roc' => 'https://www.gurufocus.com/term/ROC/'.self::$guruFullTkr.'/Return-on-Capital/',
+				'roc' => 'https://www.gurufocus.com/term/ROC/'.self::$guruFullTkr.'/ROC-Percentage/',
 				'te' => 'https://www.gurufocus.com/term/Total+Equity/'.self::$guruFullTkr.'/Total-Equity/',
 				'oi' => 'https://www.gurufocus.com/term/Operating+Income/'.self::$guruFullTkr.'/Operating-Income/',
-				'om' => 'https://www.gurufocus.com/term/operatingmargin/'.self::$guruFullTkr.'/Operating-Margin/',
-				'wacc' => 'https://www.gurufocus.com/term/wacc/'.self::$guruFullTkr.'/Weighted-Average-Cost-Of-Capital-WACC/',
-				'roe' => 'https://www.gurufocus.com/term/ROE/'.self::$guruFullTkr.'/Return-on-Equity/',
-				'rota' => 'https://www.gurufocus.com/term/ROTA/'.self::$guruFullTkr.'/Return-on-Tangible-Assets/',
+				'om' => 'https://www.gurufocus.com/term/operatingmargin/'.self::$guruFullTkr.'/Operating-Margin-Percentage/',
+				'wacc' => 'https://www.gurufocus.com/term/wacc/'.self::$guruFullTkr.'/WACC-Percentage/',
+				'roe' => 'https://www.gurufocus.com/term/ROE/'.self::$guruFullTkr.'/ROE-Percentage/',
+				'rota' => 'https://www.gurufocus.com/term/ROTA/'.self::$guruFullTkr.'/Return-on-Tangible-Asset/',
 				'rote' => 'https://www.gurufocus.com/term/ROTE/'.self::$guruFullTkr.'/Return-on-Tangible-Equity/',
 				'pe' => 'https://www.gurufocus.com/term/pe/'.self::$guruFullTkr.'/PE-Ratio/',
 				'pb' => 'https://www.gurufocus.com/term/pb/'.self::$guruFullTkr.'/PB-Ratio/',
 				'nios' => 'https://www.gurufocus.com/term/Net+Issuance+of+Stock/'.self::$guruFullTkr.'/Net-Issuance-of-Stock/',
-				'dda' => 'https://www.gurufocus.com/term/DDA/'.self::$guruFullTkr.'/Depreciation-Depletion-and-Amortization/',
+				'dda' => 'https://www.gurufocus.com/term/CF_DDA/'.self::$guruFullTkr.'/Depreciation,-Depletion-and-Amortization/',
 				'capE' => 'https://www.gurufocus.com/term/Cash+Flow_CPEX/'.self::$guruFullTkr.'/Capital-Expenditure/',
 				'cCapE' => 'https://www.gurufocus.com/term/ChangeInWorkingCapital/'.self::$guruFullTkr.'/Change-In-Working-Capital/',
 				'cp' => self::$cpUrl
@@ -434,7 +441,7 @@
 
 			$ctt = $result['mc'];
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/Market Cap \(M\)\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no mc: '.$ctt;
@@ -442,9 +449,13 @@
 
 			self::$def->mc = str_replace(',', '', $matches[2]);
 
+			if (self::$def->mc == 0) {
+				return 'no mc: mc is 0';
+			}
+
 			$ctt =  $result['bps'];
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
+			preg_match('/Book Value per Share\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no bps';
@@ -454,7 +465,7 @@
 
 			$ctt = $result['so'];
 
-			preg_match('/data_value"\>(.+) Mil/', $ctt, $matches);
+			preg_match('/Shares Outstanding \(EOP\)\: (.+) Mil/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no so';
@@ -466,7 +477,7 @@
 
 			$ctt = $result['der'];
 
-			preg_match('/data_value"\>(.+) \(As of/', $ctt, $matches);
+			preg_match('/Debt-to-Equity\: (.+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no der';
@@ -481,33 +492,53 @@
 			self::$def->debt = self::$def->ce * self::$def->der;
 			self::$def->cap = self::$def->debt + self::$def->ce;
 
-			preg_match('/Annual Data[\s\S]+deb2equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
-			self::$def->slyder = str_replace(',', '', $matches[2]);
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no slyder';
+			}
+
+			self::$def->slyder = str_replace(',', '', $matches[count($matches) - 2][2]);
 
 			$ctt = $result['ni'];
 
-			preg_match('/Annual Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no ni';
 			}
 
-			self::$def->lyni = str_replace(',', '', $matches[2]);
+			self::$def->lyni = str_replace(',', '', end($matches)[2]);
 
 			//gurufocus does not update net income to the current year,
 			//we add up the quaterly data to get tailing net income
-			preg_match('/Quarterly Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+			preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if ($matches) {
 				//add up 4 quarters
-				self::$def->t12mni = str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2]);
+				self::$def->t12mni = str_replace(',', '', $matches[count($matches) - 1][2]) + str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]);
 			} else {
 				//check for semi-annual data
-				preg_match('/Semi-Annual Data[\s\S]+Net Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+				preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
+
+				$tmpMatch = $matches[0];
+
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 				if ($matches) {
-					self::$def->t12mni = str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2]);
+					self::$def->t12mni = str_replace(',', '', $matches[count($matches) - 1][2]) + str_replace(',', '', $matches[count($matches) - 2][2]);
 				} else {
 					return 'no trailing ni';
 				}
@@ -515,15 +546,19 @@
 
 			$ctt = $result['ie'];
 
-			preg_match('/Annual Data[\s\S]+Interest Expense[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no ie';
 			}
 
-			self::$def->lyie = str_replace(',', '', $matches[2]);
+			self::$def->lyie = str_replace(',', '', end($matches)[2]);
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/Interest Expense\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mie';
@@ -537,22 +572,28 @@
 
 			$ctt = $result['roc'];
 
-			preg_match('/fiscal year[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+A\: (Oct|Dec|Jan|Mar|Jun|Sep|Feb|Aug|May|Jul|Nov|Apr)\.[\s\S]+Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+			preg_match('/fiscal year[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
+
+			preg_match('/Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>/', $matches[0], $matches);
 
 			if (!$matches) {
 				return 'no roc ltd std';
 			}
 
-			self::$def->lyltd = str_replace(',', '', $matches[3]);
-			self::$def->lystd = str_replace(',', '', $matches[4]);
+			self::$def->lyltd = str_replace(',', '', $matches[1]);
+			self::$def->lystd = str_replace(',', '', $matches[2]);
 
 			self::$def->lyd = self::$def->lyltd + self::$def->lystd;
 
-			self::$def->lye = str_replace(',', '', $matches[5]);
+			self::$def->lye = str_replace(',', '', $matches[3]);
 
 			self::$def->lycap = self::$def->lye + self::$def->lyd;
 
-			preg_match('/data_value"\>(.+)\% \(As of/', $ctt, $matches);
+			preg_match('/ROC \%\: (.+)\% +\(As of/', $ctt, $matches);
+
+			if (!$matches) {
+				return 'no roc';
+			}
 
 			$lroc = str_replace(',', '', $matches[1]);
 
@@ -564,15 +605,19 @@
 
 			$ver = $vcr / (1 + $def->der);*/
 
-			preg_match('/Annual Data[\s\S]+ROC[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no roc annual data';
 			}
 
-			self::$def->lyroc = str_replace(',', '', $matches[8]);
-			self::$def->slyroc = str_replace(',', '', $matches[5]);
-			self::$def->tlyroc = str_replace(',', '', $matches[2]);
+			self::$def->lyroc = str_replace(',', '', $matches[count($matches) - 1][2]);
+			self::$def->slyroc = str_replace(',', '', $matches[count($matches) - 2][2]);
+			self::$def->tlyroc = str_replace(',', '', $matches[count($matches) - 3][2]);
 
 			//in case roc was 0
 			self::$def->slyroc = (self::$def->slyroc == 0) ? 1 : self::$def->slyroc;
@@ -582,6 +627,7 @@
 
 			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
 
+<<<<<<< HEAD
 			if ($isQuarterOne) {
 				self::$def->t12maroc = self::$def->lyroc;
 			} else {
@@ -591,11 +637,31 @@
 				self::$def->lt12maroc = str_replace(',', '', $matches[9]);
 				self::$def->slt12maroc = str_replace(',', '', $matches[6]);
 				self::$def->tlt12maroc = str_replace(',', '', $matches[3]);
+=======
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no roc quarterly data';
+			}
+
+			self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
+			self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
+			self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
+			self::$def->tlt12maroc = str_replace(',', '', $matches[count($matches) - 4][2]);
+>>>>>>> origin/master
 
 				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
 
+<<<<<<< HEAD
 				self::$def->t12maroc = ($at12maroc < self::$def->t12maroc) ? $at12maroc : self::$def->t12maroc;
 			}
+=======
+			self::$def->t12maroc = min($at12maroc, self::$def->t12maroc);
+>>>>>>> origin/master
 
 			//in case om was 0
 			if (self::$def->lyroc <= 0) {
@@ -606,7 +672,7 @@
 
 			$ctt = $result['te'];
 
-			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> ?\- ?\<\/td\>\<td\>([\-.\d]+|N\/A)\<\/td\>[\s\S]+Explanation\<\/div\>/', $ctt, $matches);
+			preg_match('/quarter[\s\S]+Q\: [\s\S]+Q\: [\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> ?\- ?\<\/td\>\<td\>([\-.\d]+|N\/A)\<\/td\>[\s\S]+Explanation\<\/p\>/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no te ta tl';
@@ -620,13 +686,17 @@
 				self::$def->cl = 0;
 			}
 
-			preg_match('/Annual Data[\s\S]+Total Equity[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no te';
 			}
 
-			self::$def->slye = str_replace(',', '', $matches[2]);
+			self::$def->slye = str_replace(',', '', $matches[count($matches) - 2][2]);
 
 			self::$def->slycap = (1 + self::$def->slyder) * self::$def->slye;
 
@@ -636,15 +706,19 @@
 
 			$ctt = $result['oi'];
 
-			preg_match('/Annual Data[\s\S]+Operating Income[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no oi';
 			}
 
-			self::$def->lyoi = str_replace(',', '', $matches[2]);
+			self::$def->lyoi = str_replace(',', '', $matches[count($matches) - 1][2]);
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/Operating Income\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 			self::$def->t12moi = str_replace(',', '', $matches[2]);
 
@@ -659,18 +733,21 @@
 			$at12mni = self::$def->t12mni * $coinir;
 			self::$def->at12mni = $at12mni;
 
-
 			$ctt = $result['om'];
 
-			preg_match('/Annual Data[\s\S]+Operating Margin[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no om';
 			}
 
-			self::$def->lyom = str_replace(',', '', $matches[8]);
-			self::$def->slyom = str_replace(',', '', $matches[5]);
-			self::$def->tlyom = str_replace(',', '', $matches[2]);
+			self::$def->lyom = str_replace(',', '', $matches[count($matches) - 1][2]);
+			self::$def->slyom = str_replace(',', '', $matches[count($matches) - 2][2]);
+			self::$def->tlyom = str_replace(',', '', $matches[count($matches) - 3][2]);
 
 			//in case om was 0
 			if (self::$def->slyom <= 0 || self::$def->tlyom <= 0) {
@@ -685,6 +762,7 @@
 				$lytlomr = self::$def->lyom / self::$def->slyom;
 			}
 
+<<<<<<< HEAD
 			if ($isQuarterOne) {
 				self::$def->t12maom = self::$def->lyom;
 			} else {
@@ -694,11 +772,33 @@
 				self::$def->lt12maom = str_replace(',', '', $matches[9]);
 				self::$def->slt12maom = str_replace(',', '', $matches[6]);
 				self::$def->tlt12maom = str_replace(',', '', $matches[3]);
+=======
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no t12mom';
+			}
+
+			$len = count($matches);
+
+			self::$def->t12maom = str_replace(',', '', $matches[$len - 1][2]);
+			self::$def->lt12maom = str_replace(',', '', $matches[$len - 2][2]);
+			self::$def->slt12maom = str_replace(',', '', $matches[$len - 3][2]);
+			self::$def->tlt12maom = str_replace(',', '', $matches[$len - 4][2]);
+>>>>>>> origin/master
 
 				$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
 
+<<<<<<< HEAD
 				self::$def->t12maom = ($at12maom < self::$def->t12maom) ? $at12maom : self::$def->t12maom;
 			}
+=======
+			self::$def->t12maom = min($at12maom, self::$def->t12maom);
+>>>>>>> origin/master
 
 			//in case om was 0
 			if (self::$def->lyom <= 0) {
@@ -730,15 +830,21 @@
 
 			$ctt = $result['roe'];
 
-			preg_match('/Annual Data[\s\S]+ROE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no roe';
 			}
 
-			self::$def->lyroe = str_replace(',', '', $matches[8]);
-			self::$def->slyroe = str_replace(',', '', $matches[5]);
-			self::$def->tlyroe = str_replace(',', '', $matches[2]);
+			$len = count($matches);
+
+			self::$def->lyroe = str_replace(',', '', $matches[$len - 1][2]);
+			self::$def->slyroe = str_replace(',', '', $matches[$len - 2][2]);
+			self::$def->tlyroe = str_replace(',', '', $matches[$len - 3][2]);
 
 			self::$def->aroe = (self::$def->lyroe + self::$def->slyroe + self::$def->tlyroe) / 3;
 
@@ -750,6 +856,7 @@
 
 			self::$def->aroeg = ((self::$def->lyroe - self::$def->slyroe) / abs(self::$def->slyroe) + (self::$def->slyroe - self::$def->tlyroe) / abs(self::$def->tlyroe)) / 2;
 
+<<<<<<< HEAD
 			if ($isQuarterOne) {
 				self::$def->t12maroe = self::$def->lyroe;
 			} else {
@@ -759,11 +866,33 @@
 				self::$def->lt12maroe = str_replace(',', '', $matches[9]);
 				self::$def->slt12maroe = str_replace(',', '', $matches[6]);
 				self::$def->tlt12maroe = str_replace(',', '', $matches[3]);
+=======
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no t12mroe';
+			}
+
+			$len = count($matches);
+
+			self::$def->t12maroe = str_replace(',', '', $matches[$len - 1][2]);
+			self::$def->lt12maroe = str_replace(',', '', $matches[$len - 2][2]);
+			self::$def->slt12maroe = str_replace(',', '', $matches[$len - 3][2]);
+			self::$def->tlt12maroe = str_replace(',', '', $matches[$len - 4][2]);
+>>>>>>> origin/master
 
 				$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
 
+<<<<<<< HEAD
 				self::$def->t12maroe = ($at12maroe < self::$def->t12maroe) ? $at12maroe : self::$def->t12maroe;
 			}
+=======
+			self::$def->t12maroe = min($at12maroe, self::$def->t12maroe);
+>>>>>>> origin/master
 
 			//in case roe was 0
 			if (self::$def->lyroe <= 0) {
@@ -810,17 +939,23 @@
 				}
 			}
 
-			preg_match('/Annual Data[\s\S]+ROTA[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no rota';
 			}
 
-			$lyrota = str_replace(',', '', $matches[29]);
-			$slyrota = str_replace(',', '', $matches[26]);
-			$tlyrota = str_replace(',', '', $matches[23]);
-			$frlyrota = str_replace(',', '', $matches[20]);
-			$filyrota = str_replace(',', '', $matches[17]);
+			$len = count($matches);
+
+			$lyrota = str_replace(',', '', $matches[$len - 1][2]);
+			$slyrota = str_replace(',', '', $matches[$len - 2][2]);
+			$tlyrota = str_replace(',', '', $matches[$len - 3][2]);
+			$frlyrota = str_replace(',', '', $matches[$len - 4][2]);
+			$filyrota = str_replace(',', '', $matches[$len - 5][2]);
 
 			//self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
 			self::$def->arota = ($lyrota + $slyrota + $tlyrota) / 3;
@@ -857,22 +992,28 @@
 
 			$ctt = $result['rote'];
 
-			preg_match('/Annual Data[\s\S]+ROTE[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no rote';
 			}
 
-			$lyrote = str_replace(',', '', $matches[29]);
-			$slyrote = str_replace(',', '', $matches[26]);
-			$tlyrote = str_replace(',', '', $matches[23]);
-			$frlyrote = str_replace(',', '', $matches[20]);
-			$filyrote = str_replace(',', '', $matches[17]);
+			$len = count($matches);
+
+			$lyrote = str_replace(',', '', $matches[$len - 1][2]);
+			$slyrote = str_replace(',', '', $matches[$len - 2][2]);
+			$tlyrote = str_replace(',', '', $matches[$len - 3][2]);
+			$frlyrote = str_replace(',', '', $matches[$len - 4][2]);
+			$filyrote = str_replace(',', '', $matches[$len - 5][2]);
 
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
 			$lowestrote = min($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote);
 
-			if (max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) - $lowestrote >= 50 || ($lowestrote <= 0)) {
+			if (((max($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote) - $lowestrote) >= 50) || ($lowestrote <= 0)) {
 				self::$def->arote = 0;
 			} else {
 				self::$def->arote = ($lyrote + $slyrote + $tlyrote + $frlyrote + $filyrote) / 5;
@@ -880,11 +1021,11 @@
 
 			$ctt = $result['pe'];
 
-			preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
+			preg_match('/PE Ratio\: ([^\(]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				//check if no pe ratio, due to negative earnings
-				preg_match('/data_value"\>\(As of/', $ctt, $matches);
+				preg_match('/PE Ratio\:\(As of/', $ctt, $matches);
 
 				if (!$matches) {
 					self::$def->lper = 999.9999;
@@ -896,17 +1037,23 @@
 				self::$def->lper = str_replace(',', '', $matches[1]);
 			}
 
-			preg_match('/Annual Data[\s\S]+pe[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+PE Ratio[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
-			self::$def->aper = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			$len = count($matches);
+
+			self::$def->aper = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
 
 			$ctt = $result['pb'];
 
-			preg_match('/data_value"\>([^\(]+) \(As of/', $ctt, $matches);
+			preg_match('/PB Ratio\: ([^\(]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				//check if no pb ratio, due to too much liability and negative book value
-				preg_match('/data_value"\>\(As of/', $ctt, $matches);
+				preg_match('/PB Ratio\:\(As of/', $ctt, $matches);
 
 				if (!$matches) {
 					self::$def->lpbr = 999.9999;
@@ -918,9 +1065,15 @@
 				self::$def->lpbr = str_replace(',', '', $matches[1]);
 			}
 
-			preg_match('/Annual Data[\s\S]+pb[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+PB Ratio[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
-			self::$def->apbr = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			$len = count($matches);
+
+			self::$def->apbr = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
 
 			//adjusted latest pe / pb ratio
 			$alper = (self::$def->lper <= 0) ? 999.9999 : self::$def->lper;
@@ -942,13 +1095,19 @@
 
 			$ctt = $result['nios'];
 
-			preg_match('/Annual Data[\s\S]+Net Issuance of Stock[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no nios';
 			}
 
-			self::$def->anios = (str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 3;
+			$len = count($matches);
+
+			self::$def->anios = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
 
 			//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 			//if there is anios, this would result in future price significantly lower than cp
@@ -973,15 +1132,19 @@
 			//lyv is lyni + the current igr + lydda + current capE (assuming one was to predict the igr and capE accurately last year)
 			$ctt = $result['dda'];//depreciation depletion and amortization
 
-			preg_match('/Annual Data[\s\S]+DDA[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\s*\<\/tr\>[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no dda';
 			}
 
-			self::$def->lydda = str_replace(',', '', $matches[2]);
+			self::$def->lydda = str_replace(',', '', end($matches)[2]);
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/Depreciation, Depletion and Amortization\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mdda';
@@ -991,7 +1154,7 @@
 
 			$ctt = $result['capE'];
 
-			preg_match('/data_value"\>(CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/Capital Expenditure\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mcapE';
@@ -1029,18 +1192,31 @@
 
 			$ctt = $result['cCapE'];
 
-			preg_match('/Quarterly Data[\s\S]+ChangeInWorkingCapital[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+			preg_match('/Quarterly Data[\s\S]+Change In Working Capital[\s\S]+Calculation/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			//the t12m is actually average t12m, but name not changed due to laziness
 			if ($matches) {
 				//add up 8 quarters, divide by 2, 2 year annualized
-				self::$def->t12mcCapE = (str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 2;
+				//only 5 data allowed for non logged in version
+				$len = count($matches);
+
+				self::$def->t12mcCapE = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2]) + str_replace(',', '', $matches[$len - 4][2]) + str_replace(',', '', $matches[$len - 5][2])) / 5 * 4;
 			} else {
 				//check for semi-annual data
-				preg_match('/Semi-Annual Data[\s\S]+ChangeInWorkingCapital[\s\S]+\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<td\>\<strong\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/strong\>\<\/td\>\<\/tr\>/', $ctt, $matches);
+				preg_match('/Semi-Annual Data[\s\S]+Change In Working Capital[\s\S]+Calculation/', $ctt, $matches);
+
+				$tmpMatch = $matches[0];
+
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 				if ($matches) {
-					self::$def->t12mcCapE = (str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[2])) / 2;
+					$len = count($matches);
+
+					self::$def->t12mcCapE = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2]) + str_replace(',', '', $matches[$len - 4][2])) / 2;
 				} else {
 					return 'no quaterly semi annually cCapE';
 				}
@@ -1212,7 +1388,7 @@
 
 			//premium or discount adjustment
 			//p o d
-			/*self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
+	/*		self::$def->pdadj = self::$def->rotaRank / self::ROTA_RANK_PASS;
 
 			//popularity
 			$rotaPplr = min(1, self::$def->rotaRank / self::ROTA_RANK_PASS_PPLR);
@@ -1264,7 +1440,23 @@
 			$ppadj = self::$def->pdadj * self::$def->pplradj;*/
 
 			$ppadj = pow(1 - self::$def->glbRank / self::TTL_GLB_RANK, 2) * (self::MAX_P - self::MAX_D) + self::MAX_D;
+
+			//profitability adjustment
+			if ($at12mni <= 0) {
+				$profitadj = 0;
+			} else {
+				$profitadj = pow($at12mni / self::NI_SZE_STD * .65 + self::$def->tlomr / self::RETURN_GRW_STD * .1 + self::$def->tlroer / self::RETURN_GRW_STD * .1 + self::$def->tlrocr / self::RETURN_GRW_STD * .1 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2.2);
+			}
+			//end profitability adj
+
+			self::$def->profitadj = $profitadj;
 			self::$def->ppadj = $ppadj;
+
+			$ppadj = $profitadj * .9 + $ppadj * .1;
+
+			if ($ppadj > 1) {
+				$ppadj = ($ppadj - 1) * $ppadj / 3.75 + 1;
+			}
 
 			self::$def->prcv0g *= $ppadj;
 
@@ -1405,7 +1597,7 @@
 				default:
 			}
 
-			self::$cpUrl = 'http://www.reuters.com/finance/stocks/chart?symbol='.$r_tkr.self::$rSe;
+			self::$cpUrl = 'https://www.reuters.com/finance/stocks/chart/'.$r_tkr.self::$rSe;
 
 			//cal data either from siphon or from db, depend on refresh
 			if ($refresh) {
@@ -1491,12 +1683,14 @@
 				}
 			}
 
-			if (self::$def->cpfptmr >= (self::DR - .02)) {
-				self::$def->advice = 'be ready to sell';
-			}
+			if (self::$def->rotaRank > 0 && self::$def->arote > 0) {
+				if (self::$def->cpfptmr >= (self::DR - .02)) {
+					self::$def->advice = 'be ready to sell';
+				}
 
-			if (self::$def->cpfptmr >= self::DR || $cc <= 0) {
-				self::$def->advice = 'sell';
+				if (self::$def->cpfptmr >= self::DR || $cc <= 0) {
+					self::$def->advice = 'sell';
+				}
 			}
 
 			return self::$def;

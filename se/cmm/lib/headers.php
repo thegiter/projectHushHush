@@ -1,6 +1,6 @@
 <?php
 	defined('root') or die;
-	
+
 	$se_headers = [
 		'<td data-acro="mc">
 			<h3>
@@ -83,7 +83,7 @@
 			</h4>
 		</td>',
 		'<td data-acro="at12mni">
-			<h3>
+			<h3 class="se-sortable">
 				Adjusted Trailing 12 Months Net Income
 			</h3>
 		</td>',
@@ -111,7 +111,7 @@
 			<h3>
 				Weighted Average Cost of Debt Ratio
 			</h3>
-			
+
 			<label>Exlude:</label>
 			<select id="wacodr-filter" name="wacodr">
 				<option>not set</option>
@@ -200,7 +200,7 @@
 			<h3 class="se-sortable">
 				Latest P/E Ratio
 			</h3>
-			
+
 			<label>Exlude:</label>
 			<select id="lper-filter" name="lper">
 				<option>not set</option>
@@ -249,7 +249,7 @@
 			<h2>
 				Price Condition
 			</h2>
-			
+
 			<select id="pc-filter" name="pc">
 				<option>not set</option>
 				<option>1</option>
@@ -290,7 +290,7 @@
 			<h4>
 				Future Projected Income Growth Rate
 			</h4>
-			
+
 			<select id="fpigr-filter" name="fpigr">
 				<option>not set</option>
 				<option>&#60;= 1.2</option>
@@ -370,7 +370,7 @@
 			<h4>
 				Probability of Winning Value (50% is gambling, less is lose)
 			</h4>
-			
+
 			<label>Exlude:</label>
 			<select id="pow-filter" name="pow">
 				<option>not set</option>
@@ -382,7 +382,7 @@
 			<h4>
 				Probability of Winning Momentum
 			</h4>
-			
+
 			<label>Exlude:</label>
 			<select id="pow-filter" name="pow">
 				<option>not set</option>
@@ -394,7 +394,7 @@
 			<h4>
 				Rough Raw Unrefined Advice
 			</h4>
-			
+
 			<select id="advice-filter" name="advice">
 				<option>not set</option>
 				<option>hold</option>

@@ -7,7 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Sat, 16 Apr 2017 22:13:40 GMT');
+	cacheCtrlModule::validate('Sat, 24 May 2017 22:13:40 GMT');
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -41,9 +41,8 @@
 	//$r[0][0]->cpns[0]->required = true;
 	//no close, define close true if needed
 
-	//$shpsAjax->cpns[1] = new stdClass;
-
-	//$shpsAjax->cpns[1]->name = 'menu_basic';
+	$r[0][0]->cpns[1] = new stdClass;
+	$r[0][0]->cpns[1]->name = 'menu_basic';
 	//no required
 
 	$r[0][1] = new stdClass;
