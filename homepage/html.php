@@ -122,14 +122,6 @@
 	<nav id="hp-bar" class="hp-bar-in-trans hp-bar-in-init hp-bar-sdw-in-init dsp-non">
 		<div id="hp-menu-resp" class="hp-menu-resp-trans"><!-- this tag is needed to contain omc and lnks -->
 			<?php
-				require_once root.'shared/modules/onenote_menu/om.php';
-
-				$omc = new omcModule;
-
-				$omc->clss = 'menu-cnr loading';
-
-				echo $omc;
-
 				require_once root.'shared/modules/ftr/info_lnks/ils.php';
 
 				$ftr_lnks = new ftrInfoLnksModule;
@@ -140,39 +132,9 @@
 
 				'.$ftr_lnks;
 			?>
-
 		</div>
 
 		<ul id="hp-menu" class="no-style">
-			<?php
-				require_once root.'shared/modules/menu_items/mis.php';
-
-				$menu_html = '';//clear variable $menu_html in case another menu was produced and $menu_html is not empty
-
-				//if tooltip's css is not loaded, then the tooltips simply would not show
-				//so we don't need  to hide it, they are hidden by default
-				//so we just need to load them when ready and not need to hide/intro them
-
-				$omc = new omcModule;
-
-				$omc->clss = 'sub-menu-cnr loading';
-
-				foreach ($mis as $mi => $mi_ppt) {								//ppt: properties, not the microsoft shit
-					$menu_html .= '<li>
-						<a href="'.$mi_ppt['href'].'">'.$mi_ppt['name'].'</a>';
-					//create_tooltip($cnrTag, $cnrId, $cnrClss, $cnrAttr, $hvrTag, $hvrId, $hvrClss, $hvrAttr, $ctt, $tooltip) syntax
-					if ($mi_ppt['smi']) {
-						$menu_html .= '<span class="sep">
-						</span>'.$omc;
-					}
-
-					$menu_html .= '
-					</li>
-					';
-				}
-
-				echo $menu_html;
-			?>
 		</ul>
 
 		<div id="hp-inf-cnr-wpr">

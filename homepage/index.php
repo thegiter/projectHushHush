@@ -7,7 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-	cacheCtrlModule::validate('Tue, 23 Apr 2016 22:13:40 GMT');
+	cacheCtrlModule::validate('Tue, 20 May 2017 22:13:40 GMT');
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
