@@ -7,11 +7,7 @@
 
 	//not using etag, because apache deflate gzip changes it
 	//validate also sets the headers for lastmodified and etag
-<<<<<<< HEAD
-	cacheCtrlModule::validate('Tue, 7 Jun 2017 14:42:40 GMT');
-=======
 	cacheCtrlModule::validate('Tue, 29 May 2017 14:42:40 GMT');
->>>>>>> origin/master
 
 	//must validate first, because validate doesn't care if is get or post
 	//while ajax_chk must be POST
@@ -45,30 +41,14 @@
 	$r[0] = [];
 
 	$r[0][0] = new stdClass;
-<<<<<<< HEAD
-	$r[0][0]->type = 'module';
-	$r[0][0]->url = '/shared/modules/js_frameworks/anim/';
-=======
 	$r[0][0]->type = 'link';
 	$r[0][0]->url = '/shared/modules/story_board/csss/sb.css';
->>>>>>> origin/master
 //grp1
 	$r[1] = [];
 
 	$r[1][0] = new stdClass;
-<<<<<<< HEAD
-	$r[1][0]->type = 'link';
-	$r[1][0]->url = '/shared/modules/story_board/csss/sb.css';
-//grp1
-	$r[2] = [];
-
-	$r[2][0] = new stdClass;
-	$r[2][0]->type = 'script';
-	$r[2][0]->url = '/shared/modules/story_board/jss/sb.js';
-=======
 	$r[1][0]->type = 'script';
 	$r[1][0]->url = '/shared/modules/story_board/jss/sb.js';
->>>>>>> origin/master
 	//define $r[][]->async = false; to turn off async loading for the script
 
 	echo json_encode($manifest);

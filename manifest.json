@@ -1,15 +1,6 @@
 {
     "short_name": "SHPS",
     "name": "SHPS",
-<<<<<<< HEAD
-    "icons": [
-        {
-          "src": "shared/imgs/favicon.ico",
-          "sizes": "32x32",
-          "type": "image/x-icon"
-        }, {
-          "src": "shared/imgs/site_icon_256.png",
-=======
     "description": "Desmond's personal website, currently in its beta.",
     "icons": [
         {
@@ -22,17 +13,12 @@
           "type": "image/x-icon"
         }, {
           "src": "/shared/imgs/site_icon_256.png",
->>>>>>> origin/master
           "sizes": "256x260",
           "type": "image/png"
         }
     ],
     "start_url": "/?utm_source=homescreen",
     "background_color": "#0E0D0B",
-<<<<<<< HEAD
-    "Theme_color": "#47433a",
-=======
     "theme_color": "#47433a",
->>>>>>> origin/master
     "display": "standalone"
 }

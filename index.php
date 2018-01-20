@@ -12,11 +12,7 @@
 	require_once root.'shared/cache_ctrl/validate.php';
 
 	//not using etag, because apache deflate gzip changes it
-<<<<<<< HEAD
-	cacheCtrlModule::validate('Sun, 21 May 2017 13:20:06 GMT');
-=======
 	cacheCtrlModule::validate('Sun, 28 May 2017 13:20:06 GMT');
->>>>>>> origin/master
 
 	require_once root.'shared/cache_ctrl/front_end.php';//far_future is no longer needed because of service workers
 
