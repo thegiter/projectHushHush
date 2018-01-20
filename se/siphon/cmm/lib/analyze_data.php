@@ -247,6 +247,10 @@
 		const ZARMP = 1000;
 		const USDMP = 1400;
 
+		private static $usFirstQuarter = ['Jan', 'Feb', 'Mar', 'Apr'];
+
+		private static $firstQuarter;
+
 		private static $fullTkr = '';
 		private static $tkr = '';
 		private static $se = '';
@@ -430,6 +434,8 @@
 			];
 
 			$result = seCurl::multiRequest($rqss);
+
+			$isFirstQuarter = in_array(date('M'), self::$firstQuarter);
 
 			$ctt = $result['mc'];
 
@@ -619,24 +625,28 @@
 
 			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
 
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			if ($isFirstQuarter) {
+				self::$def->t12maroc = self::$def->lyroc;
+			} else {
+				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
-			$tmpMatch = $matches[0];
+				$tmpMatch = $matches[0];
 
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-			if (!$matches) {
-				return 'no roc quarterly data';
+				if (!$matches) {
+					return 'no roc quarterly data';
+				}
+
+				self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
+				self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
+				self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
+				self::$def->tlt12maroc = str_replace(',', '', $matches[count($matches) - 4][2]);
+
+				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
+
+				self::$def->t12maroc = min($at12maroc, self::$def->t12maroc);
 			}
-
-			self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
-			self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
-			self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
-			self::$def->tlt12maroc = str_replace(',', '', $matches[count($matches) - 4][2]);
-
-			$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
-
-			self::$def->t12maroc = min($at12maroc, self::$def->t12maroc);
 
 			//in case om was 0
 			if (self::$def->lyroc <= 0) {
@@ -737,26 +747,30 @@
 				$lytlomr = self::$def->lyom / self::$def->slyom;
 			}
 
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			if ($isFirstQuarter) {
+				self::$def->t12maom = self::$def->lyom;
+			} else {
+				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
-			$tmpMatch = $matches[0];
+				$tmpMatch = $matches[0];
 
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-			if (!$matches) {
-				return 'no t12mom';
+				if (!$matches) {
+					return 'no t12mom';
+				}
+
+				$len = count($matches);
+
+				self::$def->t12maom = str_replace(',', '', $matches[$len - 1][2]);
+				self::$def->lt12maom = str_replace(',', '', $matches[$len - 2][2]);
+				self::$def->slt12maom = str_replace(',', '', $matches[$len - 3][2]);
+				self::$def->tlt12maom = str_replace(',', '', $matches[$len - 4][2]);
+
+				$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
+
+				self::$def->t12maom = min($at12maom, self::$def->t12maom);
 			}
-
-			$len = count($matches);
-
-			self::$def->t12maom = str_replace(',', '', $matches[$len - 1][2]);
-			self::$def->lt12maom = str_replace(',', '', $matches[$len - 2][2]);
-			self::$def->slt12maom = str_replace(',', '', $matches[$len - 3][2]);
-			self::$def->tlt12maom = str_replace(',', '', $matches[$len - 4][2]);
-
-			$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
-
-			self::$def->t12maom = min($at12maom, self::$def->t12maom);
 
 			//in case om was 0
 			if (self::$def->lyom <= 0) {
@@ -814,26 +828,30 @@
 
 			self::$def->aroeg = ((self::$def->lyroe - self::$def->slyroe) / abs(self::$def->slyroe) + (self::$def->slyroe - self::$def->tlyroe) / abs(self::$def->tlyroe)) / 2;
 
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			if ($isFirstQuarter) {
+				self::$def->t12maroe = self::$def->lyroe;
+			} else {
+				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
-			$tmpMatch = $matches[0];
+				$tmpMatch = $matches[0];
 
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-			if (!$matches) {
-				return 'no t12mroe';
+				if (!$matches) {
+					return 'no t12mroe';
+				}
+
+				$len = count($matches);
+
+				self::$def->t12maroe = str_replace(',', '', $matches[$len - 1][2]);
+				self::$def->lt12maroe = str_replace(',', '', $matches[$len - 2][2]);
+				self::$def->slt12maroe = str_replace(',', '', $matches[$len - 3][2]);
+				self::$def->tlt12maroe = str_replace(',', '', $matches[$len - 4][2]);
+
+				$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
+
+				self::$def->t12maroe = min($at12maroe, self::$def->t12maroe);
 			}
-
-			$len = count($matches);
-
-			self::$def->t12maroe = str_replace(',', '', $matches[$len - 1][2]);
-			self::$def->lt12maroe = str_replace(',', '', $matches[$len - 2][2]);
-			self::$def->slt12maroe = str_replace(',', '', $matches[$len - 3][2]);
-			self::$def->tlt12maroe = str_replace(',', '', $matches[$len - 4][2]);
-
-			$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
-
-			self::$def->t12maroe = min($at12maroe, self::$def->t12maroe);
 
 			//in case roe was 0
 			if (self::$def->lyroe <= 0) {
@@ -1520,6 +1538,7 @@
 					self::$ir = self::USDIR;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
+					self::$firstQuarter = self::$usFirstQuarter;
 
 					break;
 				case 'Nasdaq':
@@ -1531,6 +1550,7 @@
 					self::$ir = self::USDIR;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
+					self::$firstQuarter = self::$usFirstQuarter;
 
 					break;
 				default:
