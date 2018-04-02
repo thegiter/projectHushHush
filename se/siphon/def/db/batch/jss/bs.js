@@ -133,13 +133,13 @@
 
 			function siphon(tkr, se) {
 				//if max concurrent requests are reached,
-				//retry in 5 min
+				//retry in 2 min
 				if (ttlRqss >= MAX_RQSS) {
 					setTimeout(function() {
 						siphon(tkr, se);
-					}, 1000 * 60 * 2);
+					}, 1000 * 60 * 3);
 
-					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 2 minutes';
+					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 3 minutes';
 
 					return false;
 				}
@@ -184,7 +184,9 @@
 
 							siphonEnd(xhr.response);
 						} else if (retrys < MAX_RETRYS) {
-							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in 10 minutes';
+							let waitMin = (fail_cntr + 1) * (siphonTimeSecs / 1000) / 60;
+
+							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in '+waitMin+' minutes';
 
 							retrys++;
 
@@ -194,7 +196,7 @@
 
 							setTimeout(function() {
 								siphon(tkr, se);
-							}, 1000 * 60 * 10);
+							}, 1000 * 60 * waitMin);
 						} else {
 							if (noMcFails == retrys) {
 								noMcFails = 0;

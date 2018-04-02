@@ -996,7 +996,7 @@
 				self::$def->lper = str_replace(',', '', $matches[1]);
 			}
 
-			preg_match('/Annual Data[\s\S]+PE Ratio[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
