@@ -239,9 +239,9 @@
 		const RETURN_GRW_STD = 1;
 		const ROTA_RANK_STD = 60;
 
-		const CNYIR = 0.06;//10%
-		const ZARIR = 0.2;
-		const USDIR = 0.02;
+		const CNYIR = 0.03;//10%
+		const ZARIR = 0.1;
+		const USDIR = 0.01;
 
 		const CNYMP = 200;
 		const ZARMP = 1000;
@@ -1089,6 +1089,16 @@
 
 			self::$def->pc = self::$def->lpgc * self::$cc;
 
+			self::$cpHtml = $result['cp'];
+
+			$cpResult = self::getCp();
+
+			if (is_string($cpResult)) {
+				return $cpResult;
+			}
+
+			self::$def->cpResult = $cpResult;
+
 			$ctt = $result['nios'];
 
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
@@ -1103,7 +1113,7 @@
 
 			$len = count($matches);
 
-			self::$def->anios = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
+			self::$def->anios = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3 / $cpResult->cp;
 
 			//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 			//if there is anios, this would result in future price significantly lower than cp
@@ -1470,16 +1480,6 @@
 			$bettingCalc = self::calcBetting(self::$def->lffptm, self::$def->ep, self::$def->fptm);
 			self::$def->bp = $bettingCalc->bp;
 			self::$def->abdr = $bettingCalc->abdr;
-
-			self::$cpHtml = $result['cp'];
-
-			$cpResult = self::getCp();
-
-			if (is_string($cpResult)) {
-				return $cpResult;
-			}
-
-			self::$def->cpResult = $cpResult;
 		}
 
 		private static function getDef_db() {
