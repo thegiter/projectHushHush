@@ -765,7 +765,11 @@
 
 			//in case om was 0
 			if (self::$def->slyom <= 0 || self::$def->tlyom <= 0) {
-				self::$def->aomg = 0;
+				if (self::$def->lyom == 0 && self::$def->slyom == 0 && self::$def->tlyom == 0) {
+					self::$def->aomg = 1;
+				} else {
+					self::$def->aomg = 0;
+				}
 			} else {
 				self::$def->aomg = (self::$def->lyom / self::$def->slyom + self::$def->slyom / self::$def->tlyom) / 2;
 			}
