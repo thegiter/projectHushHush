@@ -725,7 +725,7 @@
 			self::$def->lyoi = str_replace(',', '', $matches[count($matches) - 1][2]);
 
 			if (self::$def->lyoi == 0) {
-				self::$def->lyoi = self::$def->lyni
+				self::$def->lyoi = self::$def->lyni;
 			}
 
 			preg_match('/Operating Income\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
@@ -733,7 +733,7 @@
 			self::$def->t12moi = str_replace(',', '', $matches[2]);
 
 			if (self::$def->t12moi == 0) {
-				self::$def->t12moi = self::$def->t12mni
+				self::$def->t12moi = self::$def->t12mni;
 			}
 
 			//measures the impact of operating income on net income
