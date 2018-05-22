@@ -628,29 +628,50 @@
 			if ($isFirstQuarter) {
 				self::$def->t12maroc = self::$def->lyroc;
 			} else {
-				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+				//chk for semi annual
+				preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
 
 				$tmpMatch = $matches[0];
 
 				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-				if (!$matches) {
-					return 'no roc quarterly data';
+				if ($matches) {
+					//add 2 semi annual
+					self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
+					self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
+
+					$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc) / 2;
+				} else {
+					//chk for quarter
+					preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
+
+					$tmpMatch = $matches[0];
+
+					preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+					if ($matches) {
+						//add 4 quaters
+						self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
+						self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
+						self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
+						self::$def->tlt12maroc = str_replace(',', '', $matches[count($matches) - 4][2]);
+
+						$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
+					} else {
+						return 'no roc quarterly / semi annual data';
+					}
 				}
-
-				self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
-				self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
-				self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
-				self::$def->tlt12maroc = str_replace(',', '', $matches[count($matches) - 4][2]);
-
-				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
 
 				self::$def->t12maroc = min($at12maroc, self::$def->t12maroc);
 			}
 
 			//in case om was 0
 			if (self::$def->lyroc <= 0) {
-				self::$def->tlrocr = 0;
+				if (self::$def->t12maroc == 0 && self::$def->lyroc == 0) {
+					self::$def->tlrocr = 1;
+				} else {
+					self::$def->tlrocr = 0;
+				}
 			} else {
 				self::$def->tlrocr = self::$def->t12maroc / self::$def->lyroc;
 			}
@@ -774,7 +795,11 @@
 
 			//in case om was 0
 			if (self::$def->lyom <= 0) {
-				self::$def->tlomr = 0;
+				if (self::$def->lyom == 0 && self::$def->t12maom == 0) {
+					self::$def->tlomr = 1;
+				} else {
+					self::$def->tlomr = 0;
+				}
 			} else {
 				self::$def->tlomr = self::$def->t12maom / self::$def->lyom;
 			}
@@ -855,7 +880,11 @@
 
 			//in case roe was 0
 			if (self::$def->lyroe <= 0) {
-				self::$def->tlroer = 0;
+				if (self::$def->lyroe == 0 && self::$def->t12maroe == 0) {
+					self::$def->tlroer = 1;
+				} else {
+					self::$def->tlroer = 0;
+				}
 			} else {
 				self::$def->tlroer = self::$def->t12maroe / self::$def->lyroe;
 			}
