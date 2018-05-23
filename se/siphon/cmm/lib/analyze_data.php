@@ -668,7 +668,7 @@
 			//in case om was 0
 			if (self::$def->lyroc <= 0) {
 				if (self::$def->t12maroc == 0 && self::$def->lyroc == 0) {
-					self::$def->tlrocr = 1;
+					self::$def->tlrocr = self::MIN_GROWTH_HARD;
 				} else {
 					self::$def->tlrocr = 0;
 				}
@@ -766,7 +766,7 @@
 			//in case om was 0
 			if (self::$def->slyom <= 0 || self::$def->tlyom <= 0) {
 				if (self::$def->lyom == 0 && self::$def->slyom == 0 && self::$def->tlyom == 0) {
-					self::$def->aomg = 1;
+					self::$def->aomg = self::MIN_GROWTH_HARD;
 				} else {
 					self::$def->aomg = 0;
 				}
@@ -808,7 +808,7 @@
 			//in case om was 0
 			if (self::$def->lyom <= 0) {
 				if (self::$def->lyom == 0 && self::$def->t12maom == 0) {
-					self::$def->tlomr = 1;
+					self::$def->tlomr = self::MIN_GROWTH_HARD;
 				} else {
 					self::$def->tlomr = 0;
 				}
@@ -893,7 +893,7 @@
 			//in case roe was 0
 			if (self::$def->lyroe <= 0) {
 				if (self::$def->lyroe == 0 && self::$def->t12maroe == 0) {
-					self::$def->tlroer = 1;
+					self::$def->tlroer = self::MIN_GROWTH_HARD;
 				} else {
 					self::$def->tlroer = 0;
 				}
