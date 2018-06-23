@@ -417,7 +417,7 @@
 				'ni' => 'https://www.gurufocus.com/term/Net+Income/'.self::$guruFullTkr.'/Net-Income/',
 				'ie' => 'https://www.gurufocus.com/term/InterestExpense/'.self::$guruFullTkr.'/Interest-Expense/',
 				'roc' => 'https://www.gurufocus.com/term/ROC/'.self::$guruFullTkr.'/ROC-Percentage/',
-				'te' => 'https://www.gurufocus.com/term/Total+Equity/'.self::$guruFullTkr.'/Total-Equity/',
+				'te' => 'https://www.gurufocus.com/term/TotalEquityGrossMinorityInterest/'.self::$guruFullTkr.'/Total-Equity/',
 				'oi' => 'https://www.gurufocus.com/term/Operating+Income/'.self::$guruFullTkr.'/Operating-Income/',
 				'om' => 'https://www.gurufocus.com/term/operatingmargin/'.self::$guruFullTkr.'/Operating-Margin-Percentage/',
 				'wacc' => 'https://www.gurufocus.com/term/wacc/'.self::$guruFullTkr.'/WACC-Percentage/',
