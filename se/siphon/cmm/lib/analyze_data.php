@@ -662,7 +662,7 @@
 					}
 				}
 
-				self::$def->t12maroc = min($at12maroc, self::$def->t12maroc);
+				self::$def->t12maroc = $at12maroc * .75 + self::$def->t12maroc * .25;
 			}
 
 			//in case om was 0
@@ -887,7 +887,7 @@
 
 				$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
 
-				self::$def->t12maroe = min($at12maroe, self::$def->t12maroe);
+				self::$def->t12maroe = $at12maroe * .75 + self::$def->t12maroe * .25;
 			}
 
 			//in case roe was 0
