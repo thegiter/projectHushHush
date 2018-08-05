@@ -676,11 +676,11 @@
 				self::$def->tlrocr = self::$def->t12maroc / self::$def->lyroc;
 
 				//normalize trailing vs last
-				$tlroc_diff = abs(self::$def->t12maroc - self::$def->lyroc)
+				$tlroc_diff = abs(self::$def->t12maroc - self::$def->lyroc);
 				//the higher the ratio, the less probability it is true
-				$tlroc_prob = 1 - $tlroc_diff / ($tlroc_diff + self::$def->lyroc)
+				$tlroc_prob = 1 - $tlroc_diff / ($tlroc_diff + self::$def->lyroc);
 
-				self::$def->tlrocr = 1 + (self::$def->tlrocr - 1) * $tlroc_prob
+				self::$def->tlrocr = 1 + (self::$def->tlrocr - 1) * $tlroc_prob;
 			}
 
 			$ctt = $result['te'];
@@ -908,11 +908,11 @@
 				self::$def->tlroer = self::$def->t12maroe / self::$def->lyroe;
 
 				//normalize trailing vs last
-				$tlroe_diff = abs(self::$def->t12maroe - self::$def->lyroe)
+				$tlroe_diff = abs(self::$def->t12maroe - self::$def->lyroe);
 				//the higher the ratio, the less probability it is true
-				$tlroe_prob = 1 - $tlroe_diff / ($tlroe_diff + self::$def->lyroe)
+				$tlroe_prob = 1 - $tlroe_diff / ($tlroe_diff + self::$def->lyroe);
 
-				self::$def->tlroer = 1 + (self::$def->tlroer - 1) * $tlroe_prob
+				self::$def->tlroer = 1 + (self::$def->tlroer - 1) * $tlroe_prob;
 			}
 
 			//project income using last year's data
