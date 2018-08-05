@@ -662,10 +662,10 @@
 					}
 				}
 
-				self::$def->t12maroc = $at12maroc * .75 + self::$def->t12maroc * .25;
+				self::$def->t12maroc = $at12maroc;
 			}
 
-			//in case om was 0
+			//in case was 0
 			if (self::$def->lyroc <= 0) {
 				if (self::$def->t12maroc == 0 && self::$def->lyroc == 0) {
 					self::$def->tlrocr = self::MIN_GROWTH_HARD + .01;
@@ -674,6 +674,13 @@
 				}
 			} else {
 				self::$def->tlrocr = self::$def->t12maroc / self::$def->lyroc;
+
+				//normalize trailing vs last
+				$tlroc_diff = abs(self::$def->t12maroc - self::$def->lyroc)
+				//the higher the ratio, the less probability it is true
+				$tlroc_prob = 1 - $tlroc_diff / ($tlroc_diff + self::$def->lyroc)
+
+				self::$def->tlrocr = 1 + (self::$def->tlrocr - 1) * $tlroc_prob
 			}
 
 			$ctt = $result['te'];
@@ -887,7 +894,7 @@
 
 				$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
 
-				self::$def->t12maroe = $at12maroe * .75 + self::$def->t12maroe * .25;
+				self::$def->t12maroe = $at12maroe;
 			}
 
 			//in case roe was 0
@@ -899,6 +906,13 @@
 				}
 			} else {
 				self::$def->tlroer = self::$def->t12maroe / self::$def->lyroe;
+
+				//normalize trailing vs last
+				$tlroe_diff = abs(self::$def->t12maroe - self::$def->lyroe)
+				//the higher the ratio, the less probability it is true
+				$tlroe_prob = 1 - $tlroe_diff / ($tlroe_diff + self::$def->lyroe)
+
+				self::$def->tlroer = 1 + (self::$def->tlroer - 1) * $tlroe_prob
 			}
 
 			//project income using last year's data
