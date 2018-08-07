@@ -245,7 +245,7 @@
 
 		const CNYMP = 200;
 		const ZARMP = 1000;
-		const USDMP = 1400;
+		const USDMP = 3600;
 
 		private static $usFirstQuarter = ['Jan', 'Feb', 'Mar', 'Apr'];
 
