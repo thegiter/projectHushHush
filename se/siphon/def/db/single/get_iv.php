@@ -45,14 +45,14 @@
 		</tr>
 		<tr>
 			<td>
-				cp
+				glbRank
 			</td><td>
 				'.$def->glbRank.'
 			</td>
 		</tr>
 		<tr>
 			<td>
-				cp
+				prlyv
 			</td><td>
 				'.$def->prlyv.'
 			</td>
