@@ -1479,7 +1479,7 @@
 			$ppadj = $profitadj * .9 + $ppadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj = ($ppadj - 1) * pow($ppadj / 4.5, 2) + 1;
+				$ppadj = ($ppadj - 1) * pow($ppadj / 4.5, 3) + 1;
 			}
 
 			self::$def->prcv0g *= $ppadj;
