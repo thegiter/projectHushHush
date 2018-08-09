@@ -1469,7 +1469,7 @@
 			if ($at12mni <= 0) {
 				$profitadj = 0;
 			} else {
-				$profitadj = pow($at12mni / self::NI_SZE_STD * .5 + self::$def->tlomr / self::RETURN_GRW_STD * .15 + self::$def->tlroer / self::RETURN_GRW_STD * .15 + self::$def->tlrocr / self::RETURN_GRW_STD * .15 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
+				$profitadj = pow($at12mni / self::NI_SZE_STD * .65 + self::$def->tlomr / self::RETURN_GRW_STD * .1 + self::$def->tlroer / self::RETURN_GRW_STD * .1 + self::$def->tlrocr / self::RETURN_GRW_STD * .1 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
 			}
 			//end profitability adj
 
@@ -1479,7 +1479,7 @@
 			$ppadj = $profitadj * .9 + $ppadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj = ($ppadj - 1) * pow($ppadj / 3, 7) + 1;
+				$ppadj = ($ppadj - 1) * pow($ppadj / 4.5, 2) + 1;
 			}
 
 			self::$def->prcv0g *= $ppadj;
