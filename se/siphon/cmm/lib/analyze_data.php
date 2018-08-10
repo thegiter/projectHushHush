@@ -1481,7 +1481,7 @@
 			if ($ppadj > 1) {
 				$ppadj_ovrAmt = ($ppadj - 1);
 
-				$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) / ($ppadj_ovrAmt * 6) + 1;
+				$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * $ppadj_ovrAmt / 50 + 1;
 			}
 
 			self::$def->prcv0g *= $ppadj;
