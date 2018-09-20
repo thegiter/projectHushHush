@@ -234,7 +234,7 @@
 		const MAX_D = .1;
 		const TTL_GLB_RANK = 4000;
 
-		const NI_SZE_STD = 20000;//mil
+		const NI_SZE_STD = 20000;//mil(15oz * crt 6yr avg gold price)
 		const RETURN_STD = 20;//pct
 		const RETURN_GRW_STD = 1;
 		const ROTA_RANK_STD = 60;
@@ -1469,7 +1469,7 @@
 			if ($at12mni <= 0) {
 				$profitadj = 0;
 			} else {
-				$profitadj = pow($at12mni / self::NI_SZE_STD * .65 + self::$def->tlomr / self::RETURN_GRW_STD * .1 + self::$def->tlroer / self::RETURN_GRW_STD * .1 + self::$def->tlrocr / self::RETURN_GRW_STD * .1 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
+				$profitadj = pow($at12mni * self::$def->cpigr * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir) / self::NI_SZE_STD * .65 + self::$def->tlomr / self::RETURN_GRW_STD * .1 + self::$def->tlroer / self::RETURN_GRW_STD * .1 + self::$def->tlrocr / self::RETURN_GRW_STD * .1 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
 			}
 			//end profitability adj
 
