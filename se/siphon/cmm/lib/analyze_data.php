@@ -330,6 +330,26 @@
 			return $result;
 		}
 
+		//profitability popularity adjustment
+		private static function calcPpAdj($ni, $popadj) {
+			if ($ni <= 0) {
+				$profitadj = 0;
+			} else {
+				$profitadj = pow($ni / self::NI_SZE_STD * .65 + self::$def->tlomr / self::RETURN_GRW_STD * .1 + self::$def->tlroer / self::RETURN_GRW_STD * .1 + self::$def->tlrocr / self::RETURN_GRW_STD * .1 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
+			}
+			//end profitability adj
+
+			$ppadj = $profitadj * .9 + $popadj * .1;
+
+			if ($ppadj > 1) {
+				$ppadj_ovrAmt = ($ppadj - 1);
+
+				$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + .1))) * $ppadj_ovrAmt + 1;
+			}
+
+			return $ppadj;
+		}
+
 		private static function calcBetting($pf, $ep, $pc) {
 			$result = new stdClass;
 
@@ -516,8 +536,11 @@
 
 			self::$def->lyni = str_replace(',', '', end($matches)[2]);
 
+			//get sum of last 4 years ni later we add them to avg ly ni to get get historical 5 year avg
+			$l4yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]) + str_replace(',', '', $matches[count($matches) - 5][2]);
+
 			//gurufocus does not update net income to the current year,
-			//we add up the quaterly data to get tailing net income
+			//we add up the quaterly data to get trailing net income
 			preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
@@ -541,6 +564,10 @@
 					return 'no trailing ni';
 				}
 			}
+
+			$avglyni = (self::$def->lyni + self::$def->t12mni) / 2;
+
+			self::$def->l5yavgni = ($avglyni + $l4yni) / 5;
 
 			$ctt = $result['ie'];
 
@@ -753,6 +780,7 @@
 
 			$at12mni = self::$def->t12mni * $coinir;
 			self::$def->at12mni = $at12mni;
+			self::$def->al5yavgni = self::$def->l5yavgni * $coinir;
 
 			$ctt = $result['om'];
 
@@ -1463,36 +1491,29 @@
 
 			$ppadj = self::$def->pdadj * self::$def->pplradj;*/
 
-			$ppadj = pow(1 - self::$def->glbRank / self::TTL_GLB_RANK, 2) * (self::MAX_P - self::MAX_D) + self::MAX_D;
+			self::$def->popadj = pow(1 - self::$def->glbRank / self::TTL_GLB_RANK, 2) * (self::MAX_P - self::MAX_D) + self::MAX_D;
 
 			//profitability adjustment
-			if ($at12mni <= 0) {
-				$profitadj = 0;
-			} else {
-				$profitadj = pow($at12mni * self::$def->cpigr * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir) / self::NI_SZE_STD * .65 + self::$def->tlomr / self::RETURN_GRW_STD * .1 + self::$def->tlroer / self::RETURN_GRW_STD * .1 + self::$def->tlrocr / self::RETURN_GRW_STD * .1 + self::$def->rotaRank / self::ROTA_RANK_STD * .05, 2);
-			}
+			//we will have 2 adj, 1 forward looking and 1 historical
+			//the lower one will be used for price floor, the higher for price ceiling
+			self::$def->flppadj = self::calcPpAdj($at12mni * self::$def->cpigr * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir), self::$def->popadj);
+			self::$def->histppadj = self::calcPpAdj(self::$def->al5yavgni, self::$def->popadj);
+
+			$ppadj_high = max(self::$def->flppadj, self::$def->histppadj);
+			$ppadj_low = min(self::$def->flppadj, self::$def->histppadj);
 			//end profitability adj
 
-			self::$def->profitadj = $profitadj;
-			self::$def->ppadj = $ppadj;
+			self::$def->prcv0g *= $ppadj_high;
 
-			$ppadj = $profitadj * .9 + $ppadj * .1;
-
-			if ($ppadj > 1) {
-				$ppadj_ovrAmt = ($ppadj - 1);
-
-				$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + .1))) * $ppadj_ovrAmt + 1;
+			//price ceiling
+			if ($ppadj_high > 1) {
+				self::$def->fp *= $ppadj_high;
+				self::$def->fptm *= $ppadj_high;
+				self::$def->afptm *= $ppadj_high;
 			}
 
-			self::$def->prcv0g *= $ppadj;
-
-			if ($ppadj > 1) {
-				self::$def->fp *= $ppadj;
-				self::$def->fptm *= $ppadj;
-				self::$def->afptm *= $ppadj;
-			}
-
-			self::$def->lffptm *= $ppadj;
+			//price floor
+			self::$def->lffptm *= $ppadj_low;
 			//end premium or discount adjutment
 
 			self::$def->ep = (self::$def->fptm + self::$def->lffptm) / 2;
