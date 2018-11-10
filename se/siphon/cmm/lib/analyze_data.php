@@ -346,7 +346,7 @@
 
 				//$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 2))) * $ppadj_ovrAmt + 1;
 				//$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * ($ppadj_ovrAmt / 7) + 1;
-				$ppadj = $ppadj_ovrAmt / 2 + 1;
+				$ppadj = $ppadj_ovrAmt / ($ppadj_ovrAmt + 1) * $ppadj_ovrAmt + 1;
 			}
 
 			return $ppadj;
