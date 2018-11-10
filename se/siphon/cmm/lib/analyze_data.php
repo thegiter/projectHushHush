@@ -230,8 +230,8 @@
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP_DOWN = .8;
 		const PPLR_PCT_STEP_UP = 1.2;
-		const MAX_P = 1.5;
-		const MAX_D = .1;
+		const MAX_P = 3;//max premium using apple or birshire, etc as guideline 
+		const MAX_D = .1;//max discount
 		const TTL_GLB_RANK = 4000;
 
 		const NI_SZE_STD = 20000;//mil(15oz * crt 6yr avg gold price)
@@ -1478,11 +1478,11 @@
 
 			$ppadj = $profitadj * .9 + $ppadj * .1;
 
-			if ($ppadj > 1) {
+			/*if ($ppadj > 1) {
 				$ppadj_ovrAmt = ($ppadj - 1);
 
 				$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * $ppadj_ovrAmt / 7 + 1;
-			}
+			}*/
 
 			self::$def->prcv0g *= $ppadj;
 
