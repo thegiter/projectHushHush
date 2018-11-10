@@ -344,7 +344,8 @@
 			if ($ppadj > 1) {
 				$ppadj_ovrAmt = ($ppadj - 1);
 
-				$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + .1))) * $ppadj_ovrAmt + 1;
+				$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 7))) * $ppadj_ovrAmt + 1;
+				//$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * ($ppadj_ovrAmt / 7) + 1;
 			}
 
 			return $ppadj;
