@@ -68,7 +68,7 @@
 			<td>
 				avgRote
 			</td><td>
-				'.$def->avgRote.'
+				'.$def->arote.'
 			</td>
 		</tr>
 	</table>';
