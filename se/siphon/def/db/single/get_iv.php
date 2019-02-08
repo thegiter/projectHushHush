@@ -57,5 +57,19 @@
 				'.$def->prlyv.'
 			</td>
 		</tr>
+		<tr>
+			<td>
+				rotaRank
+			</td><td>
+				'.$def->rotaRank.'
+			</td>
+		</tr>
+		<tr>
+			<td>
+				avgRote
+			</td><td>
+				'.$def->avgRote.'
+			</td>
+		</tr>
 	</table>';
 ?>
