@@ -1232,8 +1232,22 @@
 			//(although we do not know what the igr will be in the future)
 			//thus, we use the current igr, but adjust it with a few factors
 			//and future capE = current capE - current change in capE
-			$ar = min(self::$def->tlomr, self::$def->tlroer, self::$def->tlrocr);
+			$ar_arr = [];
 
+			if (self::$def->lyom != 0 || self::$def->t12maom != 0) {
+				$ar_arr[] = self::$def->tlomr;//adds 1 elm to end of arr
+			}
+
+			if (self::$def->lyroe != 0 || self::$def->t12maroe != 0) {
+				$ar_arr[] = self::$def->tlroer;//adds 1 elm to end of arr
+			}
+
+			if (self::$def->t12maroc != 0 && self::$def->lyroc != 0) {
+				$ar_arr[] = self::$def->tlrocr;//adds 1 elm to end of arr
+			}
+
+			$ar = min($ar_arr);
+/*
 			if ((self::$def->tlroer == 0) && (self::$def->tlrocr != 0)) {
 				$ar = min(self::$def->tlomr, self::$def->tlrocr);
 			} else if ((self::$def->tlrocr == 0) && (self::$def->tlroer != 0)) {
@@ -1241,7 +1255,7 @@
 			} else if ((self::$def->tlrocr == 0) && (self::$def->tlroer == 0)) {
 				$ar = self::$def->tlomr;
 			}
-
+*/
 			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, $at12mni, self::$def->so);
 
 			$ctt = $result['cCapE'];
