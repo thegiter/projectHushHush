@@ -1242,7 +1242,7 @@
 				$ar_arr[] = self::$def->tlroer;//adds 1 elm to end of arr
 			}
 
-			if (self::$def->t12maroc != 0 && self::$def->lyroc != 0) {
+			if (self::$def->t12maroc != 0 || self::$def->lyroc != 0) {
 				$ar_arr[] = self::$def->tlrocr;//adds 1 elm to end of arr
 			}
 
