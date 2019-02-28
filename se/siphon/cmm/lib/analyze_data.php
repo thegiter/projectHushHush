@@ -539,6 +539,8 @@
 			self::$def->lyni = str_replace(',', '', end($matches)[2]);
 
 			//get sum of last 4 years ni later we add them to avg ly ni to get get historical 5 year avg
+			$l2yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]);
+			$l3yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]);
 			$l4yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]) + str_replace(',', '', $matches[count($matches) - 5][2]);
 
 			//gurufocus does not update net income to the current year,
@@ -569,6 +571,8 @@
 
 			$avglyni = (self::$def->lyni + self::$def->t12mni) / 2;
 
+			self::$def->l3yavgni = ($avglyni + $l2yni) / 3;
+			self::$def->sl3yavgni = $l3yni / 3;
 			self::$def->l5yavgni = ($avglyni + $l4yni) / 5;
 
 			$ctt = $result['ie'];
@@ -782,6 +786,8 @@
 
 			$at12mni = self::$def->t12mni * $coinir;
 			self::$def->at12mni = $at12mni;
+			self::$def->adjl3yavgni = self::$def->l3yavgni * $coinir;
+			self::$def->adjsl3yavgni = self::$def->sl3yavgni * $lyoinir;
 			self::$def->al5yavgni = self::$def->l5yavgni * $coinir;
 
 			$ctt = $result['om'];
@@ -1171,13 +1177,13 @@
 				return 'no so';
 			}
 
-			if ($alyni == 0) {
+			if (self::$def->adjsl3yavgni == 0) {
 				self::$def->cigr = 1;
 			} else {
-				self::$def->cigr = $at12mni / $alyni;
+				self::$def->cigr = self::$def->adjl3yavgni / self::$def->adjsl3yavgni;
 			}
 
-			if ($alyni < 0) {
+			if (self::$def->adjsl3yavgni < 0) {
 				self::$def->cigr = abs(self::$def->cigr);
 			}
 
@@ -1216,10 +1222,10 @@
 
 			self::$def->t12mcapE = str_replace(',', '', $matches[2]);
 
-			$lyvIcm = ($alyni + self::$def->lydda + self::$def->t12mcapE) * self::$def->cigr * self::VIR / (1 + self::DR);
+			$lyvIcm = (self::$def->adjsl3yavgni + self::$def->lydda + self::$def->t12mcapE) * self::$def->cigr * self::VIR / (1 + self::DR);
 
 			//alternative valuation is equity + expected income (assuming expecation is accurate)
-			$lyvE = (self::$def->lye + $at12mni) / (1 + self::DR);
+			$lyvE = (self::$def->lye + self::$def->adjl3yavgni) / (1 + self::DR);
 
 			//last year value price is then last year value / by expected (this year's) so
 			self::$def->prlyvIcm = ($lyvIcm + $lyvE) / self::$def->so;
@@ -1256,7 +1262,7 @@
 				$ar = self::$def->tlomr;
 			}
 */
-			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, $at12mni, self::$def->so);
+			self::$def->cpigr = self::pjtIgr(self::$def->cigr, $ar, self::$def->adjl3yavgni, self::$def->so);
 
 			$ctt = $result['cCapE'];
 
@@ -1292,10 +1298,10 @@
 
 			$cpcapE = self::$def->t12mcapE - self::$def->t12mcCapE;//crt proected
 
-			$cvIcm = self::estimatedValueIcm($at12mni, self::$def->cpigr, self::$def->t12mdda, $cpcapE);
+			$cvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->cpigr, self::$def->t12mdda, $cpcapE);
 
 			//alternative current value is equity + projected income
-			$ecv = self::estimatedValueE(self::$def->ce, $at12mni, self::$def->cpigr);
+			$ecv = self::estimatedValueE(self::$def->ce, self::$def->adjl3yavgni, self::$def->cpigr);
 			$cvE = $ecv->ev;
 			$feE = $ecv->fe;
 
@@ -1342,7 +1348,7 @@
 				//self::$def->prcv0gE = 0;
 			} else {
 				self::$def->prcvIcm = ($cvIcm + $cvE) / $pso;
-				self::$def->prcv0gIcm = ($at12mni * self::VIR + self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
+				self::$def->prcv0gIcm = (self::$def->adjl3yavgni * self::VIR + self::$def->ce + self::$def->adjl3yavgni) / (1 + self::DR) / $pso;
 
 				//self::$def->prcvE = $cvE / $pso;
 				//self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
@@ -1356,11 +1362,11 @@
 			if (self::$def->cpigr === 0) {
 				self::$def->fpigr = 0;
 			} else {
-				self::$def->fpigr = self::pjtIgr(self::$def->cpigr, $ar, $at12mni, $pso);
+				self::$def->fpigr = self::pjtIgr(self::$def->cpigr, $ar, self::$def->adjl3yavgni, $pso);
 			}
 
-			$fvIcm = self::estimatedValueIcm($at12mni, self::$def->fpigr, self::$def->t12mdda, $cpcapE);
-			$efv = self::estimatedValueE($feE, $at12mni, self::$def->fpigr);
+			$fvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->fpigr, self::$def->t12mdda, $cpcapE);
+			$efv = self::estimatedValueE($feE, self::$def->adjl3yavgni, self::$def->fpigr);
 			$fvE = $efv->ev;
 
 			self::$def->fpIcm = ($fvIcm + $fvE) / $pso;
@@ -1397,8 +1403,8 @@
 			//downward moe is dynamically calculated depending of different type of stock
 			//more precisely depending on the standard deviation of the stock
 			//but in this case, we are just using growth rate
-			$aefv = self::estimatedValueE($feE, $at12mni, $afpigr);//adj esti fv
-			self::$def->afptmIcm = (self::estimatedValueIcm($at12mni, $afpigr, self::$def->t12mdda, $cpcapE) + $aefv->ev) / $pso;
+			$aefv = self::estimatedValueE($feE, self::$def->adjl3yavgni, $afpigr);//adj esti fv
+			self::$def->afptmIcm = (self::estimatedValueIcm(self::$def->adjl3yavgni, $afpigr, self::$def->t12mdda, $cpcapE) + $aefv->ev) / $pso;
 			//self::$def->afptmE =  $aefv->ev / $pso;
 
 			self::$def->afptm = self::$def->afptmIcm / (1 + self::$ir) / (1 + self::$ir);
@@ -1407,7 +1413,7 @@
 			$lfar = ($ar > 1) ? 1 : $ar;
 
 			if (self::$def->cigr > 1) {
-				$lfcpigr = self::pjtIgr(1, $lfar, $at12mni, self::$def->so);
+				$lfcpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni, self::$def->so);
 			} else {
 				$lfcpigr = self::$def->cpigr;
 			}
@@ -1420,9 +1426,9 @@
 			if ($lfcpigr == 0) {
 				$lffpigr = 0;
 			} else if ($lfcpigr > 1) {
-				$lffpigr = self::pjtIgr(1, $lfar, $at12mni, $lfpso);
+				$lffpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni, $lfpso);
 			} else {
-				$lffpigr = self::pjtIgr($lfcpigr, $lfar, $at12mni, $lfpso);
+				$lffpigr = self::pjtIgr($lfcpigr, $lfar, self::$def->adjl3yavgni, $lfpso);
 			}
 
 			if ($lffpigr > 1) {
@@ -1447,8 +1453,8 @@
 
 			$lfafpigr = $lffpigr * $lfadj;
 
-			$lfaefv = self::estimatedValueE(self::$def->ce, $at12mni, $lfafpigr);
-			self::$def->lffptmIcm = (self::estimatedValueIcm($at12mni, $lfafpigr, self::$def->t12mdda, $cpcapE) + $lfaefv->ev) / $lfpso;
+			$lfaefv = self::estimatedValueE(self::$def->ce, self::$def->adjl3yavgni, $lfafpigr);
+			self::$def->lffptmIcm = (self::estimatedValueIcm(self::$def->adjl3yavgni, $lfafpigr, self::$def->t12mdda, $cpcapE) + $lfaefv->ev) / $lfpso;
 			//self::$def->lffptmE = $lfaefv->ev / $lfpso;
 
 			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
@@ -1512,7 +1518,7 @@
 			//profitability adjustment
 			//we will have 2 adj, 1 forward looking and 1 historical
 			//the lower one will be used for price floor, the higher for price ceiling
-			self::$def->flppadj = self::calcPpAdj($at12mni * self::$def->cpigr * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir), self::$def->popadj);
+			self::$def->flppadj = self::calcPpAdj(self::$def->adjl3yavgni * self::$def->cpigr * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir), self::$def->popadj);
 			self::$def->histppadj = self::calcPpAdj(self::$def->al5yavgni, self::$def->popadj);
 
 			$ppadj_high = max(self::$def->flppadj, self::$def->histppadj);
