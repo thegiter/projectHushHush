@@ -82,6 +82,21 @@
 				Last Year PII to Capital Ratio
 			</h4>
 		</td>',
+		'<td data-acro="al5yavgni">
+			<h3 class="se-sortable">
+				Adjusted Last 5 Years Avg Net Income
+			</h3>
+		</td>',
+		'<td data-acro="adjsl3yavgni">
+			<h3 class="se-sortable">
+				Adjusted Second Last 3 Years Avg Net Income
+			</h3>
+		</td>',
+		'<td data-acro="adjl3yavgni">
+			<h3 class="se-sortable">
+				Adjusted Last 3 Years Avg Net Income
+			</h3>
+		</td>',
 		'<td data-acro="at12mni">
 			<h3 class="se-sortable">
 				Adjusted Trailing 12 Months Net Income
