@@ -239,8 +239,8 @@
 		const RETURN_GRW_STD = 1;
 		const ROTA_RANK_STD = 60;
 
-		const CNYIR = 0.03;//10%
-		const ZARIR = 0.1;
+		const CNYIR = 0.02;//10%
+		const ZARIR = 0.06;
 		const USDIR = 0.01;
 
 		const CNYMP = 200;
