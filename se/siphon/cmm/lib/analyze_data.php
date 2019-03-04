@@ -240,7 +240,7 @@
 		const ROTA_RANK_STD = 60;
 
 		const CNYIR = 0.02;//10%
-		const ZARIR = 0.06;
+		const ZARIR = 0.07;
 		const USDIR = 0.01;
 
 		const CNYMP = 200;
