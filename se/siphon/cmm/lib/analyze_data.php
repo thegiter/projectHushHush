@@ -170,6 +170,31 @@
 	}
 
 	class seCalc {
+		//normalized trailing vs last
+		//last must always be positive (>0)
+		public static function calcNormTl($t, $l, $avg) {
+			$tl = $t / $l;//2.08 / 16.8 = .123
+
+			//normalize trailing vs last
+			//prob = trailing vs avg
+			$diff = abs($t - $avg);//10
+
+			$avg_size = abs($avg);//12
+
+			//the higher the ratio, the less probability it is true
+			//1 - 10 / (10 + 2)
+			//1 - 10 / 12
+			//1 - .83
+			//.16
+			$prob = 1 - $diff / ($diff + $avg_size / 6);
+
+			//1 + (.123 - 1) * .16
+			//1 + -.877 * .16
+			//1 + -.14
+			//.86
+			return 1 + ($tl - 1) * $prob;
+		}
+
 		public static function getOinir($oi, $ni) {
 			if ($oi > $ni) {
 				$oinir = 1;
@@ -268,31 +293,6 @@
 		private static $cpHtml = '';
 
 		private static $def;
-
-		//normalized trailing vs last
-		//last must always be positive (>0)
-		private static function normTl($t, $l, $avg) {
-			$tl = $t / $l;//2.08 / 16.8 = .123
-
-			//normalize trailing vs last
-			//prob = trailing vs avg
-			$diff = abs($t - $avg);//10
-
-			$avg_size = abs($avg);//12
-
-			//the higher the ratio, the less probability it is true
-			//1 - 10 / (10 + 2)
-			//1 - 10 / 12
-			//1 - .83
-			//.16
-			$prob = 1 - $diff / ($diff + $avg_size / 6);
-
-			//1 + (.123 - 1) * .16
-			//1 + -.877 * .16
-			//1 + -.14
-			//.86
-			return 1 + ($tl - 1) * $prob;
-		}
 
 		private static function pjtIgr($cigr, $ar, $ni, $so) {
 			//adjusted income growth rate
@@ -770,7 +770,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = normTl(self::$def->t12maroc, self::$def->lyroc, $l3yAvgRoc);
+				self::$def->tlrocr = seCalc::calcNormTl(self::$def->t12maroc, self::$def->lyroc, $l3yAvgRoc);
 			}
 
 			$ctt = $result['te'];
