@@ -272,9 +272,9 @@
 		const ZARMP = 1000;
 		const USDMP = 3600;
 
-		private static $usFirstQuarter = ['Jan', 'Feb', 'Mar', 'Apr'];
+		//private static $usFirstQuarter = ['Jan', 'Feb', 'Mar', 'Apr'];
 
-		private static $firstQuarter;
+		//private static $firstQuarter;
 
 		private static $fullTkr = '';
 		private static $tkr = '';
@@ -850,6 +850,7 @@
 
 			$ctt = $result['om'];
 
+			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
@@ -860,9 +861,13 @@
 				return 'no om';
 			}
 
-			self::$def->lyom = str_replace(',', '', $matches[count($matches) - 1][2]);
-			self::$def->slyom = str_replace(',', '', $matches[count($matches) - 2][2]);
-			self::$def->tlyom = str_replace(',', '', $matches[count($matches) - 3][2]);
+			$matchCnt = count($matches) - $yrShift;
+
+			self::$def->lyom = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			self::$def->slyom = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			self::$def->tlyom = str_replace(',', '', $matches[$matchCnt - 3][2]);
+
+			$l3yAvgOm = (self::$def->lyom + self::$def->slyom + self::$def->tlyom) / 3;
 
 			//in case om was 0
 			if (self::$def->slyom <= 0 || self::$def->tlyom <= 0) {
@@ -881,30 +886,28 @@
 				$lytlomr = self::$def->lyom / self::$def->slyom;
 			}
 
-			if ($isFirstQuarter) {
-				self::$def->t12maom = self::$def->lyom;
-			} else {
-				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			//match trailing
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
-				$tmpMatch = $matches[0];
+			$tmpMatch = $matches[0];
 
-				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-				if (!$matches) {
-					return 'no t12mom';
-				}
-
-				$len = count($matches);
-
-				self::$def->t12maom = str_replace(',', '', $matches[$len - 1][2]);
-				self::$def->lt12maom = str_replace(',', '', $matches[$len - 2][2]);
-				self::$def->slt12maom = str_replace(',', '', $matches[$len - 3][2]);
-				self::$def->tlt12maom = str_replace(',', '', $matches[$len - 4][2]);
-
-				$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
-
-				self::$def->t12maom = min($at12maom, self::$def->t12maom);
+			if (!$matches) {
+				return 'no t12mom';
 			}
+
+			$matchCnt = count($matches);
+
+			self::$def->t12maom = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			self::$def->lt12maom = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			self::$def->slt12maom = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			self::$def->tlt12maom = str_replace(',', '', $matches[$matchCnt - 4][2]);
+
+			$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
+
+			//the smaller of the latest avg or the avg of the 4 averages
+			self::$def->t12maom = min($at12maom, self::$def->t12maom);
 
 			//in case om was 0
 			if (self::$def->lyom <= 0) {
@@ -914,7 +917,7 @@
 					self::$def->tlomr = 0;
 				}
 			} else {
-				self::$def->tlomr = self::$def->t12maom / self::$def->lyom;
+				self::$def->tlomr = seCalc::calcNormTl(self::$def->t12maom, self::$def->lyom, $l3yAvgOm);
 			}
 
 			$ctt = $result['wacc'];
@@ -940,6 +943,7 @@
 
 			$ctt = $result['roe'];
 
+			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
@@ -950,11 +954,11 @@
 				return 'no roe';
 			}
 
-			$len = count($matches);
+			$matchCnt = count($matches) - $yrShift;
 
-			self::$def->lyroe = str_replace(',', '', $matches[$len - 1][2]);
-			self::$def->slyroe = str_replace(',', '', $matches[$len - 2][2]);
-			self::$def->tlyroe = str_replace(',', '', $matches[$len - 3][2]);
+			self::$def->lyroe = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			self::$def->slyroe = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			self::$def->tlyroe = str_replace(',', '', $matches[$matchCnt - 3][2]);
 
 			self::$def->aroe = (self::$def->lyroe + self::$def->slyroe + self::$def->tlyroe) / 3;
 
@@ -966,30 +970,27 @@
 
 			self::$def->aroeg = ((self::$def->lyroe - self::$def->slyroe) / abs(self::$def->slyroe) + (self::$def->slyroe - self::$def->tlyroe) / abs(self::$def->tlyroe)) / 2;
 
-			if ($isFirstQuarter) {
-				self::$def->t12maroe = self::$def->lyroe;
-			} else {
-				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			//match trailing
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
 
-				$tmpMatch = $matches[0];
+			$tmpMatch = $matches[0];
 
-				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-				if (!$matches) {
-					return 'no t12mroe';
-				}
-
-				$len = count($matches);
-
-				self::$def->t12maroe = str_replace(',', '', $matches[$len - 1][2]);
-				self::$def->lt12maroe = str_replace(',', '', $matches[$len - 2][2]);
-				self::$def->slt12maroe = str_replace(',', '', $matches[$len - 3][2]);
-				self::$def->tlt12maroe = str_replace(',', '', $matches[$len - 4][2]);
-
-				$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
-
-				self::$def->t12maroe = $at12maroe;
+			if (!$matches) {
+				return 'no t12mroe';
 			}
+
+			$matchCnt = count($matches);
+
+			self::$def->t12maroe = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			self::$def->lt12maroe = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			self::$def->slt12maroe = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			self::$def->tlt12maroe = str_replace(',', '', $matches[$matchCnt - 4][2]);
+
+			$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
+
+			self::$def->t12maroe = $at12maroe;
 
 			//in case roe was 0
 			if (self::$def->lyroe <= 0) {
@@ -999,14 +1000,7 @@
 					self::$def->tlroer = 0;
 				}
 			} else {
-				self::$def->tlroer = self::$def->t12maroe / self::$def->lyroe;
-
-				//normalize trailing vs last
-				$tlroe_diff = abs(self::$def->t12maroe - self::$def->lyroe);
-				//the higher the ratio, the less probability it is true
-				$tlroe_prob = 1 - $tlroe_diff / ($tlroe_diff + self::$def->lyroe);
-
-				self::$def->tlroer = 1 + (self::$def->tlroer - 1) * $tlroe_prob;
+				self::$def->tlroer = seCalc::calcNormTl(self::$def->t12maroe, self::$def->lyroe, self::$def->aroe);
 			}
 
 			//project income using last year's data
@@ -1047,6 +1041,7 @@
 				}
 			}
 
+			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
@@ -1057,13 +1052,12 @@
 				return 'no rota';
 			}
 
-			$len = count($matches);
+			$matchCnt = count($matches);
 
-			$lyrota = str_replace(',', '', $matches[$len - 1][2]);
-			$slyrota = str_replace(',', '', $matches[$len - 2][2]);
-			$tlyrota = str_replace(',', '', $matches[$len - 3][2]);
-			$frlyrota = str_replace(',', '', $matches[$len - 4][2]);
-			$filyrota = str_replace(',', '', $matches[$len - 5][2]);
+			$lyrota = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			$slyrota = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			$tlyrota = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			//$frlyrota = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			//self::$def->arote = (str_replace(',', '', $matches[2]) + str_replace(',', '', $matches[5]) + str_replace(',', '', $matches[8]) + str_replace(',', '', $matches[11]) + str_replace(',', '', $matches[14]) + str_replace(',', '', $matches[17]) + str_replace(',', '', $matches[20]) + str_replace(',', '', $matches[23]) + str_replace(',', '', $matches[26]) + str_replace(',', '', $matches[29])) / 10;
 			self::$def->arota = ($lyrota + $slyrota + $tlyrota) / 3;
@@ -1071,7 +1065,7 @@
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
 			$lowestrota = min($lyrota, $slyrota, $tlyrota);
 
-			if (max($lyrota, $slyrota, $tlyrota) - $lowestrota >= 30 || $lowestrota <= 0) {
+			if (((max($lyrota, $slyrota, $tlyrota) - $lowestrota) >= 30) || ($lowestrota <= 0)) {
 				self::$def->rotaRank = 0;
 			}
 
@@ -1100,6 +1094,7 @@
 
 			$ctt = $result['rote'];
 
+			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
@@ -1110,13 +1105,13 @@
 				return 'no rote';
 			}
 
-			$len = count($matches);
+			$matchCnt = count($matches);
 
-			$lyrote = str_replace(',', '', $matches[$len - 1][2]);
-			$slyrote = str_replace(',', '', $matches[$len - 2][2]);
-			$tlyrote = str_replace(',', '', $matches[$len - 3][2]);
-			$frlyrote = str_replace(',', '', $matches[$len - 4][2]);
-			$filyrote = str_replace(',', '', $matches[$len - 5][2]);
+			$lyrote = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			$slyrote = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			$tlyrote = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			$frlyrote = str_replace(',', '', $matches[$matchCnt - 4][2]);
+			$filyrote = str_replace(',', '', $matches[$matchCnt - 5][2]);
 
 			//check for consistency, the difference of the highest and lowest must not exceed 50%
 			$lowestrote = min($lyrote, $slyrote, $tlyrote, $frlyrote, $filyrote);
@@ -1696,7 +1691,7 @@
 					self::$ir = self::USDIR;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
-					self::$firstQuarter = self::$usFirstQuarter;
+					//self::$firstQuarter = self::$usFirstQuarter;
 
 					break;
 				case 'Nasdaq':
@@ -1708,7 +1703,7 @@
 					self::$ir = self::USDIR;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
-					self::$firstQuarter = self::$usFirstQuarter;
+					//self::$firstQuarter = self::$usFirstQuarter;
 
 					break;
 				default:
