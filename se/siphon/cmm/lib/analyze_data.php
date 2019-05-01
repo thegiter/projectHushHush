@@ -457,8 +457,6 @@
 
 			$result = seCurl::multiRequest($rqss);
 
-			$isFirstQuarter = in_array(date('M'), self::$firstQuarter);
-
 			$ctt = $result['mc'];
 
 			preg_match('/Market Cap \(M\)\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(As of/', $ctt, $matches);
@@ -538,10 +536,12 @@
 
 			self::$def->lyni = str_replace(',', '', end($matches)[2]);
 
+			$matchCnt = count($matches);
+
 			//get sum of last 4 years ni later we add them to avg ly ni to get get historical 5 year avg
-			$l2yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]);
-			$l3yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]);
-			$l4yni = str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]) + str_replace(',', '', $matches[count($matches) - 5][2]);
+			$l2yni = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]);
+			$l3yni = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]);
+			$l4yni = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]) + str_replace(',', '', $matches[$matchCnt - 5][2]);
 
 			//gurufocus does not update net income to the current year,
 			//we add up the quaterly data to get trailing net income
@@ -553,7 +553,9 @@
 
 			if ($matches) {
 				//add up 4 quarters
-				self::$def->t12mni = str_replace(',', '', $matches[count($matches) - 1][2]) + str_replace(',', '', $matches[count($matches) - 2][2]) + str_replace(',', '', $matches[count($matches) - 3][2]) + str_replace(',', '', $matches[count($matches) - 4][2]);
+				$matchCnt = count($matches);
+
+				self::$def->t12mni = str_replace(',', '', $matches[$matchCnt - 1][2]) + str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]);
 			} else {
 				//check for semi-annual data
 				preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
@@ -563,7 +565,9 @@
 				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 				if ($matches) {
-					self::$def->t12mni = str_replace(',', '', $matches[count($matches) - 1][2]) + str_replace(',', '', $matches[count($matches) - 2][2]);
+					$matchCnt = count($matches);
+
+					self::$def->t12mni = str_replace(',', '', $matches[$matchCnt - 1][2]) + str_replace(',', '', $matches[$matchCnt - 2][2]);
 				} else {
 					return 'no trailing ni';
 				}
@@ -636,19 +640,52 @@
 
 			$ver = $vcr / (1 + $def->der);*/
 
+			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
-			$tmpMatch = $matches[0];
+			$annualMatch = $matches[0];
 
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+			//match annual names
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no roc annual names';
+			}
+
+			$lyName = str_replace(',', '', end($matches)[2]);
+
+			//match trailing
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+
+			$trailMatch = $matches[0];
+
+			//match trailing name
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no roc trailing names';
+			}
+
+			$tyName = str_replace(',', '', end($matches)[2]);
+
+			//$isFirstQuarter = in_array(date('M'), self::$firstQuarter);
+			$isFirstQuarter = $lyName == $tyName;
+
+			//shift year data by 1 if is $firstQuarter
+			$yrShift = ($isFirstQuarter == true) ? 1 : 0;
+
+			//match annual figures
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no roc annual data';
 			}
 
-			self::$def->lyroc = str_replace(',', '', $matches[count($matches) - 1][2]);
-			self::$def->slyroc = str_replace(',', '', $matches[count($matches) - 2][2]);
-			self::$def->tlyroc = str_replace(',', '', $matches[count($matches) - 3][2]);
+			$matchCnt = count($matches) - $yrShift;
+
+			self::$def->lyroc = str_replace(',', '', $matches[$matchCnt - 1][2]);
+			self::$def->slyroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
+			self::$def->tlyroc = str_replace(',', '', $matches[$matchCnt - 3][2]);
 
 			//in case roc was 0
 			self::$def->slyroc = (self::$def->slyroc == 0) ? 1 : self::$def->slyroc;
@@ -658,45 +695,45 @@
 
 			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
 
-			if ($isFirstQuarter) {
-				self::$def->t12maroc = self::$def->lyroc;
+			//chk for semi annual
+			preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if ($matches) {
+				//add 2 semi annual
+				$matchCnt = count($matches);
+
+				self::$def->t12maroc = str_replace(',', '', $matches[$matchCnt - 1][2]);
+				self::$def->lt12maroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
+
+				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc) / 2;
 			} else {
-				//chk for semi annual
-				preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
+				//chk for quarter
+				preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
 
 				$tmpMatch = $matches[0];
 
 				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
-				if ($matches) {
-					//add 2 semi annual
-					self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
-					self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
-
-					$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc) / 2;
-				} else {
-					//chk for quarter
-					preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
-
-					$tmpMatch = $matches[0];
-
-					preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
-
-					if ($matches) {
-						//add 4 quaters
-						self::$def->t12maroc = str_replace(',', '', $matches[count($matches) - 1][2]);
-						self::$def->lt12maroc = str_replace(',', '', $matches[count($matches) - 2][2]);
-						self::$def->slt12maroc = str_replace(',', '', $matches[count($matches) - 3][2]);
-						self::$def->tlt12maroc = str_replace(',', '', $matches[count($matches) - 4][2]);
-
-						$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
-					} else {
-						return 'no roc quarterly / semi annual data';
-					}
+				if (!$matches) {
+					return 'no roc quarterly / semi annual data';
 				}
 
-				self::$def->t12maroc = $at12maroc;
+				//add 4 quaters
+				$matchCnt = count($matches);
+
+				self::$def->t12maroc = str_replace(',', '', $matches[$matchCnt - 1][2]);
+				self::$def->lt12maroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
+				self::$def->slt12maroc = str_replace(',', '', $matches[$matchCnt - 3][2]);
+				self::$def->tlt12maroc = str_replace(',', '', $matches[$matchCnt - 4][2]);
+
+				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
 			}
+
+			self::$def->t12maroc = $at12maroc;
 
 			//in case was 0
 			if (self::$def->lyroc <= 0) {
@@ -786,6 +823,7 @@
 
 			$at12mni = self::$def->t12mni * $coinir;
 			self::$def->at12mni = $at12mni;
+			
 			self::$def->adjl3yavgni = self::$def->l3yavgni * $coinir;
 			self::$def->adjsl3yavgni = self::$def->sl3yavgni * $lyoinir;
 			self::$def->al5yavgni = self::$def->l5yavgni * $coinir;
