@@ -269,6 +269,31 @@
 
 		private static $def;
 
+		//normalized trailing vs last
+		//last must always be positive (>0)
+		private static function normTl($t, $l, $avg) {
+			$tl = $t / $l;//2.08 / 16.8 = .123
+
+			//normalize trailing vs last
+			//prob = trailing vs avg
+			$diff = abs($t - $avg);//10
+
+			$avg_size = abs($avg);//12
+
+			//the higher the ratio, the less probability it is true
+			//1 - 10 / (10 + 2)
+			//1 - 10 / 12
+			//1 - .83
+			//.16
+			$prob = 1 - $diff / ($diff + $avg_size / 6);
+
+			//1 + (.123 - 1) * .16
+			//1 + -.877 * .16
+			//1 + -.14
+			//.86
+			return 1 + ($tl - 1) * $prob;
+		}
+
 		private static function pjtIgr($cigr, $ar, $ni, $so) {
 			//adjusted income growth rate
 			//we say that igr is not sustainable, if ar is declining
@@ -687,6 +712,8 @@
 			self::$def->slyroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
 			self::$def->tlyroc = str_replace(',', '', $matches[$matchCnt - 3][2]);
 
+			$l3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
+
 			//in case roc was 0
 			self::$def->slyroc = (self::$def->slyroc == 0) ? 1 : self::$def->slyroc;
 			self::$def->tlyroc = (self::$def->tlyroc == 0) ? 1 : self::$def->tlyroc;
@@ -743,14 +770,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = self::$def->t12maroc / self::$def->lyroc;
-
-				//normalize trailing vs last
-				$tlroc_diff = abs(self::$def->t12maroc - self::$def->lyroc);
-				//the higher the ratio, the less probability it is true
-				$tlroc_prob = 1 - $tlroc_diff / ($tlroc_diff + self::$def->lyroc);
-
-				self::$def->tlrocr = 1 + (self::$def->tlrocr - 1) * $tlroc_prob;
+				self::$def->tlrocr = normTl(self::$def->t12maroc, self::$def->lyroc, $l3yAvgRoc);
 			}
 
 			$ctt = $result['te'];
@@ -823,7 +843,7 @@
 
 			$at12mni = self::$def->t12mni * $coinir;
 			self::$def->at12mni = $at12mni;
-			
+
 			self::$def->adjl3yavgni = self::$def->l3yavgni * $coinir;
 			self::$def->adjsl3yavgni = self::$def->sl3yavgni * $lyoinir;
 			self::$def->al5yavgni = self::$def->l5yavgni * $coinir;
