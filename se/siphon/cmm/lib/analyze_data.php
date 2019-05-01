@@ -331,7 +331,7 @@
 		}
 
 		//profitability popularity adjustment
-		private static function calcPpAdj($ni, $popadj) {
+		private static function calcPpAdj($ni) {
 			if ($ni <= 0) {
 				$profitadj = 0;
 			} else {
@@ -339,7 +339,7 @@
 			}
 			//end profitability adj
 
-			$ppadj = $profitadj * .9 + $popadj * .1;
+			$ppadj = $profitadj * .9 + self::$def->popadj * .1;
 
 			if ($ppadj > 1) {
 				$ppadj_ovrAmt = ($ppadj - 1);
@@ -1518,8 +1518,8 @@
 			//profitability adjustment
 			//we will have 2 adj, 1 forward looking and 1 historical
 			//the lower one will be used for price floor, the higher for price ceiling
-			self::$def->flppadj = self::calcPpAdj(self::$def->adjl3yavgni * self::$def->cpigr * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir), self::$def->popadj);
-			self::$def->histppadj = self::calcPpAdj(self::$def->al5yavgni, self::$def->popadj);
+			self::$def->flppadj = self::calcPpAdj(self::$def->adjl3yavgni * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir));
+			self::$def->histppadj = self::calcPpAdj(self::$def->al5yavgni);
 
 			$ppadj_high = max(self::$def->flppadj, self::$def->histppadj);
 			$ppadj_low = min(self::$def->flppadj, self::$def->histppadj);
