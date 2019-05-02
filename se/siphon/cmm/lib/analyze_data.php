@@ -1233,7 +1233,7 @@
 			if (self::$def->adjsl3yavgni == 0) {
 				self::$def->cigr = 1;
 			} else {
-				self::$def->cigr = self::$def->adjl3yavgni / self::$def->adjsl3yavgni;
+				self::$def->cigr = seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni);
 			}
 
 			if (self::$def->adjsl3yavgni < 0) {
