@@ -711,6 +711,8 @@
 			self::$def->tlyroc = str_replace(',', '', $matches[$matchCnt - 3][2]);
 			self::$def->flyroc = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
+			$l3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
+
 			if ($yrShift == 0) {
 				$latestYrRoc = self::$def->lyroc;
 				$sl2yRoc = self::$def->slyroc + self::$def->tlyroc;
@@ -718,10 +720,8 @@
 			} else {
 				$latestYrRoc = str_replace(',', '', $matches[count($matches) - 1][2]);
 				$sl2yRoc = self::$def->lyroc + self::$def->slyroc;
-				$sl3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
+				$sl3yAvgRoc = $l3yAvgRoc;
 			}
-
-			$l3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
 
 			//in case roc was 0
 			self::$def->slyroc = (self::$def->slyroc == 0) ? 1 : self::$def->slyroc;
