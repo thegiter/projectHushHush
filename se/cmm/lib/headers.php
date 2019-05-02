@@ -170,7 +170,7 @@
 		</td>',
 		'<td data-acro="tlrocr">
 			<h2>
-				Trailing Return on Capital vs Last Year Return on Capital
+				Current 3 Years Average vs Last 3 Years Average Return on Capital
 			</h2>
 		</td>',
 		'<td data-acro="pci">

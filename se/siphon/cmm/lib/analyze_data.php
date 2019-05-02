@@ -774,8 +774,8 @@
 			self::$def->crt3yAvgRoc = (self::$def->t12maroc + $sl2yRoc) / 3;
 
 			//in case was 0
-			if (self::$def->lyroc <= 0) {
-				if (self::$def->t12maroc == 0 && self::$def->lyroc == 0) {
+			if (self::$def->sl3yAvgRoc <= 0) {
+				if (self::$def->crt3yAvgRoc == 0 && self::$def->sl3yAvgRoc == 0) {
 					self::$def->tlrocr = self::MIN_GROWTH_HARD + .01;
 				} else {
 					self::$def->tlrocr = 0;
