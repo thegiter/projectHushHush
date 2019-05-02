@@ -158,6 +158,16 @@
 				Trailing 12 Months Average Return on Capital
 			</h3>
 		</td>',
+		'<td data-acro="sl3yAvgRoc">
+			<h3>
+				Last 3 Years Average Return on Capital
+			</h3>
+		</td>',
+		'<td data-acro="crt3yAvgRoc">
+			<h3>
+				Current 3 Years Average Return on Capital
+			</h3>
+		</td>',
 		'<td data-acro="tlrocr">
 			<h2>
 				Trailing Return on Capital vs Last Year Return on Capital

@@ -716,11 +716,11 @@
 			if ($yrShift == 0) {
 				$latestYrRoc = self::$def->lyroc;
 				$sl2yRoc = self::$def->slyroc + self::$def->tlyroc;
-				$sl3yAvgRoc = (self::$def->slyroc + self::$def->tlyroc + self::$def->flyroc) / 3;
+				self::$def->sl3yAvgRoc = (self::$def->slyroc + self::$def->tlyroc + self::$def->flyroc) / 3;
 			} else {
 				$latestYrRoc = str_replace(',', '', $matches[count($matches) - 1][2]);
 				$sl2yRoc = self::$def->lyroc + self::$def->slyroc;
-				$sl3yAvgRoc = $l3yAvgRoc;
+				self::$def->sl3yAvgRoc = $l3yAvgRoc;
 			}
 
 			//in case roc was 0
@@ -771,7 +771,7 @@
 
 			self::$def->t12maroc = ($at12maroc + $latestYrRoc) / 2;
 
-			$crt3yAvgRoc = (self::$def->t12maroc + $sl2yRoc) / 3;
+			self::$def->crt3yAvgRoc = (self::$def->t12maroc + $sl2yRoc) / 3;
 
 			//in case was 0
 			if (self::$def->lyroc <= 0) {
@@ -781,7 +781,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = seCalc::calcNormTl($crt3yAvgRoc, $sl3yAvgRoc, $l3yAvgRoc);
+				self::$def->tlrocr = seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc);
 			}
 
 			$ctt = $result['te'];
