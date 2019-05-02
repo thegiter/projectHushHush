@@ -694,10 +694,8 @@
 			$tyName = str_replace(',', '', end($matches)[2]);
 
 			//$isFirstQuarter = in_array(date('M'), self::$firstQuarter);
-			$isFirstQuarter = $lyName == $tyName;
-
 			//shift year data by 1 if is $firstQuarter
-			$yrShift = ($isFirstQuarter == true) ? 1 : 0;
+			$yrShift = ($lyName == $tyName) ? 1 : 0;
 
 			//match annual figures
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
@@ -711,6 +709,17 @@
 			self::$def->lyroc = str_replace(',', '', $matches[$matchCnt - 1][2]);
 			self::$def->slyroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
 			self::$def->tlyroc = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			self::$def->flyroc = str_replace(',', '', $matches[$matchCnt - 4][2]);
+
+			if ($yrShift == 0) {
+				$latestYrRoc = self::$def->lyroc;
+				$sl2yRoc = self::$def->slyroc + self::$def->tlyroc;
+				$sl3yAvgRoc = (self::$def->slyroc + self::$def->tlyroc + self::$def->flyroc) / 3;
+			} else {
+				$latestYrRoc = str_replace(',', '', $matches[count($matches) - 1][2]);
+				$sl2yRoc = self::$def->lyroc + self::$def->slyroc;
+				$sl3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
+			}
 
 			$l3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
 
@@ -760,7 +769,9 @@
 				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
 			}
 
-			self::$def->t12maroc = $at12maroc;
+			self::$def->t12maroc = ($at12maroc + $latestYrRoc) / 2;
+
+			$crt3yAvgRoc = (self::$def->t12maroc + $sl2yRoc) / 3;
 
 			//in case was 0
 			if (self::$def->lyroc <= 0) {
@@ -770,7 +781,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = seCalc::calcNormTl(self::$def->t12maroc, self::$def->lyroc, $l3yAvgRoc);
+				self::$def->tlrocr = seCalc::calcNormTl($crt3yAvgRoc, $sl3yAvgRoc, $l3yAvgRoc);
 			}
 
 			$ctt = $result['te'];
