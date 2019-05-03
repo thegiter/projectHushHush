@@ -877,8 +877,19 @@
 			self::$def->lyom = str_replace(',', '', $matches[$matchCnt - 1][2]);
 			self::$def->slyom = str_replace(',', '', $matches[$matchCnt - 2][2]);
 			self::$def->tlyom = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			self::$def->flyom = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			$l3yAvgOm = (self::$def->lyom + self::$def->slyom + self::$def->tlyom) / 3;
+
+			if ($yrShift == 0) {
+				$latestYrOm = self::$def->lyom;
+				$sl2yOm = self::$def->slyom + self::$def->tlyom;
+				self::$def->sl3yAvgOm = (self::$def->slyom + self::$def->tlyom + self::$def->flyom) / 3;
+			} else {
+				$latestYrOm = str_replace(',', '', $matches[count($matches) - 1][2]);
+				$sl2yOm = self::$def->lyom + self::$def->slyom;
+				self::$def->sl3yAvgOm = $l3yAvgOm;
+			}
 
 			//in case om was 0
 			if (self::$def->slyom <= 0 || self::$def->tlyom <= 0) {
@@ -918,17 +929,19 @@
 			$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
 
 			//the smaller of the latest avg or the avg of the 4 averages
-			self::$def->t12maom = min($at12maom, self::$def->t12maom);
+			self::$def->t12maom = (min($at12maom, self::$def->t12maom) + $latestYrOm) / 2;;
+
+			self::$def->crt3yAvgOm = (self::$def->t12maom + $sl2yOm) / 3;
 
 			//in case om was 0
-			if (self::$def->lyom <= 0) {
-				if (self::$def->lyom == 0 && self::$def->t12maom == 0) {
+			if (self::$def->sl3yAvgOm <= 0) {
+				if ((self::$def->sl3yAvgOm == 0) && (self::$def->crt3yAvgOm == 0)) {
 					self::$def->tlomr = self::MIN_GROWTH_HARD + .01;
 				} else {
 					self::$def->tlomr = 0;
 				}
 			} else {
-				self::$def->tlomr = seCalc::calcNormTl(self::$def->t12maom, self::$def->lyom, $l3yAvgOm);
+				self::$def->tlomr = seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm);
 			}
 
 			$ctt = $result['wacc'];
@@ -970,8 +983,19 @@
 			self::$def->lyroe = str_replace(',', '', $matches[$matchCnt - 1][2]);
 			self::$def->slyroe = str_replace(',', '', $matches[$matchCnt - 2][2]);
 			self::$def->tlyroe = str_replace(',', '', $matches[$matchCnt - 3][2]);
+			self::$def->flyroe = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			self::$def->aroe = (self::$def->lyroe + self::$def->slyroe + self::$def->tlyroe) / 3;
+
+			if ($yrShift == 0) {
+				$latestYrRoe = self::$def->lyroe;
+				$sl2yRoe = self::$def->slyroe + self::$def->tlyroe;
+				self::$def->sl3yAvgRoe = (self::$def->slyroe + self::$def->tlyroe + self::$def->flyroe) / 3;
+			} else {
+				$latestYrRoe = str_replace(',', '', $matches[count($matches) - 1][2]);
+				$sl2yRoe = self::$def->lyroe + self::$def->slyroe;
+				self::$def->sl3yAvgRoe = self::$def->aroe;
+			}
 
 			//in case roe was 0
 			self::$def->slyroe = (self::$def->slyroe == 0) ? 1 : self::$def->slyroe;
@@ -1001,7 +1025,9 @@
 
 			$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
 
-			self::$def->t12maroe = $at12maroe;
+			self::$def->t12maroe = ($at12maroe + $latestYrRoe) / 2;;
+
+			self::$def->crt3yAvgRoe = (self::$def->t12maroe + $sl2yRoe) / 3;
 
 			//in case roe was 0
 			if (self::$def->lyroe <= 0) {
@@ -1011,7 +1037,7 @@
 					self::$def->tlroer = 0;
 				}
 			} else {
-				self::$def->tlroer = seCalc::calcNormTl(self::$def->t12maroe, self::$def->lyroe, self::$def->aroe);
+				self::$def->tlroer = seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe);
 			}
 
 			//project income using last year's data

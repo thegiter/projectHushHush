@@ -112,9 +112,19 @@
 				Trailing 12 Months Average Operating Margin
 			</h3>
 		</td>',
+		'<td data-acro="sl3yAvgOm">
+			<h3 class="se-sortable">
+				Last 3 Years Average Operating Margin
+			</h3>
+		</td>',
+		'<td data-acro="crt3yAvgOm">
+			<h3 class="se-sortable">
+				Current 3 Years Average Operating Margin
+			</h3>
+		</td>',
 		'<td data-acro="tlomr">
 			<h2 class="se-sortable">
-				Trailing Operating Margin vs Last Year Operating Margin
+				Current vs Last 3 Years Average Operating Margin
 			</h2>
 		</td>',
 		'<td data-acro="aomg">
@@ -143,9 +153,19 @@
 				Trailing 12 Months Average Return on Equity
 			</h3>
 		</td>',
+		'<td data-acro="sl3yAvgRoe">
+			<h3>
+				Last 3 Years Average Return on Equity
+			</h3>
+		</td>',
+		'<td data-acro="crt3yAvgRoe">
+			<h3>
+				Current 3 Years Average Return on Equity
+			</h3>
+		</td>',
 		'<td data-acro="tlroer">
 			<h2>
-				Trailing Return on Equity vs Last Year Return on Equity
+				Current vs Last 3 Years Return on Equity
 			</h2>
 		</td>',
 		'<td data-acro="lyroc">
@@ -170,7 +190,7 @@
 		</td>',
 		'<td data-acro="tlrocr">
 			<h2>
-				Current 3 Years Average vs Last 3 Years Average Return on Capital
+				Current vs Last 3 Years Average Return on Capital
 			</h2>
 		</td>',
 		'<td data-acro="pci">
