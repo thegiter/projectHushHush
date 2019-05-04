@@ -186,7 +186,12 @@
 			//1 - 10 / 12
 			//1 - .83
 			//.16
-			$prob = 1 - $diff / ($diff + $avg_size / 6);
+			//10% is the avg annual return in S&P 500
+			//which in a normal distribution, means 50% of the companies make 10%
+			//our formula here isn't calculating probability using normal distribution
+			//but because PHP is not a statistics language, this is the closest thing
+			//also, in this case, it's less about probability but more about how achievable the change rate is
+			$prob = 1 - $diff / ($diff + $avg_size * .1);
 
 			//1 + (.123 - 1) * .16
 			//1 + -.877 * .16
