@@ -1403,7 +1403,12 @@
 				}
 			}
 
-			$cpcapE = self::$def->t12mcapE - self::$def->t12mcCapE;//crt proected
+			//captial expenditure is the money spent on buying infrastructure such as building / equipments
+			//change in working captial in the change in float
+			//a change in the float (liquid cash) a company has may indicate a change in capital expenditure
+			//though not nessarily
+			//capital expenditure is capped at 0, because it is an expenditure, it can only be 0 or negative
+			$cpcapE = min(self::$def->t12mcapE - self::$def->t12mcCapE, 0);//crt projected
 
 			$cvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->cpigr, self::$def->t12mdda, $cpcapE);
 
@@ -1455,7 +1460,7 @@
 				//self::$def->prcv0gE = 0;
 			} else {
 				self::$def->prcvIcm = ($cvIcm + $cvE) / $pso;
-				self::$def->prcv0gIcm = (self::$def->adjl3yavgni * self::VIR + self::$def->ce + self::$def->adjl3yavgni) / (1 + self::DR) / $pso;
+				self::$def->prcv0gIcm = ((self::$def->adjl3yavgni + self::$def->lydda + self::$def->t12mcapE) * self::VIR + self::$def->ce + self::$def->adjl3yavgni) / (1 + self::DR) / $pso;
 
 				//self::$def->prcvE = $cvE / $pso;
 				//self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
