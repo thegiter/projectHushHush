@@ -572,6 +572,7 @@
 			$l2yni = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]);
 			$l3yni = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]);
 			$l4yni = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]) + str_replace(',', '', $matches[$matchCnt - 5][2]);
+			$sl3yni = str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]) + str_replace(',', '', $matches[$matchCnt - 5][2]);
 
 			//gurufocus does not update net income to the current year,
 			//we add up the quaterly data to get trailing net income
@@ -607,6 +608,7 @@
 
 			self::$def->l3yavgni = ($avglyni + $l2yni) / 3;
 			self::$def->sl3yavgni = $l3yni / 3;
+			self::$def->tl3yAvgNi = $sl3yni / 3;
 			self::$def->l5yavgni = ($avglyni + $l4yni) / 5;
 
 			$ctt = $result['ie'];
@@ -717,15 +719,18 @@
 			self::$def->flyroc = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			$l3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
+			$sl3yAvgRoc = (self::$def->slyroc + self::$def->tlyroc + self::$def->flyroc) / 3;
 
 			if ($yrShift == 0) {
 				$latestYrRoc = self::$def->lyroc;
 				$sl2yRoc = self::$def->slyroc + self::$def->tlyroc;
-				self::$def->sl3yAvgRoc = (self::$def->slyroc + self::$def->tlyroc + self::$def->flyroc) / 3;
+				self::$def->sl3yAvgRoc = $sl3yAvgRoc;
+				self::$def->tl3yAvgRoc = (self::$def->tlyroc + self::$def->flyroc + str_replace(',', '', $matches[count($matches) - 5][2])) / 3;
 			} else {
 				$latestYrRoc = str_replace(',', '', $matches[count($matches) - 1][2]);
 				$sl2yRoc = self::$def->lyroc + self::$def->slyroc;
 				self::$def->sl3yAvgRoc = $l3yAvgRoc;
+				self::$def->tl3yAvgRoc = $sl3yAvgRoc;
 			}
 
 			//in case roc was 0
@@ -786,7 +791,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc);
+				self::$def->tlrocr = (seCalc::calcNormTl(self::$def->sl3yAvgRoc, self::$def->tl3yAvgRoc, self::$def->tl3yAvgRoc) + seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc)) / 2;
 			}
 
 			$ctt = $result['te'];
@@ -862,6 +867,7 @@
 
 			self::$def->adjl3yavgni = self::$def->l3yavgni * $coinir;
 			self::$def->adjsl3yavgni = self::$def->sl3yavgni * $lyoinir;
+			self::$def->adjTl3yAvgNi = self::$def->tl3yAvgNi * $lyoinir;
 			self::$def->al5yavgni = self::$def->l5yavgni * $coinir;
 
 			$ctt = $result['om'];
@@ -885,15 +891,18 @@
 			self::$def->flyom = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			$l3yAvgOm = (self::$def->lyom + self::$def->slyom + self::$def->tlyom) / 3;
+			$sl3yAvgOm = (self::$def->slyom + self::$def->tlyom + self::$def->flyom) / 3;
 
 			if ($yrShift == 0) {
 				$latestYrOm = self::$def->lyom;
 				$sl2yOm = self::$def->slyom + self::$def->tlyom;
-				self::$def->sl3yAvgOm = (self::$def->slyom + self::$def->tlyom + self::$def->flyom) / 3;
+				self::$def->sl3yAvgOm = $sl3yAvgOm;
+				self::$def->tl3yAvgOm = (self::$def->tlyom + self::$def->flyom + str_replace(',', '', $matches[count($matches) - 5][2])) / 3;
 			} else {
 				$latestYrOm = str_replace(',', '', $matches[count($matches) - 1][2]);
 				$sl2yOm = self::$def->lyom + self::$def->slyom;
 				self::$def->sl3yAvgOm = $l3yAvgOm;
+				self::$def->tl3yAvgOm = $sl3yAvgOm;
 			}
 
 			//in case om was 0
@@ -946,7 +955,7 @@
 					self::$def->tlomr = 0;
 				}
 			} else {
-				self::$def->tlomr = seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm);
+				self::$def->tlomr = (seCalc::calcNormTl(self::$def->sl3yAvgOm, self::$def->tl3yAvgOm, self::$def->tl3yAvgOm) + seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm)) / 2;
 			}
 
 			$ctt = $result['wacc'];
@@ -991,15 +1000,18 @@
 			self::$def->flyroe = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			self::$def->aroe = (self::$def->lyroe + self::$def->slyroe + self::$def->tlyroe) / 3;
+			$sl3yAvgRoe = (self::$def->slyroe + self::$def->tlyroe + self::$def->flyroe) / 3;
 
 			if ($yrShift == 0) {
 				$latestYrRoe = self::$def->lyroe;
 				$sl2yRoe = self::$def->slyroe + self::$def->tlyroe;
-				self::$def->sl3yAvgRoe = (self::$def->slyroe + self::$def->tlyroe + self::$def->flyroe) / 3;
+				self::$def->sl3yAvgRoe = $sl3yAvgRoe;
+				self::$def->tl3yAvgRoe = (self::$def->tlyroe + self::$def->flyroe + str_replace(',', '', $matches[count($matches) - 5][2])) / 3;
 			} else {
 				$latestYrRoe = str_replace(',', '', $matches[count($matches) - 1][2]);
 				$sl2yRoe = self::$def->lyroe + self::$def->slyroe;
 				self::$def->sl3yAvgRoe = self::$def->aroe;
+				self::$def->tl3yAvgRoe = $sl3yAvgRoe;
 			}
 
 			//in case roe was 0
@@ -1042,7 +1054,7 @@
 					self::$def->tlroer = 0;
 				}
 			} else {
-				self::$def->tlroer = seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe);
+				self::$def->tlroer = (seCalc::calcNormTl(self::$def->sl3yAvgRoe, self::$def->tl3yAvgRoe, self::$def->tl3yAvgRoe) + seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe)) / 2;
 			}
 
 			//project income using last year's data
@@ -1275,7 +1287,7 @@
 			if (self::$def->adjsl3yavgni == 0) {
 				self::$def->cigr = 1;
 			} else {
-				self::$def->cigr = seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni);
+				self::$def->cigr = (seCalc::calcNormTl(self::$def->adjsl3yavgni, self::$def->adjTl3yAvgNi, self::$def->adjTl3yAvgNi) + seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni)) / 2;
 			}
 
 			if (self::$def->adjsl3yavgni < 0) {
