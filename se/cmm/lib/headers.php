@@ -124,7 +124,7 @@
 		</td>',
 		'<td data-acro="tlomr">
 			<h2 class="se-sortable">
-				Current vs Last 3 Years Average Operating Margin
+				Avg Current vs Last 3 Years Average Operating Margin
 			</h2>
 		</td>',
 		'<td data-acro="aomg">
@@ -165,7 +165,7 @@
 		</td>',
 		'<td data-acro="tlroer">
 			<h2>
-				Current vs Last 3 Years Return on Equity
+				Avg Current vs Last 3 Years Avg Return on Equity
 			</h2>
 		</td>',
 		'<td data-acro="lyroc">
@@ -190,7 +190,7 @@
 		</td>',
 		'<td data-acro="tlrocr">
 			<h2>
-				Current vs Last 3 Years Average Return on Capital
+				Avg Current vs Last 3 Years Average Return on Capital
 			</h2>
 		</td>',
 		'<td data-acro="pci">
@@ -308,7 +308,7 @@
 		</td>',
 		'<td data-acro="cigr">
 			<h4>
-				Current Income Growth Rate
+				Avg Current Income Growth Rate
 			</h4>
 		</td>',
 		'<td data-acro="prlyv">
