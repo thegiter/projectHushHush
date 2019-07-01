@@ -513,7 +513,7 @@
 
 			$ctt = $result['so'];
 
-			preg_match('/\: (.+) Mil *\(As of/', $ctt, $matches);
+			preg_match('/\: ([^\:]+) Mil *\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no so';
@@ -525,7 +525,7 @@
 
 			$ctt = $result['der'];
 
-			preg_match('/\: (.+) \(As of/', $ctt, $matches);
+			preg_match('/\: ([^\:]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no der';
@@ -656,7 +656,7 @@
 
 			self::$def->lycap = self::$def->lye + self::$def->lyd;
 
-			preg_match('/\: (.+)\% +\(As of/', $ctt, $matches);
+			preg_match('/\: ([^\:]+)\% +\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no roc';
