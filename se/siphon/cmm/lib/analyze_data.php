@@ -1178,7 +1178,7 @@
 
 			$ctt = $result['pe'];
 
-			preg_match('/\: ([^\(]+) \(As of/', $ctt, $matches);
+			preg_match('/\: ([^\:\(]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				//check if no pe ratio, due to negative earnings
@@ -1206,7 +1206,7 @@
 
 			$ctt = $result['pb'];
 
-			preg_match('/\: ([^\(]+) \(As of/', $ctt, $matches);
+			preg_match('/\: ([^\:\(]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				//check if no pb ratio, due to too much liability and negative book value
