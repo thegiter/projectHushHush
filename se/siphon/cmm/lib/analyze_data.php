@@ -489,7 +489,7 @@
 
 			$ctt = $result['mc'];
 
-			preg_match('/Market Cap \(M\)\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no mc: '.$ctt;
@@ -503,7 +503,7 @@
 
 			$ctt =  $result['bps'];
 
-			preg_match('/Book Value per Share\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no bps';
@@ -513,7 +513,7 @@
 
 			$ctt = $result['so'];
 
-			preg_match('/Shares Outstanding \(EOP\)\: (.+) Mil/', $ctt, $matches);
+			preg_match('/\: (.+) Mil *\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no so';
@@ -525,7 +525,7 @@
 
 			$ctt = $result['der'];
 
-			preg_match('/Debt-to-Equity\: (.+) \(As of/', $ctt, $matches);
+			preg_match('/\: (.+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no der';
@@ -625,7 +625,7 @@
 
 			self::$def->lyie = str_replace(',', '', end($matches)[2]);
 
-			preg_match('/Interest Expense\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mie';
@@ -656,7 +656,7 @@
 
 			self::$def->lycap = self::$def->lye + self::$def->lyd;
 
-			preg_match('/ROC \%\: (.+)\% +\(As of/', $ctt, $matches);
+			preg_match('/\: (.+)\% +\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no roc';
@@ -846,7 +846,7 @@
 				self::$def->lyoi = self::$def->lyni;
 			}
 
-			preg_match('/Operating Income\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			self::$def->t12moi = str_replace(',', '', $matches[2]);
 
@@ -1178,11 +1178,11 @@
 
 			$ctt = $result['pe'];
 
-			preg_match('/PE Ratio\: ([^\(]+) \(As of/', $ctt, $matches);
+			preg_match('/\: ([^\(]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				//check if no pe ratio, due to negative earnings
-				preg_match('/PE Ratio\:\(As of/', $ctt, $matches);
+				preg_match('/\:\(As of/', $ctt, $matches);
 
 				if (!$matches) {
 					self::$def->lper = 999.9999;
@@ -1206,11 +1206,11 @@
 
 			$ctt = $result['pb'];
 
-			preg_match('/PB Ratio\: ([^\(]+) \(As of/', $ctt, $matches);
+			preg_match('/\: ([^\(]+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				//check if no pb ratio, due to too much liability and negative book value
-				preg_match('/PB Ratio\:\(As of/', $ctt, $matches);
+				preg_match('/\:\(As of/', $ctt, $matches);
 
 				if (!$matches) {
 					self::$def->lpbr = 999.9999;
@@ -1311,7 +1311,7 @@
 
 			self::$def->lydda = str_replace(',', '', end($matches)[2]);
 
-			preg_match('/Depreciation, Depletion and Amortization\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mdda';
@@ -1321,7 +1321,7 @@
 
 			$ctt = $result['capE'];
 
-			preg_match('/Capital Expenditure\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mcapE';
