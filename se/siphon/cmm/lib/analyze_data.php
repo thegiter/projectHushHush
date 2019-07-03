@@ -1479,7 +1479,7 @@
 			if (self::$def->cpigr === 0) {
 				self::$def->fpigr = 0;
 			} else {
-				self::$def->fpigr = self::pjtIgr(self::$def->cigr * self::$def->cpigr, $ar, self::$def->adjl3yavgni * self::$def->cpigr, $pso);
+				self::$def->fpigr = self::pjtIgr(self::$def->cigr * self::$def->cpigr, $ar * self::$def->cpigr, self::$def->adjl3yavgni * self::$def->cpigr, $pso);
 			}
 
 			$fvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->fpigr, self::$def->t12mdda, $cpcapE);
@@ -1543,9 +1543,9 @@
 			if ($lfcpigr == 0) {
 				$lffpigr = 0;
 			} else if ($lfcpigr > 1) {
-				$lffpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni * $lfcpigr, $lfpso);
+				$lffpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni, $lfpso);
 			} else {
-				$lffpigr = self::pjtIgr($lfcpigr, $lfar, self::$def->adjl3yavgni * $lfcpigr, $lfpso);
+				$lffpigr = self::pjtIgr($lfcpigr, $lfar * $lfcpigr, self::$def->adjl3yavgni * $lfcpigr, $lfpso);
 			}
 
 			if ($lffpigr > 1) {
