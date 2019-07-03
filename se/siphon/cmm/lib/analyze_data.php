@@ -191,7 +191,11 @@
 			//our formula here isn't calculating probability using normal distribution
 			//but because PHP is not a statistics language, this is the closest thing
 			//also, in this case, it's less about probability but more about how achievable the change rate is
-			$prob = 1 - $diff / ($diff + $avg_size * .1);
+			//however, in doing so, we are striving for average and we will always get average
+			//that means we will miss out on the outliers (those truely exceptional growth companies)
+			//so we temporarily disable until we find a better solution
+			//$prob = 1 - $diff / ($diff + $avg_size * .1);
+			$prob = 1;
 
 			//1 + (.123 - 1) * .16
 			//1 + -.877 * .16
