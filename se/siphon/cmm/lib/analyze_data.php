@@ -1363,7 +1363,8 @@
 				$ar_arr[] = self::$def->tlrocr;//adds 1 elm to end of arr
 			}
 
-			$ar = min($ar_arr);
+			//$ar = min($ar_arr);
+			$ar = array_sum($ar_arr) / count($ar_arr);
 /*
 			if ((self::$def->tlroer == 0) && (self::$def->tlrocr != 0)) {
 				$ar = min(self::$def->tlomr, self::$def->tlrocr);
@@ -1478,7 +1479,7 @@
 			if (self::$def->cpigr === 0) {
 				self::$def->fpigr = 0;
 			} else {
-				self::$def->fpigr = self::pjtIgr(self::$def->cpigr, $ar, self::$def->adjl3yavgni, $pso);
+				self::$def->fpigr = self::pjtIgr(self::$def->cigr * self::$def->cpigr, $ar, self::$def->adjl3yavgni * self::$def->cpigr, $pso);
 			}
 
 			$fvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->fpigr, self::$def->t12mdda, $cpcapE);
@@ -1542,9 +1543,9 @@
 			if ($lfcpigr == 0) {
 				$lffpigr = 0;
 			} else if ($lfcpigr > 1) {
-				$lffpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni, $lfpso);
+				$lffpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni * $lfcpigr, $lfpso);
 			} else {
-				$lffpigr = self::pjtIgr($lfcpigr, $lfar, self::$def->adjl3yavgni, $lfpso);
+				$lffpigr = self::pjtIgr($lfcpigr, $lfar, self::$def->adjl3yavgni * $lfcpigr, $lfpso);
 			}
 
 			if ($lffpigr > 1) {
