@@ -326,7 +326,7 @@
 			//ni growth potential
 			//set to 12% as 12% is the avg
 			//then modify it based on the tailing size compared to std
-			$expGr = .12 + max((self::RETURN_STD - $ni) / $ni, 0) + 1;
+			$expGr = .12 + max((self::NI_SZE_STD - $ni) / $ni, 0) + 1;
 
 			$nigpr = 1 - $aigr / ($aigr + $expGr);
 
