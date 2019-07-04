@@ -321,7 +321,7 @@
 			//price growth potential, conteracts the omg or roeg
 			$pgpr = (self::$mp - $p0g) / self::$mp;
 
-			$aigr *= $pgpr;
+			$aigr = 1 + ($aigr - 1) * $pgpr;
 
 			//ni growth potential
 			//set to 12% as 12% is the avg
@@ -330,7 +330,7 @@
 
 			$nigpr = 1 - $aigr / ($aigr + $expGr);
 
-			$aigr *= $nigpr;
+			$aigr = 1 + ($aigr - 1) * $nigpr;
 
 			//deviation and volatility calculation here
 
