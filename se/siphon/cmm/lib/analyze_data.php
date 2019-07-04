@@ -172,7 +172,7 @@
 	class seCalc {
 		//normalized trailing vs last
 		//last must always be positive (>0)
-		public static function calcNormTl($t, $l, $avg) {
+		public static function calcNormTl($t, $l, $avg, $std) {
 			$tl = $t / $l;//2.08 / 16.8 = .123
 
 			//normalize trailing vs last
@@ -186,16 +186,23 @@
 			//1 - 10 / 12
 			//1 - .83
 			//.16
-			//10% is the avg annual return in S&P 500
-			//which in a normal distribution, means 50% of the companies make 10%
+			//12% is the avg annual growth rate
+			//2000 mil is the avg ni, which is about 10% of std
+			//which in a normal distribution, means 50% of the companies make 13% and 2000 mil
 			//our formula here isn't calculating probability using normal distribution
 			//but because PHP is not a statistics language, this is the closest thing
 			//also, in this case, it's less about probability but more about how achievable the change rate is
 			//however, in doing so, we are striving for average and we will always get average
 			//that means we will miss out on the outliers (those truely exceptional growth companies)
-			//so we temporarily disable until we find a better solution
-			//$prob = 1 - $diff / ($diff + $avg_size * .1);
-			$prob = 1;
+			//to combat this, we set a limit on the size to std
+			//if size at std, then it follows the avg growth probablity
+			//the higher the size, the less probability
+			//the lower the size, the more probable
+			//set to 12% as 12% is the avg
+			//then modify it based on the tailing size compared to std
+			$expGr = .12 + max(($std - $t) / $t, 0);
+
+			$prob = 1 - $diff / ($diff + $avg_size * $expGr);
 
 			//1 + (.123 - 1) * .16
 			//1 + -.877 * .16
