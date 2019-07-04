@@ -172,7 +172,7 @@
 	class seCalc {
 		//normalized trailing vs last
 		//last must always be positive (>0)
-		public static function calcNormTl($t, $l, $avg, $std) {
+		public static function calcNormTl($t, $l, $avg) {
 			$tl = $t / $l;//2.08 / 16.8 = .123
 
 			//normalize trailing vs last
@@ -198,11 +198,7 @@
 			//if size at std, then it follows the avg growth probablity
 			//the higher the size, the less probability
 			//the lower the size, the more probable
-			//set to 12% as 12% is the avg
-			//then modify it based on the tailing size compared to std
-			$expGr = .12 + max(($std - $t) / $t, 0);
-
-			$prob = 1 - $diff / ($diff + $avg_size * $expGr);
+			$prob = 1;
 
 			//1 + (.123 - 1) * .16
 			//1 + -.877 * .16
@@ -326,6 +322,15 @@
 			$pgpr = (self::$mp - $p0g) / self::$mp;
 
 			$aigr *= $pgpr;
+
+			//ni growth potential
+			//set to 12% as 12% is the avg
+			//then modify it based on the tailing size compared to std
+			$expGr = .12 + max((self::RETURN_STD - $ni) / $ni, 0) + 1;
+
+			$nigpr = 1 - $aigr / ($aigr + $expGr);
+
+			$aigr *= $nigpr;
 
 			//deviation and volatility calculation here
 
@@ -802,7 +807,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = (seCalc::calcNormTl(self::$def->sl3yAvgRoc, self::$def->tl3yAvgRoc, self::$def->tl3yAvgRoc, self::RETURN_STD) + seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc, self::RETURN_STD)) / 2;
+				self::$def->tlrocr = (seCalc::calcNormTl(self::$def->sl3yAvgRoc, self::$def->tl3yAvgRoc, self::$def->tl3yAvgRoc) + seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc)) / 2;
 			}
 
 			$ctt = $result['te'];
@@ -966,7 +971,7 @@
 					self::$def->tlomr = 0;
 				}
 			} else {
-				self::$def->tlomr = (seCalc::calcNormTl(self::$def->sl3yAvgOm, self::$def->tl3yAvgOm, self::$def->tl3yAvgOm, self::RETURN_STD) + seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm, self::RETURN_STD)) / 2;
+				self::$def->tlomr = (seCalc::calcNormTl(self::$def->sl3yAvgOm, self::$def->tl3yAvgOm, self::$def->tl3yAvgOm) + seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm)) / 2;
 			}
 
 			$ctt = $result['wacc'];
@@ -1065,7 +1070,7 @@
 					self::$def->tlroer = 0;
 				}
 			} else {
-				self::$def->tlroer = (seCalc::calcNormTl(self::$def->sl3yAvgRoe, self::$def->tl3yAvgRoe, self::$def->tl3yAvgRoe, self::RETURN_STD) + seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe, self::RETURN_STD)) / 2;
+				self::$def->tlroer = (seCalc::calcNormTl(self::$def->sl3yAvgRoe, self::$def->tl3yAvgRoe, self::$def->tl3yAvgRoe) + seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe)) / 2;
 			}
 
 			//project income using last year's data
@@ -1298,7 +1303,7 @@
 			if (self::$def->adjsl3yavgni == 0) {
 				self::$def->cigr = 1;
 			} else {
-				self::$def->cigr = (seCalc::calcNormTl(self::$def->adjsl3yavgni, self::$def->adjTl3yAvgNi, self::$def->adjTl3yAvgNi, self::NI_SZE_STD) + seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni, self::NI_SZE_STD)) / 2;
+				self::$def->cigr = (seCalc::calcNormTl(self::$def->adjsl3yavgni, self::$def->adjTl3yAvgNi, self::$def->adjTl3yAvgNi) + seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni)) / 2;
 			}
 
 			if (self::$def->adjsl3yavgni < 0) {
