@@ -802,7 +802,7 @@
 					self::$def->tlrocr = 0;
 				}
 			} else {
-				self::$def->tlrocr = (seCalc::calcNormTl(self::$def->sl3yAvgRoc, self::$def->tl3yAvgRoc, self::$def->tl3yAvgRoc) + seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc)) / 2;
+				self::$def->tlrocr = (seCalc::calcNormTl(self::$def->sl3yAvgRoc, self::$def->tl3yAvgRoc, self::$def->tl3yAvgRoc, self::RETURN_STD) + seCalc::calcNormTl(self::$def->crt3yAvgRoc, self::$def->sl3yAvgRoc, $l3yAvgRoc, self::RETURN_STD)) / 2;
 			}
 
 			$ctt = $result['te'];
@@ -966,7 +966,7 @@
 					self::$def->tlomr = 0;
 				}
 			} else {
-				self::$def->tlomr = (seCalc::calcNormTl(self::$def->sl3yAvgOm, self::$def->tl3yAvgOm, self::$def->tl3yAvgOm) + seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm)) / 2;
+				self::$def->tlomr = (seCalc::calcNormTl(self::$def->sl3yAvgOm, self::$def->tl3yAvgOm, self::$def->tl3yAvgOm, self::RETURN_STD) + seCalc::calcNormTl(self::$def->crt3yAvgOm, self::$def->sl3yAvgOm, $l3yAvgOm, self::RETURN_STD)) / 2;
 			}
 
 			$ctt = $result['wacc'];
@@ -1065,7 +1065,7 @@
 					self::$def->tlroer = 0;
 				}
 			} else {
-				self::$def->tlroer = (seCalc::calcNormTl(self::$def->sl3yAvgRoe, self::$def->tl3yAvgRoe, self::$def->tl3yAvgRoe) + seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe)) / 2;
+				self::$def->tlroer = (seCalc::calcNormTl(self::$def->sl3yAvgRoe, self::$def->tl3yAvgRoe, self::$def->tl3yAvgRoe, self::RETURN_STD) + seCalc::calcNormTl(self::$def->crt3yAvgRoe, self::$def->sl3yAvgRoe, self::$def->aroe, self::RETURN_STD)) / 2;
 			}
 
 			//project income using last year's data
@@ -1298,7 +1298,7 @@
 			if (self::$def->adjsl3yavgni == 0) {
 				self::$def->cigr = 1;
 			} else {
-				self::$def->cigr = (seCalc::calcNormTl(self::$def->adjsl3yavgni, self::$def->adjTl3yAvgNi, self::$def->adjTl3yAvgNi) + seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni)) / 2;
+				self::$def->cigr = (seCalc::calcNormTl(self::$def->adjsl3yavgni, self::$def->adjTl3yAvgNi, self::$def->adjTl3yAvgNi, self::NI_SZE_STD) + seCalc::calcNormTl(self::$def->adjl3yavgni, self::$def->adjsl3yavgni, self::$def->adjsl3yavgni, self::NI_SZE_STD)) / 2;
 			}
 
 			if (self::$def->adjsl3yavgni < 0) {
