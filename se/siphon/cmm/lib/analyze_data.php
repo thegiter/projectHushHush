@@ -592,7 +592,8 @@
 
 			//gurufocus does not update net income to the current year,
 			//we add up the quaterly data to get trailing net income
-			preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
+			//U makes regex ungreedy, so it matches first Calculation instead of last
+			preg_match('/Quarterly Data[\s\S]+Calculation/U', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -605,7 +606,7 @@
 				self::$def->t12mni = str_replace(',', '', $matches[$matchCnt - 1][2]) + str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]);
 			} else {
 				//check for semi-annual data
-				preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
+				preg_match('/Semi-Annual Data[\s\S]+Calculation/U', $ctt, $matches);
 
 				$tmpMatch = $matches[0];
 
@@ -703,7 +704,7 @@
 			$lyName = str_replace(',', '', end($matches)[2]);
 
 			//match trailing
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
 
 			$trailMatch = $matches[0];
 
@@ -758,7 +759,7 @@
 			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
 
 			//chk for semi annual
-			preg_match('/Semi-Annual Data[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/Semi-Annual Data[\s\S]+Calculation/U', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -774,7 +775,7 @@
 				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc) / 2;
 			} else {
 				//chk for quarter
-				preg_match('/Quarterly Data[\s\S]+Calculation/', $ctt, $matches);
+				preg_match('/Quarterly Data[\s\S]+Calculation/U', $ctt, $matches);
 
 				$tmpMatch = $matches[0];
 
@@ -939,7 +940,7 @@
 			}
 
 			//match trailing
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -1039,7 +1040,7 @@
 			self::$def->aroeg = ((self::$def->lyroe - self::$def->slyroe) / abs(self::$def->slyroe) + (self::$def->slyroe - self::$def->tlyroe) / abs(self::$def->tlyroe)) / 2;
 
 			//match trailing
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -1390,7 +1391,7 @@
 
 			$ctt = $result['cCapE'];
 
-			preg_match('/Quarterly Data[\s\S]+Change In Working Capital[\s\S]+Calculation/', $ctt, $matches);
+			preg_match('/Quarterly Data[\s\S]+Change In Working Capital[\s\S]+Calculation/U', $ctt, $matches);
 
 			$tmpMatch = $matches[0];
 
@@ -1405,7 +1406,7 @@
 				self::$def->t12mcCapE = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2]) + str_replace(',', '', $matches[$len - 4][2]) + str_replace(',', '', $matches[$len - 5][2])) / 5 * 4;
 			} else {
 				//check for semi-annual data
-				preg_match('/Semi-Annual Data[\s\S]+Change In Working Capital[\s\S]+Calculation/', $ctt, $matches);
+				preg_match('/Semi-Annual Data[\s\S]+Change In Working Capital[\s\S]+Calculation/U', $ctt, $matches);
 
 				$tmpMatch = $matches[0];
 
