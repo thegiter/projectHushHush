@@ -448,11 +448,18 @@
 		}
 
 		private static function getCp() {
-			preg_match('/ on (Nasdaq|NASDAQ|.+ Stock Exchange)[\s\S]+\<span style\="font-size:[^"]+"\>\s+([\d\.\,]+)\<\/span\>\<span\>(CNY|HKD|ZAc|ZAX|USD)\<\/span\>[\s\S]+\<span\>52\-wk High\<\/span\>[\s\S]+class\="sectionQuoteDetailHigh"\>.+;([\d\.\,]+)\<\/span\>[\s\S]+\<span\>52\-wk Low\<\/span\>[\s\S]+class\="sectionQuoteDetailLow">.+;([\d\.\,]+)\<\/span\>/', self::$cpHtml, $matches);
+			preg_match('/\"last\"\:\"([\d\.]+)\"/', self::$cpHtml, $matches);
 
 			$cp = str_replace(',', '', $matches[2]);
-			$high = str_replace(',', '', $matches[4]);
-			$low = str_replace(',', '', $matches[5]);
+
+			//don't need to escape . in character class
+			preg_match('/\"fiftytwo_wk_high\"\:\"([\d.]+)\"/', self::$cpHtml, $matches);
+
+			$high = str_replace(',', '', $matches[2]);
+
+			preg_match('/\"fiftytwo_wk_low\"\:\"([\d.]+)\"/', self::$cpHtml, $matches);
+
+			$low = str_replace(',', '', $matches[2]);
 
 			if (($cp !== 0) && !$cp) {
 				return 'get current price failed: '.self::$cpHtml;
@@ -1786,7 +1793,7 @@
 				default:
 			}
 
-			self::$cpUrl = 'https://www.reuters.com/finance/stocks/chart/'.$r_tkr.self::$rSe;
+			self::$cpUrl = 'https://www.reuters.com/companies/'.$r_tkr.self::$rSe;
 
 			//cal data either from siphon or from db, depend on refresh
 			if ($refresh) {
