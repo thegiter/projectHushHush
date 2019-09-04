@@ -448,18 +448,18 @@
 		}
 
 		private static function getCp() {
-			preg_match('/\"last\"\:\"([\d.]+)\"/', self::$cpHtml, $matches);
+			preg_match('/\"last\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
 
-			$cp = str_replace(',', '', $matches[2]);
+			$cp = str_replace(',', '', $matches[1]);
 
 			//don't need to escape . in character class
-			preg_match('/\"fiftytwo_wk_high\"\:\"([\d.]+)\"/', self::$cpHtml, $matches);
+			preg_match('/\"fiftytwo_wk_high\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
 
-			$high = str_replace(',', '', $matches[2]);
+			$high = str_replace(',', '', $matches[1]);
 
-			preg_match('/\"fiftytwo_wk_low\"\:\"([\d.]+)\"/', self::$cpHtml, $matches);
+			preg_match('/\"fiftytwo_wk_low\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
 
-			$low = str_replace(',', '', $matches[2]);
+			$low = str_replace(',', '', $matches[1]);
 
 			if (($cp !== 0) && !$cp) {
 				return 'get current price failed: '.self::$cpHtml;
