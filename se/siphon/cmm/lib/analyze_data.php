@@ -448,7 +448,7 @@
 		}
 
 		private static function getCp() {
-			preg_match('/\"last\"\:\"([\d\.]+)\"/', self::$cpHtml, $matches);
+			preg_match('/\"last\"\:\"([\d.]+)\"/', self::$cpHtml, $matches);
 
 			$cp = str_replace(',', '', $matches[2]);
 
