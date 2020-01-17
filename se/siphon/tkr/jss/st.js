@@ -184,37 +184,27 @@ shpsCmm.domMgr.domReady().then(function() {
 				//loop through each row
 				//first row is heading, start from 2nd row
 				shpsCmm.domMgr.forEachNode(trs, function (tr, idx) {
-					//combine first cell and second cell html in each row, seperated by comma
-					//symbol before the first comma is the ticker
-					//before the second comma is the name inside double quotes
-					//possible span in second comma, for the apostrophy symbol
+					//firt cell text is ticker
+					//second cell text is compnay name
+					//possible span in second cell, for the apostrophy symbol
 					//create ticker
 
-					let txt = tr.children[0].textContent;
+					const tkr = tr.children[0].textContent;
+					let sName = tr.children[1].textContent;
 
-					if (tr.children[1]) {
-						txt += tr.children[1].textContent;
-					}
+					const tkrMatches = /^[A-Z\.]+$/.exec(tkr);
+					const nameMatches_fund = /\bFund\b/.exec(sName);
+					const nameMatches_etf = /\bETF\b/.exec(sName);
 
-					txt = txt.replace(/(?:\r\n|\r|\n)/g, ' ');
+					if (tkrMatches && !nameMatches_fund && !nameMatches_etf) {
+						//select is a reserved word, therefore must be escaped
+						sName = sName.replace(/\bselect/gi, 'ESCSelect');
+						sName = sName.replace(/\bunion/gi, 'ESCUnion');
 
-					const matches = /^([A-Z\.]+),"([^"]+)"/.exec(txt);
-
-					if (matches) {
-						let sName = matches[2];
-
-						if ((sName.indexOf('Fund') == -1) && (sName.indexOf(' ETF') == -1)) {
-							const tkr = matches[1];
-
-							//select is a reserved word, therefore must be escaped
-							sName = sName.replace(/\bselect/gi, 'ESCSelect');
-							sName = sName.replace(/\bunion/gi, 'ESCUnion');
-
-							tickers.push({
-								ticker: tkr,
-								name: sName
-							});
-						}
+						tickers.push({
+							ticker: tkr,
+							name: sName
+						});
 					}
 				});
 
