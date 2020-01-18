@@ -749,9 +749,9 @@
 				$latestYrRoc = self::$def->lyroc;
 				$sl2yRoc = self::$def->slyroc + self::$def->tlyroc;
 				self::$def->sl3yAvgRoc = $sl3yAvgRoc;
-				self::$def->tl3yAvgRoc = (self::$def->tlyroc + self::$def->flyroc + str_replace(',', '', $matches[count($matches) - 5][2])) / 3;
+				self::$def->tl3yAvgRoc = (self::$def->tlyroc + self::$def->flyroc + floatval(str_replace(',', '', $matches[count($matches) - 5][2]))) / 3;
 			} else {
-				$latestYrRoc = str_replace(',', '', $matches[count($matches) - 1][2]);
+				$latestYrRoc = floatval(str_replace(',', '', $matches[count($matches) - 1][2]));
 				$sl2yRoc = self::$def->lyroc + self::$def->slyroc;
 				self::$def->sl3yAvgRoc = $l3yAvgRoc;
 				self::$def->tl3yAvgRoc = $sl3yAvgRoc;
@@ -1041,9 +1041,9 @@
 				$latestYrRoe = self::$def->lyroe;
 				$sl2yRoe = self::$def->slyroe + self::$def->tlyroe;
 				self::$def->sl3yAvgRoe = $sl3yAvgRoe;
-				self::$def->tl3yAvgRoe = (self::$def->tlyroe + self::$def->flyroe + str_replace(',', '', $matches[count($matches) - 5][2])) / 3;
+				self::$def->tl3yAvgRoe = (self::$def->tlyroe + self::$def->flyroe + floatval(str_replace(',', '', $matches[count($matches) - 5][2]))) / 3;
 			} else {
-				$latestYrRoe = str_replace(',', '', $matches[count($matches) - 1][2]);
+				$latestYrRoe = floatval(str_replace(',', '', $matches[count($matches) - 1][2]));
 				$sl2yRoe = self::$def->lyroe + self::$def->slyroe;
 				self::$def->sl3yAvgRoe = self::$def->aroe;
 				self::$def->tl3yAvgRoe = $sl3yAvgRoe;
