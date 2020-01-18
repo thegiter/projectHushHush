@@ -848,7 +848,11 @@
 
 			self::$def->slycap = (1 + self::$def->slyder) * self::$def->slye;
 
-			self::$def->lypcr = self::$def->lypii / self::$def->slycap;
+			if (self::$def->slycap == 0) {
+				self::$def->lypcr = 1;
+			} else {
+				self::$def->lypcr = self::$def->lypii / self::$def->slycap;
+			}
 
 			self::$def->t12mpcr = self::$def->t12mpii / self::$def->lycap;
 
@@ -909,10 +913,17 @@
 
 			$matchCnt = count($matches) - $yrShift;
 
-			self::$def->lyom = str_replace(',', '', $matches[$matchCnt - 1][2]);
-			self::$def->slyom = str_replace(',', '', $matches[$matchCnt - 2][2]);
-			self::$def->tlyom = str_replace(',', '', $matches[$matchCnt - 3][2]);
-			self::$def->flyom = str_replace(',', '', $matches[$matchCnt - 4][2]);
+			//if there is not enough years for the stock,
+			//if might match title cells which will contain
+			//a string such as Operating Margin % instead of a number
+			//in this case we want to make sure it's converted to number
+			//because database has specific data types in this case it has to be a decimal
+			//otherwise, database will not allow it to be saved
+			//floatval extracts the numeric portion of the string
+			self::$def->lyom = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
+			self::$def->slyom = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
+			self::$def->tlyom = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
+			self::$def->flyom = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 
 			$l3yAvgOm = (self::$def->lyom + self::$def->slyom + self::$def->tlyom) / 3;
 			$sl3yAvgOm = (self::$def->slyom + self::$def->tlyom + self::$def->flyom) / 3;
