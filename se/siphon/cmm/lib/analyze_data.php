@@ -173,7 +173,11 @@
 		//normalized trailing vs last
 		//last must always be positive (>0)
 		public static function calcNormTl($t, $l, $avg) {
-			$tl = $t / $l;//2.08 / 16.8 = .123
+			if ($l == 0) {
+				$tl = 1;
+			} else {
+				$tl = $t / $l;//2.08 / 16.8 = .123
+			}
 
 			//normalize trailing vs last
 			//prob = trailing vs avg
