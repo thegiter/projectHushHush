@@ -80,7 +80,16 @@
 
 			//else if more than 5 days
 			//fetch car cc, etc if exist and continue to siphon
-			if ($db_def = $mysqli->query('SELECT car, cc, advice FROM '.$tbl_name.' WHERE tkr="'.$tkr.'"')) {
+			if ($db_def = $mysqli->query("
+				SELECT
+					car
+					, cc
+					, advice
+				FROM
+					".$tbl_name."
+				WHERE
+					tkr = '".$tkr."'
+			")) {
 				$db_def->data_seek(0);
 
 				$db_tkr_def = $db_def->fetch_assoc();
@@ -100,7 +109,15 @@
 
 			//fetch global rank, if found, check last update, must be less than a year
 			//if over a year, remove global rank, else, assign to var
-			if ($db_def = $mysqli->query('SELECT glbrank, glbranklu FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"')) {
+			if ($db_def = $mysqli->query("
+				SELECT
+					glbrank
+					, glbranklu
+				FROM
+					".strtolower($se)."_vars
+				WHERE
+					tkr = '".$tkr."'
+			")) {
 				$db_def->data_seek(0);
 
 				$db_tkr_def = $db_def->fetch_assoc();
@@ -114,7 +131,13 @@
 
 					if ($lu->diff($now)->y >= 1) {//if over a year
 						//remove glbrank
-						$mysqli->query('DELETE FROM '.strtolower($se).'_vars WHERE tkr="'.$tkr.'"');
+						$mysqli->query("
+							DELETE
+							FROM
+								".strtolower($se)."_vars
+							WHERE
+								tkr = '".$tkr."'
+						");
 					} else if ($gr > GLB_RANK_MAX) {//if over max
 						$glbrank = GLB_RANK_MAX;
 					} else {
@@ -156,9 +179,14 @@
 		}
 
 		//update tbl
-		if (!$mysqli->query('INSERT INTO advice_updates(tkr, old_advice, new_advice)
-		VALUES("'.$tkr.'", "'.$old_advice.'", "'.$def->advice.'")
-		ON DUPLICATE KEY UPDATE old_advice=VALUES(old_advice), new_advice=VALUES(new_advice)')) {
+		if (!$mysqli->query("
+			INSERT INTO
+				advice_updates(tkr, old_advice, new_advice)
+				VALUES('".$tkr."', '".$old_advice."', '".$def->advice."')
+				ON DUPLICATE KEY UPDATE
+					old_advice = VALUES(old_advice)
+					, new_advice = VALUES(new_advice)
+		")) {
 			die('insert / update advice updates tbl error');
 		}
 	}
