@@ -138,7 +138,7 @@
 			function siphon(tkr, se, sameRqs) {
 				//if max concurrent requests are reached,
 				//retry in 2 min
-				if (!sameRqs && ttlRqss >= MAX_RQSS) {
+				if ((!sameRqs) && (ttlRqss >= MAX_RQSS)) {
 					setTimeout(function() {
 						siphon(tkr, se);
 					}, 1000 * 60 * 4);
