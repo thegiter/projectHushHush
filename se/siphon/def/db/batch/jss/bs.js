@@ -63,6 +63,7 @@
 
 		const MAX_FAILS = MAX_THREADS;
 		var fail_cntr = 0;
+		let retryCnt = 0;
 
 		const MAX_RQSS = 5;
 		var ttlRqss = 0;
@@ -181,14 +182,16 @@
 							retrys = 0;
 							noMcFails = 0;
 							fail_cntr = 0;
+							retryCnt = 0;
 
 							siphonEnd(xhr.response);
 						} else if (retrys < MAX_RETRYS) {
-							let waitMin = (fail_cntr + 1) * (siphonTimeSecs / 1000) / 60;
+							let waitMin = (retryCnt + 1) * (siphonTimeSecs / 1000) / 60;
 
 							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in '+waitMin+' minutes';
 
 							retrys++;
+							retryCnt++;
 
 							if (xhr.response && (/^no mc\:.*/.test(xhr.response.err_msg))) {
 								noMcFails++;
