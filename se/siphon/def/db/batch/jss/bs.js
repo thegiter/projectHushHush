@@ -18,7 +18,7 @@
 		minIntSecs = 3 * 60;
 		initThreadsMins = 40;
 		additionalThreadsMins = 50;
-		siphonTimeSecs = 200000;
+		siphonTimeSecs = 200000;//millisecs
 	}
 	//end settings
 
@@ -68,6 +68,8 @@
 		const MAX_RQSS = 5;
 		var ttlRqss = 0;
 
+		const MAX_TO_CNT = 3;
+
 		function siphonThread(js) {
 			threadCnt++;
 
@@ -81,6 +83,7 @@
 			var retrys = 0;
 			var noMcFails = 0;
 			var tkrRow;
+			let toCnt = 0;
 
 			function getTicker() {
 				//first child of row is the cell with the ticker
@@ -138,9 +141,9 @@
 				if (ttlRqss >= MAX_RQSS) {
 					setTimeout(function() {
 						siphon(tkr, se);
-					}, 1000 * 60 * 3);
+					}, 1000 * 60 * 4);
 
-					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 3 minutes';
+					scb.tMsgCnrs[threadNum].textContent = 'concurrent rqss maxed. Retry in 4 minutes';
 
 					return false;
 				}
@@ -174,6 +177,26 @@
 					ttlRqss++;
 
 					shpsCmm.ajaxMgr.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+refreshParam+ignoreLuParam+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
+						//if cloudflare hardcoded 100 sec tiemout occurs
+						//and has not timed out 3 times
+						//wait for time to complete siphon (200 secs)
+						//then try again
+						if (xhr.status == 524) {
+							toCnt++;
+
+							if (toCnt < MAX_TO_CNT) {
+								let waitMin = siphonTimeSecs / 1000 / 60;
+
+								scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' timed out. Retry in '+waitMin+' minutes';
+
+								setTimeout(function() {
+									siphon(tkr, se);
+								}, siphonTimeSecs);
+
+								return false;
+							}
+						}
+
 						ttlRqss--;
 
 						//determin if success, set retry cntr to 0
@@ -186,7 +209,7 @@
 
 							siphonEnd(xhr.response);
 						} else if (retrys < MAX_RETRYS) {
-							let waitMin = (retryCnt + 1) * (siphonTimeSecs / 1000) / 60;
+							let waitMin = (retryCnt / MAX_RETRYS + 1) * (siphonTimeSecs / 1000) / 60;
 
 							scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' failed. Retry in '+waitMin+' minutes';
 
