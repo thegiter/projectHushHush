@@ -174,7 +174,9 @@
 					//var seurl = 'http://ses'+rand+'.'+window.location.hostname.replace('www.', '');
 					var seurl = '/se/siphon/def/db/batch/siphon.php';
 
-					ttlRqss++;
+					if (!sameRqs) {
+						ttlRqss++;
+					}
 
 					shpsCmm.ajaxMgr.createAjax('post', seurl, 'se='+se+'&tkr='+tkr+refreshParam+ignoreLuParam+'&ee25d6='+document.cookie.replace(/(?:(?:^|.*;\s*)ee25d6\s*\=\s*([^;]*).*$)|^.*$/, "$1"), 'json').then(function(xhr) {
 						//if cloudflare hardcoded 100 sec tiemout occurs
