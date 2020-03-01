@@ -135,10 +135,10 @@
 				});
 			}
 
-			function siphon(tkr, se) {
+			function siphon(tkr, se, sameRqs) {
 				//if max concurrent requests are reached,
 				//retry in 2 min
-				if (ttlRqss >= MAX_RQSS) {
+				if (!sameRqs && ttlRqss >= MAX_RQSS) {
 					setTimeout(function() {
 						siphon(tkr, se);
 					}, 1000 * 60 * 4);
@@ -190,7 +190,7 @@
 								scb.tMsgCnrs[threadNum].textContent = 'attempt '+retrys+' timed out. Retry in '+waitMin+' minutes';
 
 								setTimeout(function() {
-									siphon(tkr, se);
+									siphon(tkr, se, true);
 								}, siphonTimeSecs);
 
 								return false;
