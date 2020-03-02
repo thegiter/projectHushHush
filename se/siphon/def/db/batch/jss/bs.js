@@ -82,8 +82,9 @@
 
 			var retrys = 0;
 			var noMcFails = 0;
-			var tkrRow;
 			let toCnt = 0;
+
+			var tkrRow;
 
 			function getTicker() {
 				//first child of row is the cell with the ticker
@@ -204,8 +205,6 @@
 						//determin if success, set retry cntr to 0
 						//if success, update the table row, else retry
 						if (xhr.response && !xhr.response.err) {//xhr.response will be null if failed
-							retrys = 0;
-							noMcFails = 0;
 							fail_cntr = 0;
 							retryCnt = 0;
 
@@ -302,6 +301,11 @@
 				if (!/[\S]+/.exec(tkrRow.children[1].textContent)) {
 					siphonNext();
 				} else {
+					//reset vars
+					retrys = 0;
+					noMcFails = 0;
+					toCnt = 0;
+					
 					siphon(getTicker(), tkrRow.children[0].dataset.se);
 				}
 			}
