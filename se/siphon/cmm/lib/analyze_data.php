@@ -1575,12 +1575,13 @@
 
 			$lfpso = max($pso, self::$def->so);
 
-			if ($lfcpigr == 0) {
+			$lf_cigr = min(self::$def->cigr, 1);
+			$lf_cpigr = min($lfcpigr, 1);
+
+			if ($lf_cpigr == 0) {
 				$lffpigr = 0;
-			} else if ($lfcpigr > 1) {
-				$lffpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni, $lfpso);
 			} else {
-				$lffpigr = self::pjtIgr($lfcpigr, $lfar * $lfcpigr, self::$def->adjl3yavgni * $lfcpigr, $lfpso);
+				$lffpigr = self::pjtIgr($lf_cigr * $lf_cpigr, $lfar * $lf_cpigr, self::$def->adjl3yavgni * $lf_cpigr, $lfpso);
 			}
 
 			if ($lffpigr > 1) {
@@ -1670,11 +1671,12 @@
 			//profitability adjustment
 			//we will have 2 adj, 1 forward looking and 1 historical
 			//the lower one will be used for price floor, the higher for price ceiling
-			self::$def->flppadj = self::calcPpAdj(self::$def->adjl3yavgni * self::$def->fpigr / (1 + self::$ir) / (1 + self::$ir));
+			self::$def->flppadj = self::calcPpAdj(self::$def->adjl3yavgni * $afpigr / (1 + self::$ir) / (1 + self::$ir));
+			self::$def->flppadj_lf = self::calcPpAdj(self::$def->adjl3yavgni * $lfafpigr / (1 + self::$ir) / (1 + self::$ir));
 			self::$def->histppadj = self::calcPpAdj(self::$def->al5yavgni);
 
-			$ppadj_high = max(self::$def->flppadj, self::$def->histppadj);
-			$ppadj_low = min(self::$def->flppadj, self::$def->histppadj);
+			$ppadj_high = max(self::$def->flppadj, self::$def->flppadj_lf, self::$def->histppadj);
+			$ppadj_low = min(self::$def->flppadj, self::$def->flppadj_lf, self::$def->histppadj);
 			//end profitability adj
 
 			self::$def->prcv0g *= $ppadj_high;
