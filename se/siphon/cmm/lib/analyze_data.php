@@ -913,22 +913,25 @@
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
-				return 'no om';
+				self::$def->lyom = 0;
+				self::$def->slyom = 0;
+				self::$def->tlyom = 0;
+				self::$def->flyom = 0;
+			} else {
+				$matchCnt = count($matches) - $yrShift;
+
+				//if there is not enough years for the stock,
+				//if might match title cells which will contain
+				//a string such as Operating Margin % instead of a number
+				//in this case we want to make sure it's converted to number
+				//because database has specific data types in this case it has to be a decimal
+				//otherwise, database will not allow it to be saved
+				//floatval extracts the numeric portion of the string
+				self::$def->lyom = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
+				self::$def->slyom = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
+				self::$def->tlyom = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
+				self::$def->flyom = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 			}
-
-			$matchCnt = count($matches) - $yrShift;
-
-			//if there is not enough years for the stock,
-			//if might match title cells which will contain
-			//a string such as Operating Margin % instead of a number
-			//in this case we want to make sure it's converted to number
-			//because database has specific data types in this case it has to be a decimal
-			//otherwise, database will not allow it to be saved
-			//floatval extracts the numeric portion of the string
-			self::$def->lyom = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
-			self::$def->slyom = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
-			self::$def->tlyom = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
-			self::$def->flyom = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 
 			$l3yAvgOm = (self::$def->lyom + self::$def->slyom + self::$def->tlyom) / 3;
 			$sl3yAvgOm = (self::$def->slyom + self::$def->tlyom + self::$def->flyom) / 3;
@@ -970,15 +973,18 @@
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
-				return 'no t12mom';
+				self::$def->t12maom = 0;
+				self::$def->lt12maom = 0;
+				self::$def->slt12maom = 0;
+				self::$def->tlt12maom = 0;
+			} else {
+				$matchCnt = count($matches);
+
+				self::$def->t12maom = str_replace(',', '', $matches[$matchCnt - 1][2]);
+				self::$def->lt12maom = str_replace(',', '', $matches[$matchCnt - 2][2]);
+				self::$def->slt12maom = str_replace(',', '', $matches[$matchCnt - 3][2]);
+				self::$def->tlt12maom = str_replace(',', '', $matches[$matchCnt - 4][2]);
 			}
-
-			$matchCnt = count($matches);
-
-			self::$def->t12maom = str_replace(',', '', $matches[$matchCnt - 1][2]);
-			self::$def->lt12maom = str_replace(',', '', $matches[$matchCnt - 2][2]);
-			self::$def->slt12maom = str_replace(',', '', $matches[$matchCnt - 3][2]);
-			self::$def->tlt12maom = str_replace(',', '', $matches[$matchCnt - 4][2]);
 
 			$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
 
