@@ -869,18 +869,19 @@
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
-				return 'no oi';
-			}
+				self::$def->lyoi = 0;
+				self::$def->t12moi = 0;
+			} else {
+				self::$def->lyoi = str_replace(',', '', $matches[count($matches) - 1][2]);
 
-			self::$def->lyoi = str_replace(',', '', $matches[count($matches) - 1][2]);
+				preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
+
+				self::$def->t12moi = str_replace(',', '', $matches[2]);
+			}
 
 			if (self::$def->lyoi == 0) {
 				self::$def->lyoi = self::$def->lyni;
 			}
-
-			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
-
-			self::$def->t12moi = str_replace(',', '', $matches[2]);
 
 			if (self::$def->t12moi == 0) {
 				self::$def->t12moi = self::$def->t12mni;
