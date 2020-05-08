@@ -577,6 +577,7 @@
 				return 'no slyder';
 			}
 
+			self::$def->lyder = str_replace(',', '', $matches[count($matches) - 1][2]);
 			self::$def->slyder = str_replace(',', '', $matches[count($matches) - 2][2]);
 
 			$ctt = $result['ni'];
@@ -666,23 +667,6 @@
 			self::$def->t12mpii = self::$def->t12mni - self::$def->t12mie;
 
 			$ctt = $result['roc'];
-
-			preg_match('/fiscal year[\s\S]+for the \<strong\>quarter\<\/strong\> that ended/', $ctt, $matches);
-
-			preg_match('/Long\-Term Debt[\s\S]+\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \+ \<\/td\>\<td\>[\-.\d]+\<\/td\>\<td\> \+ \<\/td\>\<td\>([\-.\d]+)\<\/td\>\<td\> \- \<\/td\>/', $matches[0], $matches);
-
-			if (!$matches) {
-				return 'no roc ltd std';
-			}
-
-			self::$def->lyltd = str_replace(',', '', $matches[1]);
-			self::$def->lystd = str_replace(',', '', $matches[2]);
-
-			self::$def->lyd = self::$def->lyltd + self::$def->lystd;
-
-			self::$def->lye = str_replace(',', '', $matches[3]);
-
-			self::$def->lycap = self::$def->lye + self::$def->lyd;
 
 			preg_match('/\: ([^\:]+)\% +\(As of/', $ctt, $matches);
 
@@ -848,8 +832,12 @@
 				return 'no te';
 			}
 
+			self::$def->lye = str_replace(',', '', $matches[count($matches) - 1][2]);
 			self::$def->slye = str_replace(',', '', $matches[count($matches) - 2][2]);
 
+			self::$def->lyd = self::$def->lyder * self::$def->lye;
+
+			self::$def->lycap = self::$def->lyd + self::$def->lye;
 			self::$def->slycap = (1 + self::$def->slyder) * self::$def->slye;
 
 			if (self::$def->slycap == 0) {
