@@ -859,12 +859,57 @@
 			if (!$matches) {
 				self::$def->lyoi = 0;
 				self::$def->t12moi = 0;
+				self::$def->l3yAvgoi = 0;
+				self::$def->sl3yAvgOi = 0;
+				self::$def->tl3yAvgOi = 0;
+				self::$def->l5yAvgOi = 0;
 			} else {
-				self::$def->lyoi = str_replace(',', '', $matches[count($matches) - 1][2]);
+				self::$def->lyoi = str_replace(',', '', end($matches)[2]);
 
-				preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
+				$matchCnt = count($matches);
 
-				self::$def->t12moi = str_replace(',', '', $matches[2]);
+				//get sum of last 4 years ni later we add them to avg ly ni to get get historical 5 year avg
+				$l2yOi = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]);
+				$l3yOi = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]);
+				$sl3yOi = str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]) + str_replace(',', '', $matches[$matchCnt - 5][2]);
+				$l4yOi = str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]) + str_replace(',', '', $matches[$matchCnt - 5][2]);
+
+				//we add up the quaterly data to get trailing operating income
+				//U makes regex ungreedy, so it matches first Calculation instead of last
+				preg_match('/Quarterly Data[\s\S]+Calculation/U', $ctt, $matches);
+
+				$tmpMatch = $matches[0];
+
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+				if ($matches) {
+					//add up 4 quarters
+					$matchCnt = count($matches);
+
+					self::$def->t12moi = str_replace(',', '', $matches[$matchCnt - 1][2]) + str_replace(',', '', $matches[$matchCnt - 2][2]) + str_replace(',', '', $matches[$matchCnt - 3][2]) + str_replace(',', '', $matches[$matchCnt - 4][2]);
+				} else {
+					//check for semi-annual data
+					preg_match('/Semi-Annual Data[\s\S]+Calculation/U', $ctt, $matches);
+
+					$tmpMatch = $matches[0];
+
+					preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+					if ($matches) {
+						$matchCnt = count($matches);
+
+						self::$def->t12moi = str_replace(',', '', $matches[$matchCnt - 1][2]) + str_replace(',', '', $matches[$matchCnt - 2][2]);
+					} else {
+						self::$def->t12moi = 0;
+					}
+				}
+
+				$avgLyOi = (self::$def->lyoi + self::$def->t12moi) / 2;
+
+				self::$def->l3yAvgoi = ($avgLyOi + $l2yOi) / 3;
+				self::$def->sl3yAvgOi = $l3yOi / 3;
+				self::$def->tl3yAvgOi = $sl3yOi / 3;
+				self::$def->l5yAvgOi = ($avgLyOi + $l4yOi) / 5;
 			}
 
 			if (self::$def->lyoi == 0) {
@@ -875,21 +920,42 @@
 				self::$def->t12moi = self::$def->t12mni;
 			}
 
+			if (self::$def->l3yAvgOi == 0) {
+				self::$def->l3yAvgOi = self::$def->l3yavgni;
+			}
+
+			if (self::$def->sl3yAvgOi == 0) {
+				self::$def->sl3yAvgOi = self::$def->sl3yavgni;
+			}
+
+			if (self::$def->tl3yAvgOi == 0) {
+				self::$def->tl3yAvgOi = self::$def->tl3yAvgNi;
+			}
+
+			if (self::$def->l5yAvgOi == 0) {
+				self::$def->l5yAvgOi = self::$def->l5yavgni;
+			}
+
 			//measures the impact of operating income on net income
 			$lyoinir = seCalc::getOinir(self::$def->lyoi, self::$def->lyni);
-
-			$coinir = seCalc::getOinir(self::$def->t12moi, self::$def->t12mni);
-
 			//adjusted last year ni
 			$alyni = self::$def->lyni * $lyoinir;
 
+			$coinir = seCalc::getOinir(self::$def->t12moi, self::$def->t12mni);
 			$at12mni = self::$def->t12mni * $coinir;
 			self::$def->at12mni = $at12mni;
 
-			self::$def->adjl3yavgni = self::$def->l3yavgni * $coinir;
-			self::$def->adjsl3yavgni = self::$def->sl3yavgni * $lyoinir;
-			self::$def->adjTl3yAvgNi = self::$def->tl3yAvgNi * $lyoinir;
-			self::$def->al5yavgni = self::$def->l5yavgni * $coinir;
+			$l3yAvgOinir = seCalc::getOinir(self::$def->l3yAvgOi, self::$def->l3yavgni);
+			self::$def->adjl3yavgni = self::$def->l3yavgni * $l3yAvgOinir;
+
+			$sl3yAvgOinir = seCalc::getOinir(self::$def->sl3yAvgOi, self::$def->sl3yavgni);
+			self::$def->adjsl3yavgni = self::$def->sl3yavgni * $sl3yAvgOinir;
+
+			$tl3yAvgOinir = seCalc::getOinir(self::$def->tl3yAvgOi, self::$def->tl3yAvgNi);
+			self::$def->adjTl3yAvgNi = self::$def->tl3yAvgNi * $tl3yAvgOinir;
+
+			$l5yAvgOinir = seCalc::getOinir(self::$def->l5yAvgOi, self::$def->l5yavgni);
+			self::$def->al5yavgni = self::$def->l5yavgni * $l5yAvgOinir;
 
 			$ctt = $result['om'];
 
