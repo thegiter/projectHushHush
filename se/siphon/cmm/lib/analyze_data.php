@@ -251,6 +251,30 @@
 
 			return $result;
 		}
+
+		public static function getYrShift($annualMatch, $trailMatch) {
+			//match annual names
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no annual names';
+			}
+
+			$lyName = str_replace(',', '', end($matches)[2]);
+
+			//match trailing name
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no trailing names';
+			}
+
+			$tyName = str_replace(',', '', end($matches)[2]);
+
+			//$isFirstQuarter = in_array(date('M'), self::$firstQuarter);
+			//shift year data by 1 if is $firstQuarter
+			return ($lyName == $tyName) ? 1 : 0;
+		}
 	}
 
 	class seAnalyze {
@@ -671,64 +695,58 @@
 			preg_match('/\: ([^\:]+)\% +\(As of/', $ctt, $matches);
 
 			if (!$matches) {
-				return 'no roc';
+				$lyRoc_pre = 0;
+				$fifthLyRoc_pre = 0;
+
+				self::$def->lyroc = 0;
+				self::$def->slyroc = 0;
+				self::$def->tlyroc = 0;
+				self::$def->flyroc = 0;
+			} else {
+				//$lroc = str_replace(',', '', $matches[1]);
+
+				/*$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
+
+				$crr = 100 / $alroc;
+
+				$vcr = $vrr / $crr;
+
+				$ver = $vcr / (1 + $def->der);*/
+
+				//match annual
+				preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+				$annualMatch = $matches[0];
+
+				//match trailing
+				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
+
+				$trailMatch = $matches[0];
+
+				$yrShift = seCalc::getYrShift($annualMatch, $trailMatch);
+
+				if (is_string($yrShift)) {
+					return 'roc err: '.$yrShift;
+				}
+
+				//match annual figures
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
+
+				if (!$matches) {
+					return 'no roc annual data';
+				}
+
+				$matchCnt_pre = count($matches);
+				$matchCnt = $matchCnt_pre - $yrShift;
+
+				$lyRoc_pre = floatval(str_replace(',', '', $matches[$matchCnt_pre - 1][2]));
+				$fifthLyRoc_pre = floatval(str_replace(',', '', $matches[$matchCnt_pre - 5][2]));
+
+				self::$def->lyroc = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
+				self::$def->slyroc = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
+				self::$def->tlyroc = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
+				self::$def->flyroc = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 			}
-
-			$lroc = str_replace(',', '', $matches[1]);
-
-			/*$alroc = $lroc * (1 / (1 + ($lroc - (100 / $vrr)) / 100));
-
-			$crr = 100 / $alroc;
-
-			$vcr = $vrr / $crr;
-
-			$ver = $vcr / (1 + $def->der);*/
-
-			//match annual
-			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
-
-			$annualMatch = $matches[0];
-
-			//match annual names
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
-
-			if (!$matches) {
-				return 'no roc annual names';
-			}
-
-			$lyName = str_replace(',', '', end($matches)[2]);
-
-			//match trailing
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
-
-			$trailMatch = $matches[0];
-
-			//match trailing name
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
-
-			if (!$matches) {
-				return 'no roc trailing names';
-			}
-
-			$tyName = str_replace(',', '', end($matches)[2]);
-
-			//$isFirstQuarter = in_array(date('M'), self::$firstQuarter);
-			//shift year data by 1 if is $firstQuarter
-			$yrShift = ($lyName == $tyName) ? 1 : 0;
-
-			//match annual figures
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
-
-			if (!$matches) {
-				return 'no roc annual data';
-			}
-
-			$matchCnt = count($matches) - $yrShift;
-
-			self::$def->lyroc = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
-			self::$def->slyroc = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
-			self::$def->tlyroc = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
-			self::$def->flyroc = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 
 			$l3yAvgRoc = (self::$def->lyroc + self::$def->slyroc + self::$def->tlyroc) / 3;
 			$sl3yAvgRoc = (self::$def->slyroc + self::$def->tlyroc + self::$def->flyroc) / 3;
@@ -737,9 +755,9 @@
 				$latestYrRoc = self::$def->lyroc;
 				$sl2yRoc = self::$def->slyroc + self::$def->tlyroc;
 				self::$def->sl3yAvgRoc = $sl3yAvgRoc;
-				self::$def->tl3yAvgRoc = (self::$def->tlyroc + self::$def->flyroc + floatval(str_replace(',', '', $matches[count($matches) - 5][2]))) / 3;
+				self::$def->tl3yAvgRoc = (self::$def->tlyroc + self::$def->flyroc + $fifthLyRoc_pre) / 3;
 			} else {
-				$latestYrRoc = floatval(str_replace(',', '', $matches[count($matches) - 1][2]));
+				$latestYrRoc = $lyRoc_pre;
 				$sl2yRoc = self::$def->lyroc + self::$def->slyroc;
 				self::$def->sl3yAvgRoc = $l3yAvgRoc;
 				self::$def->tl3yAvgRoc = $sl3yAvgRoc;
@@ -753,43 +771,24 @@
 
 			self::$def->arocg = ((self::$def->lyroc - self::$def->slyroc) / abs(self::$def->slyroc) + (self::$def->slyroc - self::$def->tlyroc) / abs(self::$def->tlyroc)) / 2;
 
-			//chk for semi annual
-			preg_match('/Semi-Annual Data[\s\S]+Calculation/U', $ctt, $matches);
+			//chk for trailing data
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
 
-			$tmpMatch = $matches[0];
-
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
-
-			if ($matches) {
-				//add 2 semi annual
-				$matchCnt = count($matches);
-
-				self::$def->t12maroc = str_replace(',', '', $matches[$matchCnt - 1][2]);
-				self::$def->lt12maroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
-
-				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc) / 2;
+			if (!$matches) {
+				self::$def->t12maroc = 0;
+				self::$def->lt12maroc = 0;
+				self::$def->slt12maroc = 0;
+				self::$def->tlt12maroc = 0;
 			} else {
-				//chk for quarter
-				preg_match('/Quarterly Data[\s\S]+Calculation/U', $ctt, $matches);
-
-				$tmpMatch = $matches[0];
-
-				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
-
-				if (!$matches) {
-					return 'no roc quarterly / semi annual data';
-				}
-
-				//add 4 quaters
 				$matchCnt = count($matches);
 
-				self::$def->t12maroc = str_replace(',', '', $matches[$matchCnt - 1][2]);
-				self::$def->lt12maroc = str_replace(',', '', $matches[$matchCnt - 2][2]);
-				self::$def->slt12maroc = str_replace(',', '', $matches[$matchCnt - 3][2]);
-				self::$def->tlt12maroc = str_replace(',', '', $matches[$matchCnt - 4][2]);
-
-				$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
+				self::$def->t12maroc = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
+				self::$def->lt12maroc = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
+				self::$def->slt12maroc = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
+				self::$def->tlt12maroc = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 			}
+
+			$at12maroc = (self::$def->t12maroc + self::$def->lt12maroc + self::$def->slt12maroc + self::$def->tlt12maroc) / 4;
 
 			self::$def->t12maroc = ($at12maroc + $latestYrRoc) / 2;
 
@@ -962,17 +961,35 @@
 			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
-			$tmpMatch = $matches[0];
-
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
-
 			if (!$matches) {
+				$lyOm_pre = 0;
+				$fifthLyOm_pre = 0;
+
 				self::$def->lyom = 0;
 				self::$def->slyom = 0;
 				self::$def->tlyom = 0;
 				self::$def->flyom = 0;
 			} else {
-				$matchCnt = count($matches) - $yrShift;
+				$annualMatch = $matches[0];
+
+				//match trailing
+				preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
+
+				$trailMatch = $matches[0];
+
+				//set yr shift if not set already
+				if (!isset($yrShift)) {
+					$yrShift = seCalc::getYrShift($annualMatch, $trailMatch);
+
+					if (is_string($yrShift)) {
+						return 'om err: '.$yrShift;
+					}
+				}
+
+				preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
+
+				$matchCnt_pre = count($matches);
+				$matchCnt = $matchCnt_pre - $yrShift;
 
 				//if there is not enough years for the stock,
 				//if might match title cells which will contain
@@ -981,6 +998,9 @@
 				//because database has specific data types in this case it has to be a decimal
 				//otherwise, database will not allow it to be saved
 				//floatval extracts the numeric portion of the string
+				$lyOm_pre = floatval(str_replace(',', '', $matches[$matchCnt_pre - 1][2]));
+				$fifthLyOm_pre = floatval(str_replace(',', '', $matches[$matchCnt_pre - 5][2]));
+
 				self::$def->lyom = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
 				self::$def->slyom = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
 				self::$def->tlyom = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
@@ -994,9 +1014,9 @@
 				$latestYrOm = self::$def->lyom;
 				$sl2yOm = self::$def->slyom + self::$def->tlyom;
 				self::$def->sl3yAvgOm = $sl3yAvgOm;
-				self::$def->tl3yAvgOm = (self::$def->tlyom + self::$def->flyom + str_replace(',', '', $matches[count($matches) - 5][2])) / 3;
+				self::$def->tl3yAvgOm = (self::$def->tlyom + self::$def->flyom + $fifthLyOm_pre) / 3;
 			} else {
-				$latestYrOm = str_replace(',', '', $matches[count($matches) - 1][2]);
+				$latestYrOm = ;
 				$sl2yOm = self::$def->lyom + self::$def->slyom;
 				self::$def->sl3yAvgOm = $l3yAvgOm;
 				self::$def->tl3yAvgOm = $sl3yAvgOm;
@@ -1019,12 +1039,8 @@
 				$lytlomr = self::$def->lyom / self::$def->slyom;
 			}
 
-			//match trailing
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
-
-			$tmpMatch = $matches[0];
-
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+			//set trailing
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				self::$def->t12maom = 0;
@@ -1084,9 +1100,23 @@
 			//match annual
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
-			$tmpMatch = $matches[0];
+			$annualMatch = $matches[0];
 
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+			//match trailing
+			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
+
+			$trailMatch = $matches[0];
+
+			//set yr shift if not set already
+			if (!isset($yrShift)) {
+				$yrShift = seCalc::getYrShift($annualMatch, $trailMatch);
+
+				if (is_string($yrShift)) {
+					return 'roe err: '.$yrShift;
+				}
+			}
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no roe';
@@ -1122,12 +1152,8 @@
 
 			self::$def->aroeg = ((self::$def->lyroe - self::$def->slyroe) / abs(self::$def->slyroe) + (self::$def->slyroe - self::$def->tlyroe) / abs(self::$def->tlyroe)) / 2;
 
-			//match trailing
-			preg_match('/(Quarterly|Semi-Annual) Data[\s\S]+Calculation/U', $ctt, $matches);
-
-			$tmpMatch = $matches[0];
-
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+			//set trailing
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no t12mroe';
