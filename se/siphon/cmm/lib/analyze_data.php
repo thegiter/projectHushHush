@@ -1016,7 +1016,7 @@
 				self::$def->sl3yAvgOm = $sl3yAvgOm;
 				self::$def->tl3yAvgOm = (self::$def->tlyom + self::$def->flyom + $fifthLyOm_pre) / 3;
 			} else {
-				$latestYrOm = ;
+				$latestYrOm = $lyOm_pre;
 				$sl2yOm = self::$def->lyom + self::$def->slyom;
 				self::$def->sl3yAvgOm = $l3yAvgOm;
 				self::$def->tl3yAvgOm = $sl3yAvgOm;
@@ -1050,10 +1050,10 @@
 			} else {
 				$matchCnt = count($matches);
 
-				self::$def->t12maom = str_replace(',', '', $matches[$matchCnt - 1][2]);
-				self::$def->lt12maom = str_replace(',', '', $matches[$matchCnt - 2][2]);
-				self::$def->slt12maom = str_replace(',', '', $matches[$matchCnt - 3][2]);
-				self::$def->tlt12maom = str_replace(',', '', $matches[$matchCnt - 4][2]);
+				self::$def->t12maom = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
+				self::$def->lt12maom = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
+				self::$def->slt12maom = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
+				self::$def->tlt12maom = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 			}
 
 			$at12maom = (self::$def->t12maom + self::$def->lt12maom + self::$def->slt12maom + self::$def->tlt12maom) / 4;
@@ -1161,10 +1161,10 @@
 
 			$matchCnt = count($matches);
 
-			self::$def->t12maroe = str_replace(',', '', $matches[$matchCnt - 1][2]);
-			self::$def->lt12maroe = str_replace(',', '', $matches[$matchCnt - 2][2]);
-			self::$def->slt12maroe = str_replace(',', '', $matches[$matchCnt - 3][2]);
-			self::$def->tlt12maroe = str_replace(',', '', $matches[$matchCnt - 4][2]);
+			self::$def->t12maroe = floatval(str_replace(',', '', $matches[$matchCnt - 1][2]));
+			self::$def->lt12maroe = floatval(str_replace(',', '', $matches[$matchCnt - 2][2]));
+			self::$def->slt12maroe = floatval(str_replace(',', '', $matches[$matchCnt - 3][2]));
+			self::$def->tlt12maroe = floatval(str_replace(',', '', $matches[$matchCnt - 4][2]));
 
 			$at12maroe = (self::$def->t12maroe + self::$def->lt12maroe + self::$def->slt12maroe + self::$def->tlt12maroe) / 4;
 
