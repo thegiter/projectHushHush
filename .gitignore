@@ -8,6 +8,7 @@ gulpfile.js
 .babelrc
 .eslintrc
 package.json
+package-lock.json
 
 #xampp
 xampp/
