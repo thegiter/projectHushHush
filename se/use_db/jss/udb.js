@@ -73,35 +73,41 @@
 				ldFromDb('nasdaq')
 			]);
 		}).then(function(defsObjsArr) {
-			var nyseObj = defsObjsArr[0];
-			var nasObj = defsObjsArr[1];
+			const NYSE_OBJ = defsObjsArr[0],
+						NAS_OBJ = defsObjsArr[1];
 
-			var tkrRows = scb.getTkrRows();
+			const TKR_ROWS = scb.getTkrRows();
 
-			Array.prototype.forEach.call(tkrRows, function(row) {
-				let def;
+			//to fix performance issues, we will add each row to document fragment first
+			//then move the entire fragment to the webpage
+			const DOC_FRAG = new DocumentFragment();
 
-				var defRow = document.createElement('tr');
+			Array.prototype.forEach.call(TKR_ROWS, function(row) {
+				const DEF_ROW = document.createElement('tr');
 
 				//get tkr
-				var tkr = /\s*([A-Za-z\.]+)\s*/.exec(row.children[0].textContent)[1];
+				const TKR = /\s*([A-Za-z\.]+)\s*/.exec(row.children[0].textContent)[1];
 
-				if (nyseObj[tkr] || nasObj[tkr]) {
-					var se;
+				if (NYSE_OBJ[TKR] || NAS_OBJ[TKR]) {
+					let def, se;
 
-					if (nyseObj[tkr]) {
-						def = nyseObj[tkr];
+					if (NYSE_OBJ[TKR]) {
+						def = NYSE_OBJ[TKR];
 						se = 'NYSE';
 					} else {
-						def = nasObj[tkr];
+						def = NAS_OBJ[TKR];
 						se = 'Nasdaq';
 					}
 
-					updateRow(defRow, se, tkr, def);
+					updateRow(DEF_ROW, se, TKR, def);
 				}
 
-				scb.body.appendChild(defRow);
+				//add to doc frag
+				DOC_FRAG.appendChild(DEF_ROW);
 			});
+
+			//add doc frag to dom
+			scb.body.appendChild(DOC_FRAG);
 		});
 	});
 })();
