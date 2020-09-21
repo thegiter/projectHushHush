@@ -540,7 +540,7 @@
 
 			$ctt = $result['mc'];
 
-			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD)(.+) Mil *\(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no mc: '.$ctt;
@@ -554,7 +554,7 @@
 
 			$ctt =  $result['bps'];
 
-			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) \(As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD)(.+) \(As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no bps';
@@ -678,7 +678,7 @@
 
 			self::$def->lyie = str_replace(',', '', end($matches)[2]);
 
-			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD)(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mie';
@@ -1437,7 +1437,7 @@
 
 			self::$def->lydda = str_replace(',', '', end($matches)[2]);
 
-			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD)(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mdda';
@@ -1447,7 +1447,7 @@
 
 			$ctt = $result['capE'];
 
-			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD\<\/span\> )(.+) Mil *\(TTM As of/', $ctt, $matches);
+			preg_match('/\: (CN¥|\$|.*ZAR\<\/span\> |.*USD)(.+) Mil *\(TTM As of/', $ctt, $matches);
 
 			if (!$matches) {
 				return 'no t12mcapE';
