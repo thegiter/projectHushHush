@@ -515,8 +515,8 @@
 			$result = new stdClass;
 
 			$result->cp = $cp;
-			$result->high = $high;
 			$result->low = $low;
+			$result->high = $high;
 
 			return $result;
 		}
