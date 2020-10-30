@@ -495,7 +495,7 @@
 
 			$cp = str_replace(',', '', $matches[1]);
 
-			preg_match('/([\d.,]+)\<\/span\>[\s\S]+52 Week Range\<\/span\>[\s\S]+([\d.,]+)\<\/span\>/U', self::$cpHtml, $matches);
+			preg_match('/([\d.,]+)\<\/span\>[^\/]+52 Week Range\<\/span\>[\s\S]+([\d.,]+)\<\/span\>/U', self::$cpHtml, $matches);
 
 			$low = str_replace(',', '', $matches[1]);
 			$high = str_replace(',', '', $matches[2]);
