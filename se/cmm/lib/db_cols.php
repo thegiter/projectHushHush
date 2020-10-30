@@ -13,8 +13,6 @@
 		't12mni' => 'DECIMAL(40, 30)',
 		'lyie' => 'DECIMAL(40, 30)',
 		'lypii' => 'DECIMAL(40, 30)',
-		'lyltd' => 'DECIMAL(40, 30)',
-		'lystd' => 'DECIMAL(40, 30)',
 		'lyd' => 'DECIMAL(40, 30)',
 		'lye' => 'DECIMAL(40, 30)',
 		'lycap' => 'DECIMAL(40, 30)',

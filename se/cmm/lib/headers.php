@@ -52,16 +52,6 @@
 				Last Year Pre-Interest Income
 			</h4>
 		</td>',
-		'<td data-acro="lyltd">
-			<h3>
-				Last Year Long-Term Debt
-			</h3>
-		</td>',
-		'<td data-acro="lystd">
-			<h3>
-				Last Year Short-Term Debt
-			</h3>
-		</td>',
 		'<td data-acro="lyd">
 			<h4>
 				Last Year Debt

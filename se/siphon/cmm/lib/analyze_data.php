@@ -476,7 +476,8 @@
 		}
 
 		private static function getCp() {
-			preg_match('/\"last\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
+			//reuters
+			/*preg_match('/\"last\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
 
 			$cp = str_replace(',', '', $matches[1]);
 
@@ -487,7 +488,17 @@
 
 			preg_match('/\"fiftytwo_wk_low\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
 
+			$low = str_replace(',', '', $matches[1]);*/
+
+			//market watch
+			preg_match('/\"price\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
+
+			$cp = str_replace(',', '', $matches[1]);
+
+			preg_match('/([\d.,]+)\<\/span\>[\s\S]+52 Week Range[\s\S]+([\d.,]+)\<\/span\>/U', self::$cpHtml, $matches);
+
 			$low = str_replace(',', '', $matches[1]);
+			$high = str_replace(',', '', $matches[2]);
 
 			if (($cp !== 0) && !$cp) {
 				return 'get current price failed: '.self::$cpHtml;
@@ -1875,7 +1886,7 @@
 
 					$r_tkr = self::get_r_us_tkr();
 
-					self::$rSe = '.N';
+					self::$rSe = '';
 					self::$ir = self::USDIR;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
@@ -1887,7 +1898,7 @@
 
 					$r_tkr = self::get_r_us_tkr();
 
-					self::$rSe = '.O';
+					self::$rSe = '';
 					self::$ir = self::USDIR;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
@@ -1897,7 +1908,8 @@
 				default:
 			}
 
-			self::$cpUrl = 'https://www.reuters.com/companies/'.$r_tkr.self::$rSe;
+			//self::$cpUrl = 'https://www.reuters.com/companies/'.$r_tkr.self::$rSe;
+			self::$cpUrl = 'https://www.marketwatch.com/investing/stock/'.self::$tkr.self::$rSe;
 
 			//cal data either from siphon or from db, depend on refresh
 			if ($refresh) {
