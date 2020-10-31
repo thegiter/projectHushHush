@@ -349,7 +349,11 @@
 
 		private static $rSe = '';
 		private static $cpUrl = '';
+		private static $cpUrl_stk = '';
+		private static $cpUrl_fnd = '';
 		private static $cpHtml = '';
+		private static $cpHtml_stk = '';
+		private static $cpHtml_fnd = '';
 
 		private static $def;
 
@@ -1958,7 +1962,8 @@
 				}
 
 				//get cp
-				self::$cpHtml = seCurl::getCtts(self::$cpUrl);
+				self::$cpHtml_stk = seCurl::getCtts(self::$cpUrl_stk);
+				self::$cpHtml_fnd = seCurl::getCtts(self::$cpUrl_fnd);
 
 				$cpResult = self::getCp();
 
