@@ -291,6 +291,8 @@
 			$result->cp = $cp;
 			$result->low = $low;
 			$result->high = $high;
+
+			return $result;
 		}
 	}
 
