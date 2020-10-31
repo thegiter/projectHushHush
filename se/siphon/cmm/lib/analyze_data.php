@@ -275,6 +275,23 @@
 			//shift year data by 1 if is $firstQuarter
 			return ($lyName == $tyName) ? 1 : 0;
 		}
+
+		public static function getCp_mw($cpHtml) {
+			preg_match('/\"price\"\:\"([\d.,]+)\"/', $cpHtml, $matches);
+
+			$cp = str_replace(',', '', $matches[1]);
+
+			preg_match('/([\d.,]+)\<\/span\>[^\/]+52 Week Range\<\/span\>[\s\S]+([\d.,]+)\<\/span\>/U', $cpHtml, $matches);
+
+			$low = str_replace(',', '', $matches[1]);
+			$high = str_replace(',', '', $matches[2]);
+
+			$result = new stdClass;
+
+			$result->cp = $cp;
+			$result->low = $low;
+			$result->high = $high;
+		}
 	}
 
 	class seAnalyze {
@@ -491,32 +508,40 @@
 			$low = str_replace(',', '', $matches[1]);*/
 
 			//market watch
-			preg_match('/\"price\"\:\"([\d.,]+)\"/', self::$cpHtml, $matches);
+			//try stk html first
+			$url = self::$cpUrl_stk;
+			$html = self::$cpHtml_stk;
+			$cpR = seCalc::getCp_mw($html);
+			$cp = $cpR->cp;
 
-			$cp = str_replace(',', '', $matches[1]);
+			//if failed, try fnd html
+			if (($cp !== 0) && !$cp) {
+				$url = self::$cpUrl_fnd;
+				$html = self::$cpHtml_fnd;
+				$cpR = seCalc::getCp_mw($html);
+				$cp = $cpR->cp;
+			}
 
-			preg_match('/([\d.,]+)\<\/span\>[^\/]+52 Week Range\<\/span\>[\s\S]+([\d.,]+)\<\/span\>/U', self::$cpHtml, $matches);
-
-			$low = str_replace(',', '', $matches[1]);
-			$high = str_replace(',', '', $matches[2]);
+			$h = $cpR->high;
+			$l = $cpR->low;
 
 			if (($cp !== 0) && !$cp) {
-				return 'get current price failed: '.self::$cpHtml;
-			} else if (($high !== 0) && !$high) {
-				return 'get 52-wk high failed: '.self::$cpHtml;
-			} else if (($low !== 0) && !$low) {
-				return 'get 52-wk low failed: '.self::$cpHtml;
+				return 'get current price failed: '.$html.' cpUrl: '.$url;
+			} else if (($h !== 0) && !$h) {
+				return 'get 52-wk high failed: '.$html.' cpUrl: '.$url;
+			} else if (($l !== 0) && !$l) {
+				return 'get 52-wk low failed: '.$html.' cpUrl: '.$url;
 			} else if (self::$rSe == 'J.J') {
 				$cp /= 100;
-				$high /= 100;
-				$low /= 100;
+				$h /= 100;
+				$l /= 100;
 			}
 
 			$result = new stdClass;
 
 			$result->cp = $cp;
-			$result->low = $low;
-			$result->high = $high;
+			$result->low = $l;
+			$result->high = $h;
 
 			return $result;
 		}
@@ -544,7 +569,8 @@
 				'dda' => 'https://www.gurufocus.com/term/CF_DDA/'.self::$guruFullTkr.'/Depreciation,-Depletion-and-Amortization/',
 				'capE' => 'https://www.gurufocus.com/term/Cash+Flow_CPEX/'.self::$guruFullTkr.'/Capital-Expenditure/',
 				'cCapE' => 'https://www.gurufocus.com/term/ChangeInWorkingCapital/'.self::$guruFullTkr.'/Change-In-Working-Capital/',
-				'cp' => self::$cpUrl
+				'cp_stk' => self::$cpUrl_stk,
+				'cp_fnd' => self::$cpUrl_fnd
 			];
 
 			$result = seCurl::multiRequest($rqss);
@@ -1387,7 +1413,8 @@
 
 			self::$def->pc = self::$def->lpgc * self::$cc;
 
-			self::$cpHtml = $result['cp'];
+			self::$cpHtml_stk = $result['cp_stk'];
+			self::$cpHtml_fnd = $result['cp_fnd'];
 
 			$cpResult = self::getCp();
 
@@ -1909,7 +1936,8 @@
 			}
 
 			//self::$cpUrl = 'https://www.reuters.com/companies/'.$r_tkr.self::$rSe;
-			self::$cpUrl = 'https://www.marketwatch.com/investing/stock/'.self::$tkr.self::$rSe;
+			self::$cpUrl_stk = 'https://www.marketwatch.com/investing/stock/'.self::$tkr.self::$rSe;
+			self::$cpUrl_fnd = 'https://www.marketwatch.com/investing/fund/'.self::$tkr.self::$rSe;
 
 			//cal data either from siphon or from db, depend on refresh
 			if ($refresh) {
@@ -1917,7 +1945,7 @@
 				$err = self::getDef_siphon();
 
 				if ($err != null) {
-					return $err.' cpUrl: '.self::$cpUrl;
+					return $err;
 				}
 			} else {
 				//get from db, then get cp
