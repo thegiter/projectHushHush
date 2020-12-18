@@ -571,7 +571,8 @@
 				'rote' => 'https://www.gurufocus.com/term/ROTE/'.self::$guruFullTkr.'/Return-on-Tangible-Equity/',
 				'pe' => 'https://www.gurufocus.com/term/pe/'.self::$guruFullTkr.'/PE-Ratio/',
 				'pb' => 'https://www.gurufocus.com/term/pb/'.self::$guruFullTkr.'/PB-Ratio/',
-				'nios' => 'https://www.gurufocus.com/term/Net+Issuance+of+Stock/'.self::$guruFullTkr.'/Net-Issuance-of-Stock/',
+				'ios' => 'https://www.gurufocus.com/term/Issuance_of_Stock/'.self::$guruFullTkr.'/Issuance-of-Stock/',
+				'ros' => 'https://www.gurufocus.com/term/Repurchase_of_Stock/'.self::$guruFullTkr.'/Repurchase-of-Stock/',
 				'dda' => 'https://www.gurufocus.com/term/CF_DDA/'.self::$guruFullTkr.'/Depreciation,-Depletion-and-Amortization/',
 				'capE' => 'https://www.gurufocus.com/term/Cash+Flow_CPEX/'.self::$guruFullTkr.'/Capital-Expenditure/',
 				'cCapE' => 'https://www.gurufocus.com/term/ChangeInWorkingCapital/'.self::$guruFullTkr.'/Change-In-Working-Capital/',
@@ -1430,7 +1431,7 @@
 
 			self::$def->cpResult = $cpResult;
 
-			$ctt = $result['nios'];
+			$ctt = $result['ios'];
 
 			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
 
@@ -1439,13 +1440,31 @@
 			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
-				return 'no nios';
+				return 'no ios';
 			}
 
 			$len = count($matches);
 
-			self::$def->anios = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3 / $cpResult->cp;
+			self::$def->avgIos_val = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
 
+			$ctt = $result['ros'];
+
+			preg_match('/Annual Data[\s\S]+(Quarterly|Semi-Annual) Data/', $ctt, $matches);
+
+			$tmpMatch = $matches[0];
+
+			preg_match_all('/\<td\>(\<font[^\>]*\>)?([^\<]+)(\<\/font\>)?\<\/td\>/', $tmpMatch, $matches, PREG_SET_ORDER);
+
+			if (!$matches) {
+				return 'no ros';
+			}
+
+			$len = count($matches);
+
+			self::$def->avgRos_val = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
+
+			self::$def->anios = (self::$def->avgIos_val - self::$def->avgRos_val) / $cpResult->cp;
+			
 			//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 			//if there is anios, this would result in future price significantly lower than cp
 			//this is fine, because we are gonna ignore this stock due to lack of data
