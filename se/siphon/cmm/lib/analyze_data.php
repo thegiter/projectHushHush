@@ -323,7 +323,7 @@
 		const RETURN_GRW_STD = 1;
 		const ROTA_RANK_STD = 60;
 
-		const CNYIR = 0.03;//10%
+		const CNYIR = 0.02;//10%
 		const ZARIR = 0.07;
 		const USDIR = 0.01;
 
@@ -1464,7 +1464,7 @@
 			self::$def->avgRos_val = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
 
 			self::$def->anios = (self::$def->avgIos_val - self::$def->avgRos_val) / $cpResult->cp;
-			
+
 			//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 			//if there is anios, this would result in future price significantly lower than cp
 			//this is fine, because we are gonna ignore this stock due to lack of data
