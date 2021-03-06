@@ -889,7 +889,13 @@
 				self::$def->lypcr = self::$def->lypii / self::$def->slycap;
 			}
 
-			self::$def->t12mpcr = self::$def->t12mpii / self::$def->lycap;
+			//disable future pre int icm calc if there is no data on ly cap
+			//by setting t12mpcr to 0, future pre in icm calc will be 0 too
+			if (self::$def->lycap == 0) {
+				self::$def->t12mpcr = 0;
+			} else {
+				self::$def->t12mpcr = self::$def->t12mpii / self::$def->lycap;
+			}
 
 			$ctt = $result['oi'];
 
