@@ -1830,7 +1830,7 @@
 			//we will have 2 adj, 1 forward looking and 1 historical
 			//the lower one will be used for price floor, the higher for price ceiling
 			self::$def->flppadj = self::calcPpAdj(self::$def->adjl3yavgni * $afpigr / (1 + self::$ir) / (1 + self::$ir));
-			self::$def->flppadj_lf = self::calcPpAdj(self::$def->adjl3yavgni * $lfafpigr / (1 + self::$ir) / (1 + self::$ir));
+			self::$def->flppadj_lf = self::calcPpAdj(self::$def->adjl3yavgni * $lf_afpigr / (1 + self::$ir) / (1 + self::$ir));
 			self::$def->histppadj = self::calcPpAdj(self::$def->al5yavgni);
 
 			$ppadj_high = max(self::$def->flppadj, self::$def->flppadj_lf, self::$def->histppadj);
