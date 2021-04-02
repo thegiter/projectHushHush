@@ -352,6 +352,7 @@
 
 		private static $mp;
 		private static $ir;
+		private static $rfr;
 		private static $increment;
 
 		private static $rSe = '';
