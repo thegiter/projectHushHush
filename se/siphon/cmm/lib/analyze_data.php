@@ -412,7 +412,7 @@
 
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
-			return max(0, $ev);
+			return $ev;
 		}
 
 		//current equity, current ni, projected igr
@@ -427,7 +427,7 @@
 
 			$result->fe = $ce + $ni * $pigr;
 
-			$result->ev = max(0, $result->fe);
+			$result->ev = $result->fe;
 
 			//a company's value can be negative, if it has too much debt and is losing money
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
@@ -441,7 +441,7 @@
 
 			$rst->fe = $ev_e->fe;
 
-			$rst->edp = (self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev) / $pso / (1 + self::DR);
+			$rst->edp = max(self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev, 0) / $pso / (1 + self::DR);
 
 			return $rst;
 		}
@@ -1544,7 +1544,7 @@
 			self::$def->t12mcapE = str_replace(',', '', $matches[2]);
 
 			//price reflecting last year's value
-			self::$def->prlyvIcm = estimateDiscountedPrice(self::$def->adjsl3yavgni, self::$def->lydda, self::$def->t12mcapE, self::$def->cigr, self::$def->lye, self::$def->so)->edp;
+			self::$def->prlyvIcm = self::estimateDiscountedPrice(self::$def->adjsl3yavgni, self::$def->lydda, self::$def->t12mcapE, self::$def->cigr, self::$def->lye, self::$def->so)->edp;
 			//self::$def->prlyvE = $lyvE / self::$def->so;
 
 			//self::$def->prlyv = min(self::$def->prlyvIcm, self::$def->prlyvE) / (1 + self::$ir);
@@ -1662,12 +1662,12 @@
 				//self::$def->prcvE = 0;
 				//self::$def->prcv0gE = 0;
 			} else {
-				$cedp = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, self::$def->cpigr, self::$def->ce, $pso);
+				$cedp = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, self::$def->cpigr, self::$def->ce, $pso);
 				$cpfe = $cedp->fe;
 				self::$def->prcvIcm =$cedp->edp;
 
 				//zero growth
-				self::$def->prcv0gIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->lydda, self::$def->t12mcapE, 1, self::$def->ce, $pso)->edp;
+				self::$def->prcv0gIcm = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->lydda, self::$def->t12mcapE, 1, self::$def->ce, $pso)->edp;
 
 				//self::$def->prcvE = $cvE / $pso;
 				//self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
@@ -1684,7 +1684,7 @@
 				self::$def->fpigr = self::pjtIgr(self::$def->cigr * self::$def->cpigr, $ar * self::$def->cpigr, self::$def->adjl3yavgni * self::$def->cpigr, $pso);
 			}
 
-			self::$def->fpIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, self::$def->fpigr, $cpfe, $pso)->edp;
+			self::$def->fpIcm = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, self::$def->fpigr, $cpfe, $pso)->edp;
 			//self::$def->fpE = $fvE / $pso;
 
 			self::$def->fp = self::$def->fpIcm / (1 + self::$ir);
@@ -1719,7 +1719,7 @@
 			//downward moe is dynamically calculated depending of different type of stock
 			//more precisely depending on the standard deviation of the stock
 			//but in this case, we are just using growth rate
-			self::$def->afptmIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $afpigr, $cpfe, $pso)->edp;
+			self::$def->afptmIcm = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $afpigr, $cpfe, $pso)->edp;
 			//self::$def->afptmE =  $aefv->ev / $pso;
 
 			self::$def->afptm = self::$def->afptmIcm / (1 + self::$ir) / (1 + self::$ir);
@@ -1761,7 +1761,7 @@
 
 			$lf_afpigr = $lf_fpigr * $lf_adj;
 
-			self::$def->lffptmIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso)->edp;
+			self::$def->lffptmIcm = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso)->edp;
 			//self::$def->lffptmE = $lfaefv->ev / $lfpso;
 
 			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
