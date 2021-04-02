@@ -327,6 +327,13 @@
 		const ZARIR = 0.07;
 		const USDIR = 0.01;
 
+		//risk free rate is the safest rate - inflation
+		//which is the 3 month treasury for US
+		//if risk free rate is negative, it's set to 0
+		const RFR_USD = 0;//.0011 - .01
+		const RFR_CNY = 0;
+		const RFR_ZAR = 0;
+
 		const CNYMP = 200;
 		const ZARMP = 1000;
 		const USDMP = 3600;
@@ -401,7 +408,7 @@
 				$pigr = abs($pigr);
 			}
 
-			$ev = ($ni + $dda + $capE) * $pigr * self::VIR / (1 + self::DR);
+			$ev = ($ni + $dda + $capE) * $pigr * self::VIR;
 
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
@@ -420,11 +427,23 @@
 
 			$result->fe = $ce + $ni * $pigr;
 
-			$result->ev = max(0, $result->fe / (1 + self::DR));
+			$result->ev = max(0, $result->fe);
 
 			//a company's value can be negative, if it has too much debt and is losing money
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
 			return $result;
+		}
+
+		private static function estimateDiscountedPrice($ni, $dda, $capE, $pigr, $ce, $pso) {
+			$rst = new stdClass;
+
+			$ev_e = self::estimatedValueE($ce, $ni, $pigr);
+
+			$rst->fe = $ev_e->fe;
+
+			$rst->edp = (self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev) / $pso / (1 + self::DR);
+
+			return $rst;
 		}
 
 		//profitability popularity adjustment
@@ -1524,13 +1543,8 @@
 
 			self::$def->t12mcapE = str_replace(',', '', $matches[2]);
 
-			$lyvIcm = (self::$def->adjsl3yavgni + self::$def->lydda + self::$def->t12mcapE) * self::$def->cigr * self::VIR / (1 + self::DR);
-
-			//alternative valuation is equity + expected income (assuming expecation is accurate)
-			$lyvE = (self::$def->lye + self::$def->adjl3yavgni) / (1 + self::DR);
-
-			//last year value price is then last year value / by expected (this year's) so
-			self::$def->prlyvIcm = ($lyvIcm + $lyvE) / self::$def->so;
+			//price reflecting last year's value
+			self::$def->prlyvIcm = estimateDiscountedPrice(self::$def->adjsl3yavgni, self::$def->lydda, self::$def->t12mcapE, self::$def->cigr, self::$def->lye, self::$def->so)->edp;
 			//self::$def->prlyvE = $lyvE / self::$def->so;
 
 			//self::$def->prlyv = min(self::$def->prlyvIcm, self::$def->prlyvE) / (1 + self::$ir);
@@ -1606,13 +1620,6 @@
 			//capital expenditure is capped at 0, because it is an expenditure, it can only be 0 or negative
 			$cpcapE = min(self::$def->t12mcapE - self::$def->t12mcCapE, 0);//crt projected
 
-			$cvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->cpigr, self::$def->t12mdda, $cpcapE);
-
-			//alternative current value is equity + projected income
-			$ecv = self::estimatedValueE(self::$def->ce, self::$def->adjl3yavgni, self::$def->cpigr);
-			$cvE = $ecv->ev;
-			$feE = $ecv->fe;
-
 			//projected so
 			//probability
 			$iosPCash = 0;
@@ -1655,8 +1662,12 @@
 				//self::$def->prcvE = 0;
 				//self::$def->prcv0gE = 0;
 			} else {
-				self::$def->prcvIcm = ($cvIcm + $cvE) / $pso;
-				self::$def->prcv0gIcm = ((self::$def->adjl3yavgni + self::$def->lydda + self::$def->t12mcapE) * self::VIR + self::$def->ce + self::$def->adjl3yavgni) / (1 + self::DR) / $pso;
+				$cedp = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, self::$def->cpigr, self::$def->ce, $pso);
+				$cpfe = $cedp->fe;
+				self::$def->prcvIcm =$cedp->edp;
+
+				//zero growth
+				self::$def->prcv0gIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->lydda, self::$def->t12mcapE, 1, self::$def->ce, $pso)->edp;
 
 				//self::$def->prcvE = $cvE / $pso;
 				//self::$def->prcv0gE = (self::$def->ce + $at12mni) / (1 + self::DR) / $pso;
@@ -1673,17 +1684,14 @@
 				self::$def->fpigr = self::pjtIgr(self::$def->cigr * self::$def->cpigr, $ar * self::$def->cpigr, self::$def->adjl3yavgni * self::$def->cpigr, $pso);
 			}
 
-			$fvIcm = self::estimatedValueIcm(self::$def->adjl3yavgni, self::$def->fpigr, self::$def->t12mdda, $cpcapE);
-			$efv = self::estimatedValueE($feE, self::$def->adjl3yavgni, self::$def->fpigr);
-			$fvE = $efv->ev;
-
-			self::$def->fpIcm = ($fvIcm + $fvE) / $pso;
+			self::$def->fpIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, self::$def->fpigr, $cpfe, $pso)->edp;
 			//self::$def->fpE = $fvE / $pso;
 
 			self::$def->fp = self::$def->fpIcm / (1 + self::$ir);
 
 			self::$def->fptm = self::$def->fp / (1 + self::$ir);
 
+			//downward margin of error
 			if (self::$def->fpigr == 0) {
 				self::$def->dwmoe = 0;
 			} else if (self::$def->cigr == 0) {
@@ -1711,59 +1719,49 @@
 			//downward moe is dynamically calculated depending of different type of stock
 			//more precisely depending on the standard deviation of the stock
 			//but in this case, we are just using growth rate
-			$aefv = self::estimatedValueE($feE, self::$def->adjl3yavgni, $afpigr);//adj esti fv
-			self::$def->afptmIcm = (self::estimatedValueIcm(self::$def->adjl3yavgni, $afpigr, self::$def->t12mdda, $cpcapE) + $aefv->ev) / $pso;
+			self::$def->afptmIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $afpigr, $cpfe, $pso)->edp;
 			//self::$def->afptmE =  $aefv->ev / $pso;
 
 			self::$def->afptm = self::$def->afptmIcm / (1 + self::$ir) / (1 + self::$ir);
 
 			//price floor calculation assumes the worst case senario
-			$lfar = ($ar > 1) ? 1 : $ar;
-
-			if (self::$def->cigr > 1) {
-				$lfcpigr = self::pjtIgr(1, $lfar, self::$def->adjl3yavgni, self::$def->so);
-			} else {
-				$lfcpigr = self::$def->cpigr;
-			}
-
-			//$lfecv = self::estimatedValueE(self::$def->ce, $at12mni, $lfcpigr);
-			//$lffeE = $ecv->fe;
-
-			$lfpso = max($pso, self::$def->so);
-
+			//through capping at 1, we cap the projection that we can make
+			$lf_ar = min($ar, 1);
 			$lf_cigr = min(self::$def->cigr, 1);
-			$lf_cpigr = min($lfcpigr, 1);
+
+			$lf_cpigr = self::pjtIgr($lf_cigr, $lf_ar, self::$def->adjl3yavgni, self::$def->so);
+
+			$lf_cpigr = min($lf_cpigr, 1);
+
+			$lf_cpfe = self::estimatedValueE(self::$def->ce, self::$def->adjl3yavgni, $lf_cpigr)->fe;
+
+			$lf_pso = max($pso, self::$def->so);
 
 			if ($lf_cpigr == 0) {
-				$lffpigr = 0;
+				$lf_fpigr = 0;
 			} else {
-				$lffpigr = self::pjtIgr($lf_cigr * $lf_cpigr, $lfar * $lf_cpigr, self::$def->adjl3yavgni * $lf_cpigr, $lfpso);
+				$lf_fpigr = self::pjtIgr($lf_cigr * $lf_cpigr, $lf_ar * $lf_cpigr, self::$def->adjl3yavgni * $lf_cpigr, $lf_pso);
 			}
 
-			if ($lffpigr > 1) {
-				$lffpigr = 1;
-			}
+			$lf_fpigr = min($lf_fpigr, 1);
 
-			if (($lffpigr == 0) || (self::$def->cigr == 0)) {
-				$lfdwmoe = 0;
+			if (($lf_fpigr == 0) || ($lf_cigr == 0)) {
+				$lf_dwmoe = 0;
 			} else {
-				$lfdwmoe = 1 - 20 / self::$def->cigr / $lffpigr;
+				$lf_dwmoe = 1 - 20 / $lf_cigr / $lf_fpigr;
 			}
 
-			if ($lfdwmoe < 0) {
-				$lfdwmoe = 0;
+			$lf_dwmoe = max($lf_dwmoe, 0);
+
+			$lf_adj = 1 - $lf_dwmoe;
+
+			if ($lf_fpigr < 0) {
+				$lf_adj = abs($lf_adj);
 			}
 
-			$lfadj = 1 - $lfdwmoe;
+			$lf_afpigr = $lf_fpigr * $lf_adj;
 
-			if ($lffpigr < 0) {
-				$lfadj = abs($lfadj);
-			}
-
-			$lfafpigr = $lffpigr * $lfadj;
-
-			$lfaefv = self::estimatedValueE(self::$def->ce, self::$def->adjl3yavgni, $lfafpigr);
-			self::$def->lffptmIcm = (self::estimatedValueIcm(self::$def->adjl3yavgni, $lfafpigr, self::$def->t12mdda, $cpcapE) + $lfaefv->ev) / $lfpso;
+			self::$def->lffptmIcm = estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso)->edp;
 			//self::$def->lffptmE = $lfaefv->ev / $lfpso;
 
 			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
@@ -1921,6 +1919,7 @@
 				case 'SHSE':
 					self::$rSe = '.SS';
 					self::$ir = self::CNYIR;
+					self::$rfr = self::RFR_CNY;
 					self::$mp = self::CNYMP;//abitrary number of the max possible price
 					self::$increment = .001;
 
@@ -1928,6 +1927,7 @@
 				case 'SZSE':
 					self::$rSe = '.SZ';
 					self::$ir = self::CNYIR;
+					self::$rfr = self::RFR_CNY;
 					self::$mp = self::CNYMP;
 					self::$increment = .001;
 
@@ -1935,6 +1935,7 @@
 				case 'JSE':
 					self::$rSe = 'J.J';
 					self::$ir = self::ZARIR;
+					self::$rfr = self::RFR_ZAR;
 					self::$mp = self::ZARMP;
 					self::$increment = .01;
 
@@ -1946,6 +1947,7 @@
 
 					self::$rSe = '';
 					self::$ir = self::USDIR;
+					self::$rfr = self::RFR_USD;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
 					//self::$firstQuarter = self::$usFirstQuarter;
@@ -1958,6 +1960,7 @@
 
 					self::$rSe = '';
 					self::$ir = self::USDIR;
+					self::$rfr = self::RFR_USD;
 					self::$mp = self::USDMP;
 					self::$increment = .01;
 					//self::$firstQuarter = self::$usFirstQuarter;
