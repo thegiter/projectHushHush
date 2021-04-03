@@ -338,6 +338,12 @@
 		const ZARMP = 1000;
 		const USDMP = 3600;
 
+		const TGT_NI_USD = 60000;
+		const TGT_NI_CNY = 390000;
+		const TGT_NI_ZAR = 900000;
+
+		const TGT_ICM_GR = .06;
+
 		//private static $usFirstQuarter = ['Jan', 'Feb', 'Mar', 'Apr'];
 
 		//private static $firstQuarter;
@@ -353,6 +359,7 @@
 		private static $mp;
 		private static $ir;
 		private static $rfr;
+		private static $tgtNi;
 		private static $increment;
 
 		private static $rSe = '';
@@ -405,13 +412,53 @@
 		}
 
 		private static function estimatedValueIcm($ni, $pigr, $dda, $capE) {
+			//the value estimate for is future nominal value
+			//so we want to calc future nominal net icm first
+
+			//if ni is negative, then we want to keep it negative
+			//thereby ignoring it as an investment
 			if ($ni < 0) {
 				$pigr = abs($pigr);
 			}
 
-			//icm / (risk free rate + inflation rate + discout rate - gr)
-			//gr is set as 0 because we assume icm is at a point where company has stopped growth
-			return ($ni + $dda + $capE) * $pigr * self::VIR;
+			$fnni = $ni * $pigr;
+
+			$fni = $fnni + $dda + $capE;//future nominal
+
+			//once we have the future nominal icm
+			//we need to bring the future nominal icm to target icm
+			//because before the target icm, the company can have any growth rate
+			//once reach the target icm, we can start using the target growth
+			//which is important because target growth rate must be less that discount rate
+			//in order for the limit to converge to a number
+			$dr = self::$rfr + self::$ir + self::DR;
+
+			if ($fni >= self::$tgtNi || $fni <= 0) {
+				$fNomIcm = $fni;
+			} else {
+				//calc how many years it would take to get to target icm
+				//then apply the formula to tgt icm
+				//then adjust by inflation rate for all those years to get present value
+
+				//if ni is negative fni would also be negative
+				//if ni is positive but pigr is negative, then fni is also negative
+				//if fni is positive, then both ni and pigr must be positive
+
+				//get fnni to fni ratio
+				$i2nir = $fni / $fnni;
+
+				$adjPigr = ($pigr - 1) * $i2nir + 1;
+
+				//number of years required to reach target ni with an annual growth rate
+				//of adjPigr
+				$years = log(self::$tgtNi / $fni) / log($adjPigr);
+
+				//discount f nom icm by nbr of years
+				$fNomIcm = self::$tgtNi / pow(1 + $dr, $years);
+			}
+
+			//icm / (risk free rate + inflation rate + discout rate - icm gr)
+			return $fNomIcm / ($dr - self::TGT_ICM_GR);
 		}
 
 		//current equity, current ni, projected igr
@@ -440,7 +487,7 @@
 
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
-			$rst->edp = max(self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev, 0) / $pso / (1 + self::DR);
+			$rst->edp = max(self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev, 0) / $pso;
 
 			return $rst;
 		}
@@ -1925,6 +1972,7 @@
 					self::$ir = self::CNYIR;
 					self::$rfr = self::RFR_CNY;
 					self::$mp = self::CNYMP;//abitrary number of the max possible price
+					self::$tgtNi = self::TGT_NI_CNY;
 					self::$increment = .001;
 
 					break;
@@ -1933,6 +1981,7 @@
 					self::$ir = self::CNYIR;
 					self::$rfr = self::RFR_CNY;
 					self::$mp = self::CNYMP;
+					self::$tgtNi = self::TGT_NI_CNY;
 					self::$increment = .001;
 
 					break;
@@ -1941,6 +1990,7 @@
 					self::$ir = self::ZARIR;
 					self::$rfr = self::RFR_ZAR;
 					self::$mp = self::ZARMP;
+					self::$tgtNi = self::TGT_NI_ZAR;
 					self::$increment = .01;
 
 					break;
@@ -1953,6 +2003,7 @@
 					self::$ir = self::USDIR;
 					self::$rfr = self::RFR_USD;
 					self::$mp = self::USDMP;
+					self::$tgtNi = self::TGT_NI_USD;
 					self::$increment = .01;
 					//self::$firstQuarter = self::$usFirstQuarter;
 
@@ -1966,6 +2017,7 @@
 					self::$ir = self::USDIR;
 					self::$rfr = self::RFR_USD;
 					self::$mp = self::USDMP;
+					self::$tgtNi = self::TGT_NI_USD;
 					self::$increment = .01;
 					//self::$firstQuarter = self::$usFirstQuarter;
 
