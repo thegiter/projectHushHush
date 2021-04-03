@@ -448,14 +448,14 @@
 				//get fnni to fni ratio
 				$i2nir = $fni / $fnni;
 
-				$adjPigr = ($pigr - 1) * $i2nir + 1;
+				$adjPigr = ($pigr - 1) * $i2nir + 1;//1.05
 
 				//number of years required to reach target ni with an annual growth rate
 				//of adjPigr
-				$years = log(self::$tgtNi / $fni) / log($adjPigr);
+				$years = log(self::$tgtNi / $fni) / log($adjPigr);//11
 
 				//discount f nom icm by nbr of years
-				$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * ($adjPigr / self::TGT_ICM_GR), $years);
+				$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * (($adjPigr - 1) / self::TGT_ICM_GR), $years);//23000
 			}
 
 			//icm / (risk free rate + inflation rate + discout rate - icm gr)
@@ -1811,6 +1811,8 @@
 			}
 
 			$lf_afpigr = $lf_fpigr * $lf_adj;
+
+			$lf_afpigr = min($lf_afpigr);
 
 			$lf_prfv = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso);
 			self::$def->lffptmIcm = $lf_prfv->edp;
