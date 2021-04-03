@@ -431,7 +431,8 @@
 			//once reach the target icm, we can start using the target growth
 			//which is important because target growth rate must be less that discount rate
 			//in order for the limit to converge to a number
-			$dr = self::$rfr + self::$ir + self::DR;
+			$dr = 1 / self::VIR;
+			$rfr = self::$rfr + self::$ir;
 
 			if ($fni >= self::$tgtNi || $fni <= 0) {
 				$fNomIcm = $fni;
@@ -454,11 +455,11 @@
 				$years = log(self::$tgtNi / $fni) / log($adjPigr);
 
 				//discount f nom icm by nbr of years
-				$fNomIcm = self::$tgtNi / pow(1 + $dr, $years);
+				$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * ($adjPigr / self::TGT_ICM_GR), $years);
 			}
 
 			//icm / (risk free rate + inflation rate + discout rate - icm gr)
-			return $fNomIcm / ($dr - self::TGT_ICM_GR);
+			return $fNomIcm / ($rfr + $dr - self::TGT_ICM_GR);
 		}
 
 		//current equity, current ni, projected igr
@@ -487,7 +488,7 @@
 
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
-			$rst->edp = max(self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev, 0) / $pso;
+			$rst->edp = max(self::estimatedValueIcm($ni, $pigr, $dda, $capE) + $ev_e->ev, 0) / $pso / self::DR;
 
 			return $rst;
 		}
