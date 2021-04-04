@@ -318,7 +318,7 @@
 		const MAX_D = .1;//max discount
 		const TTL_GLB_RANK = 4000;
 
-		const NI_SZE_STD = 20000;//mil(15oz * crt 6yr avg gold price)
+		const NI_SZE_STD = 10000;//mil(7.5oz * crt 6yr avg gold price)
 		const RETURN_STD = 20;//pct
 		const RETURN_GRW_STD = 1;
 		const ROTA_RANK_STD = 60;
@@ -506,7 +506,7 @@
 			$ppadj = $profitadj * .9 + self::$def->popadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj_ovrAmt = ($ppadj - 1);
+				$ppadj_ovrAmt = ($ppadj - 1) / 4.375;//((6^2 - 1) / (3^2 - 1))
 
 				//$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 2))) * $ppadj_ovrAmt + 1;
 				//$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * ($ppadj_ovrAmt / 7) + 1;
