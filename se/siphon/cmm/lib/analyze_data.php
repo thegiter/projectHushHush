@@ -434,7 +434,12 @@
 			$dr = 1 / self::VIR;
 			$rfr = self::$rfr + self::$ir;
 
-			if ($fni >= self::$tgtNi || $fni <= 0) {
+			//get fnni to fni ratio
+			$i2nir = $fni / $fnni;
+
+			$adjPigr = ($pigr - 1) * $i2nir + 1;//1.05
+
+			if ($fni >= self::$tgtNi || $fni <= 0 || $adjPigr <= 1) {
 				$fNomIcm = $fni;
 			} else {
 				//calc how many years it would take to get to target icm
@@ -444,11 +449,6 @@
 				//if ni is negative fni would also be negative
 				//if ni is positive but pigr is negative, then fni is also negative
 				//if fni is positive, then both ni and pigr must be positive
-
-				//get fnni to fni ratio
-				$i2nir = $fni / $fnni;
-
-				$adjPigr = ($pigr - 1) * $i2nir + 1;//1.05
 
 				//number of years required to reach target ni with an annual growth rate
 				//of adjPigr
