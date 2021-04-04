@@ -1814,11 +1814,9 @@
 
 			$lf_afpigr = min($lf_afpigr);
 
-			$lf_prfv = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso);
-			self::$def->lffptmIcm = $lf_prfv->edp;
-			//self::$def->lffptmE = $lfaefv->ev / $lfpso;
+			self::$def->lf_fedp = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso);
 
-			self::$def->lffptm = self::$def->lffptmIcm / (1 + self::$ir) / (1 + self::$ir);
+			self::$def->lffptm = self::$def->lf_fedp->edp / (1 + self::$ir) / (1 + self::$ir);
 			//end price floor calculation
 
 			//premium or discount adjustment
