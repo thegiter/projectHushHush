@@ -418,15 +418,29 @@
 			//the value estimate for is future nominal value
 			//so we want to calc future nominal net icm first
 
-			//if ni is negative, then we want to keep it negative
-			//thereby ignoring it as an investment
+			//if ni and pigr are both negative, then the previous ni was positive
+			//which means we want to set pigr to positive so it keeps fni negative
+			//if ni is positive but pigr is negative
+			//then we want keep pigr negative so we do nothing
 			if ($ni < 0) {
 				$pigr = abs($pigr);
 			}
 
-			$fnni = $ni * $pigr;
+			$pigr -= 1;
 
-			$fni = $fnni + $dda + $capE;//future nominal
+			$fnni = $ni * (1 + $pigr);
+
+			//dda is money spent many years ago but wasn't reported
+			//it's now being reported but no actual cash was spent
+			//so on average it should reflect a more real income from owning the business
+			//as some of your income is used to payback the cost from years ago
+			//so if you own business for the long term, on average you would incur these cost too
+			//and therefore we do not add dda back to icm
+			$fni = $fnni + $capE;//future nominal
+
+			//we assume there is a fixed ratio between capE and icm
+			//because the more you make the more you can spend
+			//and therefore the gr for ni is the same for icm
 
 			//once we have the future nominal icm
 			//we need to bring the future nominal icm to target icm
@@ -437,32 +451,39 @@
 			$dr = 1 / self::VIR;
 			$rfr = self::$rfr + self::$ir;
 
-			//get fnni to fni ratio
-			$i2nir = $fni / $fnni;
+			$fNomIcm = $fni;
+			$icmGr = self::TGT_ICM_GR;
 
-			$adjPigr = ($pigr - 1) * $i2nir + 1;//1.05
+			if ($fni > 0) {
+				//if pigr is negative, then this simply lowers the valuation further
+				$icmGr = min($icmGr, $pigr);
 
-			if ($fni >= self::$tgtNi || $fni <= 0 || $adjPigr <= 1) {
-				$fNomIcm = $fni;
+				if ($fni < self::$tgtNi && $pigr > 0) {
+					//calc how many years it would take to get to target icm
+					//then apply the formula to tgt icm
+					//then adjust by inflation rate for all those years to get present value
+
+					//if ni is negative fni would also be negative
+					//if ni is positive but pigr is negative, then fni is also negative
+					//if fni is positive, then both ni and pigr must be positive
+
+
+
+					//number of years required to reach target ni with an annual growth rate
+					//of adjPigr
+					$years = log(self::$tgtNi / $fni) / log(1 + $pigr);//11
+
+					//discount f nom icm by nbr of years
+					$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * ($pigr / self::TGT_ICM_GR), $years);//23000
+				}
 			} else {
-				//calc how many years it would take to get to target icm
-				//then apply the formula to tgt icm
-				//then adjust by inflation rate for all those years to get present value
-
-				//if ni is negative fni would also be negative
-				//if ni is positive but pigr is negative, then fni is also negative
-				//if fni is positive, then both ni and pigr must be positive
-
-				//number of years required to reach target ni with an annual growth rate
-				//of adjPigr
-				$years = log(self::$tgtNi / $fni) / log($adjPigr);//11
-
-				//discount f nom icm by nbr of years
-				$fNomIcm = $fni + (self::$tgtNi - $fni) / pow(1 + $rfr + $dr * (($adjPigr - 1) / self::TGT_ICM_GR), $years);//23000
+				//if f nom icm is negative
+				//then we want to use the higher as growth rate
+				$icmGr = max($icmGr, abs($pigr));
 			}
 
 			//icm / (risk free rate + inflation rate + discout rate - icm gr)
-			return $fNomIcm / ($rfr + $dr - self::TGT_ICM_GR);
+			return $fNomIcm / ($rfr + $dr - $icmGr);
 		}
 
 		//current equity, current ni, projected igr
