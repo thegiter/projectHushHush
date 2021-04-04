@@ -456,6 +456,7 @@
 
 			if ($fni > 0) {
 				//if pigr is negative, then this simply lowers the valuation further
+				//for price floor this would be 0 if igr was higher than 1
 				$icmGr = min($icmGr, $pigr);
 
 				if ($fni < self::$tgtNi && $pigr > 0) {
@@ -530,7 +531,8 @@
 			$ppadj = $profitadj * .9 + self::$def->popadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj_ovrAmt = ($ppadj - 1) / 11.7;//((6^2 - 1) / (2^2 - 1))
+				//$ppadj_ovrAmt = ($ppadj - 1) / 11.7;//((6^2 - 1) / (2^2 - 1))
+				$ppadj_ovrAmt = ($ppadj - 1)
 
 				//$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 2))) * $ppadj_ovrAmt + 1;
 				//$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * ($ppadj_ovrAmt / 7) + 1;
