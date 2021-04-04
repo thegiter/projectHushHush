@@ -1813,7 +1813,7 @@
 
 			$lf_afpigr = $lf_fpigr * $lf_adj;
 
-			$lf_afpigr = min($lf_afpigr);
+			$lf_afpigr = min($lf_afpigr, 1);
 
 			self::$def->lf_fedp = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso);
 
