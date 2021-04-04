@@ -455,7 +455,7 @@
 				$years = log(self::$tgtNi / $fni) / log($adjPigr);//11
 
 				//discount f nom icm by nbr of years
-				$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * (($adjPigr - 1) / self::TGT_ICM_GR), $years);//23000
+				$fNomIcm = $fni + (self::$tgtNi - $fni) / pow(1 + $rfr + $dr * (($adjPigr - 1) / self::TGT_ICM_GR), $years);//23000
 			}
 
 			//icm / (risk free rate + inflation rate + discout rate - icm gr)
