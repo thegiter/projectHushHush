@@ -304,19 +304,22 @@
 		const B_ALLO = .25;//the target allocation for betting
 		const MOS = .8;//margin of safety
 		const VIR = 10;//value to income ratio
-		const MIN_GROWTH_HARD = .9;
-		const MIN_GROWTH = .5;//minimum growth ratio required to buy for om roe roc fpigr
-		const MIN_GROWTH_REFINE = .7;
+
 		const ROTA_RANK_PASS = 40;//percent
 		const ROTA_RANK_PASS_PPLR = 90;//percent
 		const ROTE_PASS = 20;//percent
-		const MIN_T12MNI = 100;
+
 		const T12MNI_PPLR = 10000;
 		const PPLR_PCT_STEP_DOWN = .8;
 		const PPLR_PCT_STEP_UP = 1.2;
 		const MAX_P = 1.4;//max premium using standard premium for top stocks
 		const MAX_D = .1;//max discount
 		const TTL_GLB_RANK = 4000;
+
+		const MIN_GROWTH_HARD = .9;
+		const MIN_GROWTH = .5;//minimum growth ratio required to buy for om roe roc fpigr
+		const MIN_GROWTH_REFINE = .7;
+		const MIN_T12MNI = 100;
 
 		const NI_SZE_STD = 10000;//mil(7.5oz * crt 6yr avg gold price)
 		const RETURN_STD = 20;//pct
@@ -813,6 +816,8 @@
 				self::$def->slyroc = 0;
 				self::$def->tlyroc = 0;
 				self::$def->flyroc = 0;
+
+				$trailMatch = '';
 			} else {
 				//$lroc = str_replace(',', '', $matches[1]);
 
@@ -1086,6 +1091,8 @@
 				self::$def->slyom = 0;
 				self::$def->tlyom = 0;
 				self::$def->flyom = 0;
+
+				$trailMatch = '';
 			} else {
 				$annualMatch = $matches[0];
 
