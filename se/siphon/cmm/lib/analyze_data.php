@@ -489,7 +489,7 @@
 			$rst->ev_icm = self::estimatedValueIcm($ni, $pigr, $dda, $capE);
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
-			$rst->edp = max($rst->ev_icm + $ev_e->ev, 0) / $pso / self::DR;
+			$rst->edp = max($rst->ev_icm + $ev_e->ev, 0) / $pso / (1 + self::DR);
 
 			return $rst;
 		}
