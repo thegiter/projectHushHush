@@ -509,7 +509,7 @@
 			$ppadj = $profitadj * .9 + self::$def->popadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj_ovrAmt = ($ppadj - 1) / 4.375;//((6^2 - 1) / (3^2 - 1))
+				$ppadj_ovrAmt = ($ppadj - 1) / 11.7;//((6^2 - 1) / (2^2 - 1))
 
 				//$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 2))) * $ppadj_ovrAmt + 1;
 				//$ppadj = pow($ppadj_ovrAmt, $ppadj_ovrAmt) * ($ppadj_ovrAmt / 7) + 1;
@@ -1672,7 +1672,7 @@
 			//captial expenditure is the money spent on buying infrastructure such as building / equipments
 			//change in working captial in the change in float
 			//a change in the float (liquid cash) a company has may indicate a change in capital expenditure
-			//though not nessarily
+			//though not necessarily
 			//capital expenditure is capped at 0, because it is an expenditure, it can only be 0 or negative
 			$cpcapE = min(self::$def->t12mcapE - self::$def->t12mcCapE, 0);//crt projected
 
