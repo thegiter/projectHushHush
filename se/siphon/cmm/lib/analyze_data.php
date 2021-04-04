@@ -1770,11 +1770,10 @@
 			//downward moe is dynamically calculated depending of different type of stock
 			//more precisely depending on the standard deviation of the stock
 			//but in this case, we are just using growth rate
-			$aprfv = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $afpigr, $cpfe, $pso);
-			self::$def->afptmIcm = $aprfv->edp;
+			self::$def->adjFedp = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $afpigr, $cpfe, $pso);
 			//self::$def->afptmE =  $aefv->ev / $pso;
 
-			self::$def->afptm = self::$def->afptmIcm / (1 + self::$ir) / (1 + self::$ir);
+			self::$def->afptm = self::$def->adjFedp->edp / (1 + self::$ir) / (1 + self::$ir);
 
 			//price floor calculation assumes the worst case senario
 			//through capping at 1, we cap the projection that we can make
