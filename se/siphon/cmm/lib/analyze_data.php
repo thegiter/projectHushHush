@@ -428,15 +428,21 @@
 
 			$pigr -= 1;
 
-			$fnni = $ni * (1 + $pigr);
-
 			//dda is money spent many years ago but wasn't reported
 			//it's now being reported but no actual cash was spent
 			//so on average it should reflect a more real income from owning the business
 			//as some of your income is used to payback the cost from years ago
 			//so if you own business for the long term, on average you would incur these cost too
 			//and therefore we do not add dda back to icm
-			$fni = $fnni + $capE;//future nominal
+
+			//cap expenditure is the money spent up front
+			//but not reported in the year
+			//instead, it is reported through dda over the years
+			//this results in the ni to be more stable and close to the average
+			//rather than having big spikes due to spending
+			//therefore we do not want to add the add the dda back
+			//and remove capE (by adding the negative value)
+			$fnni = $ni * (1 + $pigr);
 
 			//we assume there is a fixed ratio between capE and icm
 			//because the more you make the more you can spend
@@ -451,15 +457,15 @@
 			$dr = 1 / self::VIR;
 			$rfr = self::$rfr + self::$ir;
 
-			$fNomIcm = $fni;
+			$fNomIcm = $fnni;
 			$icmGr = self::TGT_ICM_GR;
 
-			if ($fni > 0) {
+			if ($fNomIcm > 0) {
 				//if pigr is negative, then this simply lowers the valuation further
 				//for price floor this would be 0 if igr was higher than 1
 				$icmGr = min($icmGr, $pigr);
 
-				if ($fni < self::$tgtNi && $pigr > 0) {
+				if ($fNomIcm < self::$tgtNi && $pigr > 0) {
 					//calc how many years it would take to get to target icm
 					//then apply the formula to tgt icm
 					//then adjust by inflation rate for all those years to get present value
@@ -472,7 +478,7 @@
 
 					//number of years required to reach target ni with an annual growth rate
 					//of adjPigr
-					$years = log(self::$tgtNi / $fni) / log(1 + $pigr);//11
+					$years = log(self::$tgtNi / $fNomIcm) / log(1 + $pigr);//11
 
 					//discount f nom icm by nbr of years
 					$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * ($pigr / self::TGT_ICM_GR), $years);//23000
@@ -481,6 +487,11 @@
 				//if f nom icm is negative
 				//then we want to use the higher as growth rate
 				$icmGr = max($icmGr, abs($pigr));
+
+				//we also want to make sure the dr is higher than $icmGr
+				//but lower the dr the more gr there is, because f nom icm is negative
+				//that mean we want to increase the negative valuation by reducing dr
+				$dr = $dr / ($icmGr + $dr) * .01 + $dr;
 			}
 
 			//icm / (risk free rate + inflation rate + discout rate - icm gr)
