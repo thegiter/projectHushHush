@@ -523,9 +523,17 @@
 			$rst->fe = $ev_e->fe;
 
 			$rst->ev_icm = self::estimatedValueIcm($ni, $pigr, $dda, $capE);
+
 			//a company's value can be negative if it loses money each year
 			//however, for stock valuation it is fine to assume the value is 0, because stock price can not be negative
-			$rst->edp = max($rst->ev_icm + $ev_e->ev, 0) / $pso / (1 + self::DR);
+
+			//the equity value is mostly needed for business operations
+			//which means the company can not liquidate it and distribute to shareholder
+			//furthermore, the equity value will decrease due to depreciation
+			//there maybe some part of equity value or cash that is excess and can be distributed
+			//but it is really hard to say, for each company, how much of that equity cash is available to shareholder
+			//and therefore it is best to not include equity value in valuation
+			$rst->edp = max($rst->ev_icm, 0) / $pso / (1 + self::DR);
 
 			return $rst;
 		}
