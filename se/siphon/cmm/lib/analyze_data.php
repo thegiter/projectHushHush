@@ -562,7 +562,7 @@
 			$ppadj = $profitadj * .9 + self::$def->popadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj_ovrAmt = ($ppadj - 1) / 3.5;//((6^2 - 1) / (2^2 - 1))
+				$ppadj_ovrAmt = ($ppadj - 1) / 3.18;//((6^2 - 1) / (2^2 - 1))
 				//$ppadj_ovrAmt = ($ppadj - 1) / 11.7;
 				//$ppadj_ovrAmt = ($ppadj - 1);
 
