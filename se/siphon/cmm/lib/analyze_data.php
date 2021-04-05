@@ -481,7 +481,17 @@
 					$years = log(self::$tgtNi / $fNomIcm) / log(1 + $pigr);//11
 
 					//discount f nom icm by nbr of years
-					$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr * ($pigr / self::TGT_ICM_GR), $years);//23000
+					//so we want to discount growth stocks a little higher due to the higher risk
+					//but we also don't want to discount too much
+					//because growth stocks are generally valued higher
+					//secondly we already heavily toned down the growth rate to be safe
+					$grDiff = $pigr - self::TGT_ICM_GR;
+
+					//this means if igr is lower than target
+					//dr reduces by a max of half dr which is 5%
+					//if igr is higher than target
+					//dr increase by a max of dr which is 10%
+					$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr + $dr * ($grDiff / (abs($grDiff) + self::TGT_ICM_GR)), $years);//23000
 				}
 			} else {
 				//if f nom icm is negative
