@@ -465,7 +465,7 @@
 				//for price floor this would be 0 if igr was higher than 1
 				$icmGr = min($icmGr, $pigr);
 
-				if ($fNomIcm < self::$tgtNi && $pigr > 0) {
+				if ($fNomIcm < self::$tgtNi && $pigr > $icmGr) {
 					//calc how many years it would take to get to target icm
 					//then apply the formula to tgt icm
 					//then adjust by inflation rate for all those years to get present value
@@ -478,20 +478,22 @@
 
 					//number of years required to reach target ni with an annual growth rate
 					//of adjPigr
-					$years = log(self::$tgtNi / $fNomIcm) / log(1 + $pigr);//11
+					$years = log(self::$tgtNi / $fNomIcm) / log(1 + $pigr - self::$ir);//11
 
 					//discount f nom icm by nbr of years
 					//so we want to discount growth stocks a little higher due to the higher risk
 					//but we also don't want to discount too much
 					//because growth stocks are generally valued higher
 					//secondly we already heavily toned down the growth rate to be safe
-					$grDiff = $pigr - self::TGT_ICM_GR;
+					//this gr only appears for price ceiling
+					//this is the key differenciator between price floor and price ceiling
+					//since we already have a price floor, which will be discounted to be safe
+					//for price ceiling we only need a reasonable but optimistic valuation
+					$grDiff = $pigr - $icmGr;
 
-					//this means if igr is lower than target
-					//dr reduces by a max of half dr which is 5%
-					//if igr is higher than target
-					//dr increase by a max of dr which is 10%
-					$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr + $dr * ($grDiff / (abs($grDiff) + self::TGT_ICM_GR)), $years);//23000
+					//igr has to be higher than target for this block to execute
+					//dr increase by a max of 1%
+					$fNomIcm = self::$tgtNi / pow(1 + $rfr + $dr + .01 * ($grDiff / ($grDiff + $icmGr)), $years);//23000
 				}
 			} else {
 				//if f nom icm is negative
@@ -543,7 +545,7 @@
 			//there maybe some part of equity value or cash that is excess and can be distributed
 			//but it is really hard to say, for each company, how much of that equity cash is available to shareholder
 			//and therefore it is best to not include equity value in valuation
-			$rst->edp = max($rst->ev_icm, 0) / $pso / (1 + self::DR);
+			$rst->edp = max($rst->ev_icm, 0) / $pso;
 
 			return $rst;
 		}
@@ -1876,7 +1878,7 @@
 
 			self::$def->lf_fedp = self::estimateDiscountedPrice(self::$def->adjl3yavgni, self::$def->t12mdda, $cpcapE, $lf_afpigr, $lf_cpfe, $lf_pso);
 
-			self::$def->lffptm = self::$def->lf_fedp->edp / (1 + self::$ir) / (1 + self::$ir);
+			self::$def->lffptm = self::$def->lf_fedp->edp / (1 + self::DR) / (1 + self::$ir) / (1 + self::$ir);
 			//end price floor calculation
 
 			//premium or discount adjustment
