@@ -562,8 +562,8 @@
 			$ppadj = $profitadj * .9 + self::$def->popadj * .1;
 
 			if ($ppadj > 1) {
-				$ppadj_ovrAmt = ($ppadj - 1) / 3.18;//((6^2 - 1) / (2^2 - 1))
-				//$ppadj_ovrAmt = ($ppadj - 1) / 11.7;
+				//$ppadj_ovrAmt = ($ppadj - 1) / 3.18;//((6^2 - 1) / (2^2 - 1))
+				$ppadj_ovrAmt = ($ppadj - 1) / 11.7;
 				//$ppadj_ovrAmt = ($ppadj - 1);
 
 				//$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 2))) * $ppadj_ovrAmt + 1;
@@ -2172,7 +2172,8 @@
 					self::$def->advice = 'betting buy';
 				}
 
-				if (self::$def->ivcpr > self::DR) {
+				//if (self::$def->ivcpr > self::DR) {
+				if (self::$def->ivcpr > 0) {
 					self::$def->advice = 'buy';
 				}
 			}
