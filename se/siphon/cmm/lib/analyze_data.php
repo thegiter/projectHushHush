@@ -563,7 +563,7 @@
 
 			if ($ppadj > 1) {
 				//$ppadj_ovrAmt = ($ppadj - 1) / 3.18;//((6^2 - 1) / (2^2 - 1))
-				$ppadj_ovrAmt = ($ppadj - 1) / 11.7;
+				$ppadj_ovrAmt = ($ppadj - 1) / 4.375;
 				//$ppadj_ovrAmt = ($ppadj - 1);
 
 				//$ppadj = (1 - ($ppadj_ovrAmt / ($ppadj_ovrAmt + 2))) * $ppadj_ovrAmt + 1;
