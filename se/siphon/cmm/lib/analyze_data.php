@@ -50,7 +50,7 @@
 
 				$url = (is_array($d) && !empty($d['url'])) ? $d['url'] : $d;
 
-				curl_setopt($chs_arr[$id], CURLOPT_URL,            $url.'?__cf_chl_jschl_tk__=0dacbe936e25a536d9124f1006e934dd9509a913-1622886137-0-AXwkjL_SwZkdRUxMsm4I7COqm44M5Oov8RowWPCu46zc3Bmwf1AErYNWkKa72igaJNE0s_qpDNU51jh5Rar1nwbrTKKjYnXadd1oW6j1F9gTamNO9gwCUfSoLUxgHhHw6THwbxJ6Cy9URrCHLlCWzBTzcjVPqzaLiGsL5RfXqMdO6bhaQUOhtg6NssxQOI23xIGfP9qFtioq7FZuZfOZoe4xfBvhsul_zThchxsJrL_RbvopvTXRSKmuXzYHy46Qb64v2nLc1oZyqyuZXIMvtJn_loZm8e7EAaDDr3FMsWS6CfPFXBwFFOI5-MUtuUTDyPWFwUinaHXwqGdVN3-ZMkjje9LpjOkpILengDzkoN20Sqa3vINE0Q5J4apDJeDYKODsJ0yb7vUAFneXxVn2KkdQWaNpXu6o63L9zEVKaqOoHExCdUupPIil2z43YycWxQ');
+				curl_setopt($chs_arr[$id], CURLOPT_URL,            $url);
 				curl_setopt($chs_arr[$id], CURLOPT_HEADER,         0);
 				curl_setopt($chs_arr[$id], CURLOPT_RETURNTRANSFER, 1);
 				curl_setopt($chs_arr[$id], CURLOPT_CONNECTTIMEOUT, self::MAXTIME);
