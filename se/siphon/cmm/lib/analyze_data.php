@@ -680,7 +680,7 @@
 		private static function getDef_siphon() {
 			//siphon and set up def
 			$rqss = [
-				'mc' => 'https://www.gurufocus.com/term/mktcap/'.self::$guruFullTkr.'/Market-Cap-(M)/',
+				'mc' => 'https://www.gurufocus.com/term/mktcap/'.self::$guruFullTkr.'/Market-Cap/',
 				'bps' => 'https://www.gurufocus.com/term/Book+Value+Per+Share/'.self::$guruFullTkr.'/Book-Value-per-Share/',
 				'so' => 'https://www.gurufocus.com/term/BS_share/'.self::$guruFullTkr.'/Shares-Outstanding-(EOP)/',
 				'der' => 'https://www.gurufocus.com/term/deb2equity/'.self::$guruFullTkr.'/Debt-to-Equity/',
