@@ -1598,7 +1598,8 @@
 
 			self::$def->avgRos_val = (str_replace(',', '', $matches[$len - 1][2]) + str_replace(',', '', $matches[$len - 2][2]) + str_replace(',', '', $matches[$len - 3][2])) / 3;
 
-			self::$def->anios = (self::$def->avgIos_val - self::$def->avgRos_val) / $cpResult->cp;
+			#repurchase of stock is negative
+			self::$def->anios = (self::$def->avgIos_val + self::$def->avgRos_val) / $cpResult->cp;
 
 			//in case so eop is 0, we assume an abstract value of 1 for calculation purposes
 			//if there is anios, this would result in future price significantly lower than cp
