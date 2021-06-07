@@ -254,16 +254,16 @@
 
 		public static function getYrShift($annualMatch, $trailMatch) {
 			//match annual names
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
+			preg_match_all('/\<td\>\<strong\>([A-Z][a-z]{2}\d{2})\<\/strong\>\<\/td\>/', $annualMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no annual names';
 			}
 
-			$lyName = str_replace(',', '', end($matches)[2]);
+			$lyName = str_replace(',', '', end($matches)[1]);
 
 			//match trailing name
-			preg_match_all('/\<td\>(\<font[^\>]*\>)?([A-Z][a-z]{2}\d{2})(\<\/font\>)?\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
+			preg_match_all('/\<td\>\<strong\>([A-Z][a-z]{2}\d{2})\<\/strong\>\<\/td\>/', $trailMatch, $matches, PREG_SET_ORDER);
 
 			if (!$matches) {
 				return 'no trailing names';
